@@ -1,0 +1,51 @@
+# ==========================================================================
+# Portrait privacy fence — ship the METHOD, never the person.
+# ==========================================================================
+#
+# SCHEME (template-vs-live):
+#   *.template.md   → TRACKED. The shippable method: format, seeds, placeholders.
+#                     Zero personal content. This is what other people clone.
+#   live files      → IGNORED. The user's actual filled-in portrait. Local-only.
+#                     Created by copying a *.template.md to its live name and
+#                     filling the placeholders. Never committed, never auto-leaves
+#                     the machine (local-first rule, CLAUDE.md Privacy & guardrails).
+#
+# HOW TO GO LIVE (per file):
+#   cp identity/PORTRAIT.template.md            identity/PORTRAIT.md
+#   cp identity/portraits/_PORTRAIT_001.template.md  identity/portraits/_PORTRAIT_001.md
+#   cp identity/disputed.template.md            identity/disputed.md
+#   cp identity/sources.template.md             identity/sources.md
+# Then fill. The live copies below are ignored; the .template.md originals stay tracked.
+#
+# RULE: anything containing real corpus content, inferences about the user, or
+# real local paths is LIVE and must match a pattern below. If you add a new
+# live artifact type, add its ignore line here in the same commit.
+# ==========================================================================
+
+# --- live portrait (the synthesized "current" portrait) ---
+identity/PORTRAIT.md
+
+# --- live frozen snapshots (the dated gallery) ---
+# Ignore every real snapshot; the *.template.md seed stays tracked (negation below).
+identity/portraits/*.md
+!identity/portraits/*.template.md
+
+# --- live anti-Barnum feedback log ---
+identity/disputed.md
+
+# --- live corpus manifest (contains real local paths) ---
+identity/sources.md
+
+# --- live semantic-recall index (holds real corpus content) ---
+# Built by recall/recall.py; vectors + source chunks of the personal corpus.
+# Local-only. The METHOD (recall/recall.py + recall/requirements.txt) is tracked;
+# the index is not.
+identity/recall.db
+identity/recall.db-shm
+identity/recall.db-wal
+
+# --- local embedding-model cache (downloaded ONNX weights, ~130 MB) ---
+recall/.model_cache/
+
+# macOS / editor cruft
+.DS_Store

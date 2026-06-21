@@ -1,0 +1,17 @@
+{
+  "name": "throughline",
+  "version": "0.1.0",
+  "description": "Claude Code that picks up exactly where it left off — frozen cross-session handoffs, a self-watching context budget, coherence guardrails, and an optional operator decision layer.",
+  "author": { "name": "88k8sh" },
+  "homepage": "https://github.com/88k8sh/throughline",
+  "repository": "https://github.com/88k8sh/throughline",
+  "license": "MIT",
+  "keywords": [
+    "claude-code",
+    "claude-md",
+    "context-management",
+    "session-handoff",
+    "continuity",
+    "guardrails"
+  ]
+}

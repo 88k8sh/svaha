@@ -1,0 +1,133 @@
+// Merge this "hooks" block into your ~/.claude/settings.json.
+// If you already have a "hooks" key, merge per-event (PreToolUse / PostToolUse / Stop)
+// rather than replacing the whole object.
+//
+// Placeholders:
+//   <system-dir>  → absolute path to your system root (the folder holding bin/, next/, 30_LEDGER/, etc.)
+//   ~/.claude/hooks/* paths are literal — they live in your global Claude config, leave them as-is.
+//
+// Wiring:
+//   SessionStart (all)                 → session-start-marker.sh — stamps a per-session start marker so session-end-backstop
+//                                        can tell precisely whether a _NEXT was written THIS session (backstop falls back to
+//                                        a 6h time window without it).
+//   PreToolUse  (Bash|Edit|Write|Read) → security-guard.py  — blocks secret reads + catastrophic ops; asks on force-push/reset --hard
+//   PreToolUse  (Edit|Write|MultiEdit) → version-guard.py   — HARD-BLOCKS edits to frozen artifacts (_NEXT_NNN.md + `frozen: true`)
+//   PreToolUse  (Edit|Write|MultiEdit) → drift-guard.py     — surfaces coupled files before a structural edit
+//   PostToolUse (every tool)           → context-canary.sh  — tracks context fill (transcript byte-size), nudges at thresholds
+//   Stop  group 1                      → launchpad-nudge.sh  — reminds to write _NEXT / emit opener (byte-size trigger)
+//                                        memory-reflect.sh   — prompts memory hygiene pass
+//                                        resume-line-guard.sh — validates the resume:/Next-session line points at a live _NEXT
+//   Stop  group 2                      → coherence-check.py --stop — final structural-coherence gate
+//   SessionEnd (not clear/resume)      → session-end-backstop.sh — durability catch: if NO _NEXT was written this session,
+//                                        tell the next session to run /handoff or /reflect. Fires once, event-driven.
+//   PreCompact (all)                   → session-end-backstop.sh — same catch before a context-wall /compact wipes the thread.
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash $HOME/.claude/hooks/session-start-marker.sh",
+            "timeout": 5
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Bash|Edit|Write|MultiEdit|Read",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 <system-dir>/bin/security-guard.py",
+            "timeout": 10,
+            "statusMessage": "security-guard"
+          }
+        ]
+      },
+      {
+        "matcher": "Edit|Write|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 <system-dir>/bin/version-guard.py",
+            "timeout": 10,
+            "statusMessage": "version-guard"
+          },
+          {
+            "type": "command",
+            "command": "python3 <system-dir>/bin/drift-guard.py",
+            "timeout": 10,
+            "statusMessage": "drift-guard"
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash $HOME/.claude/hooks/context-canary.sh",
+            "timeout": 5
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash $HOME/.claude/hooks/launchpad-nudge.sh",
+            "timeout": 5
+          },
+          {
+            "type": "command",
+            "command": "bash $HOME/.claude/hooks/memory-reflect.sh",
+            "timeout": 5
+          },
+          {
+            "type": "command",
+            "command": "bash $HOME/.claude/hooks/resume-line-guard.sh",
+            "timeout": 5
+          }
+        ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 <system-dir>/bin/coherence-check.py --stop",
+            "timeout": 10,
+            "statusMessage": "coherence-check"
+          }
+        ]
+      }
+    ],
+    "SessionEnd": [
+      {
+        "matcher": "logout|prompt_input_exit|other",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash $HOME/.claude/hooks/session-end-backstop.sh",
+            "timeout": 5
+          }
+        ]
+      }
+    ],
+    "PreCompact": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash $HOME/.claude/hooks/session-end-backstop.sh",
+            "timeout": 5
+          }
+        ]
+      }
+    ]
+  }
+}

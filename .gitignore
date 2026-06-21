@@ -1,0 +1,16 @@
+# Python bytecode (never ship author-machine compiled artifacts)
+__pycache__/
+*.py[cod]
+
+# macOS cruft
+.DS_Store
+
+# local preview config (dev-only, never shipped)
+.claude/
+
+# runtime machine logs — created by the PreToolUse guards, per-machine
+30_LEDGER/security-guard-log.jsonl
+30_LEDGER/version-guard-log.jsonl
+
+# Consumed-handoff sidecars are runtime state, not source
+next/*.consumed
