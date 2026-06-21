@@ -109,12 +109,16 @@ The guardrails fire in a defined order — **prevention → entry → exit → p
 
 | Guard | Stage | File | When it fires | What it does |
 |---|---|---|---|---|
+| `bin/security-guard.py` | **prevention** | `bin/security-guard.py` | PreToolUse — Bash/Edit/Write/Read | Denies reads of credential/secret files and catastrophic shell ops (`rm -rf ~`, `curl \| sh`); asks before a force-push |
+| `bin/version-guard.py` | **prevention** | `bin/version-guard.py` | PreToolUse — Edit/Write/MultiEdit | Hard-blocks edits to frozen artifacts (`_NEXT_NNN.md` and any `frozen: true` file) so history is never rewritten |
 | `bin/drift-guard.py` | **prevention** | `bin/drift-guard.py` | PreToolUse — every structural file edit | Injects the relevant coupling reminder at edit-time, so a change to one plumbing file surfaces what to update downstream |
 | `bin/coherence-check.py --boot` | **entry** | `bin/coherence-check.py` | On boot (or run via Bash) | Verifies boot-layer integrity: required files exist, the command set matches |
+| `hooks/session-start-marker.sh` | **entry** | `hooks/session-start-marker.sh` | SessionStart | Stamps a per-session start marker so the durability backstop can tell precisely whether a `_NEXT` was written this session |
 | `hooks/context-canary.sh` | **exit** | `hooks/context-canary.sh` | Stop / as the transcript grows | Emits the context gauge (KB estimate, light/medium/heavy) so you reboot before context bloats |
 | `hooks/memory-reflect.sh` | **exit** | `hooks/memory-reflect.sh` | Stop | Tiered nudge to run `/reflect` before the session closes |
 | `hooks/launchpad-nudge.sh` | **exit** | `hooks/launchpad-nudge.sh` | Stop (heavy sessions) | Reminds you to write `_NEXT` and boot from it next time |
 | `hooks/resume-line-guard.sh` | **exit** | `hooks/resume-line-guard.sh` | Stop | Validates any `Next session: /session NNN` closer — confirms `next/_NEXT_NNN.md` actually exists, flagging placeholder or recycled numbers before they propagate |
+| `hooks/session-end-backstop.sh` | **exit (durability)** | `hooks/session-end-backstop.sh` | SessionEnd + PreCompact | If no `_NEXT` was written this session, tells the next session to run `/handoff` or `/reflect` — the catch for a crashed or context-walled session |
 | `bin/next-live.sh --check` | **periodic** | `bin/next-live.sh` | Run on demand / by `/audit` | Reports `.consumed` desyncs (`DONE-UNCONSUMED`, `ORPHAN`) in the session pool |
 | `/audit` | **periodic** | `audit.md` | Every few sessions | Full drift sweep: unpushed facts, contradictions, carry-forward debt |
 

@@ -49,10 +49,13 @@ So the supportable claim is the modest one: **Portrait is an improvement on a na
 
 ## Activate it
 
-Portrait ships inside Throughline — there's nothing extra to clone. It's **off by default** and opt-in.
+Portrait ships inside Throughline — there's nothing extra to clone. It's **off by default** and opt-in; `setup.sh` deliberately does *not* install its commands. To enable it, install the three command files once:
 
 ```bash
-# from your Throughline project root
+# opt in — install the Portrait commands (from your Throughline project root):
+cp portrait/portrait.md portrait/mirror.md portrait/recall.md ~/.claude/commands/
+
+# then use them from your Throughline project root:
 /portrait      # builds (or rebuilds) the current portrait + a new frozen snapshot from your corpus + decision-history
 /mirror        # read-only: shows what the portrait infers about you, every line cited and disputable
 /recall        # OPTIONAL local semantic search over your corpus — complements grep (one dependency; see below)
