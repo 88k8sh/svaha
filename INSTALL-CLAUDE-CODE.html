@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Get Claude Code — First-Time Setup (click to copy)</title>
+<style>
+  :root{ color-scheme: light only; }
+  *{ box-sizing:border-box; }
+  html,body{ background:#f5f7fa; color:#1a1d24; margin:0; }
+  body{ font-family:-apple-system,"Helvetica Neue",Arial,sans-serif; font-size:15px; line-height:1.55; }
+  .wrap{ max-width:840px; margin:0 auto; padding:26px 18px 90px; }
+  h1{ font-size:28px; margin:0 0 4px; letter-spacing:-0.4px; }
+  h2{ font-size:20px; margin:34px 0 10px; padding-bottom:7px; border-bottom:2px solid #1a1d24; }
+  h3{ font-size:15px; margin:20px 0 6px; color:#0b3d6b; }
+  .sub{ color:#5b5f67; font-size:15px; margin:0 0 4px; }
+  .meta{ color:#8a8f98; font-size:12px; }
+  p{ margin:8px 0; }
+  code{ font-family:"SF Mono",Menlo,Consolas,monospace; font-size:13px; background:#e7ebf1; padding:1px 5px; border-radius:4px; color:#15324f; }
+  .where{ display:inline-block; padding:2px 9px; border-radius:5px; font-size:11px; font-weight:800; letter-spacing:.4px; color:#fff; text-transform:uppercase; vertical-align:middle; }
+  .term{ background:#1f7a46; } .screen{ background:#6a3aa8; } .chat{ background:#1c64b3; }
+  .cmd{ display:flex; align-items:stretch; margin:8px 0; border-radius:9px; overflow:hidden; box-shadow:0 1px 3px rgba(20,40,70,.12); }
+  .cmd pre{ flex:1; margin:0; padding:12px 14px; background:#15202e; color:#e8edf3;
+            font-family:"SF Mono",Menlo,Consolas,monospace; font-size:13px; line-height:1.5; white-space:pre-wrap; word-break:break-word; }
+  .cmd button{ flex:0 0 86px; border:0; background:#27384b; color:#cfe0f2; font-weight:700; font-size:13px; cursor:pointer; transition:background .15s; border-left:1px solid #0d1622; }
+  .cmd button:hover{ background:#33495f; } .cmd button.ok{ background:#1f7a46; color:#fff; }
+  .step{ background:#fff; border:1px solid #e1e6ee; border-radius:11px; padding:14px 16px; margin:12px 0; }
+  .step .h{ font-weight:700; margin-bottom:2px; }
+  .step .n{ display:inline-block; min-width:24px; height:24px; line-height:24px; text-align:center; background:#1a1d24; color:#fff; border-radius:50%; font-size:13px; font-weight:700; margin-right:8px; }
+  .box{ border-radius:10px; padding:12px 15px; margin:14px 0; border:1px solid; }
+  .box p:first-child{ margin-top:0; } .box p:last-child{ margin-bottom:0; }
+  .lbl{ font-weight:800; text-transform:uppercase; font-size:11px; letter-spacing:.6px; display:block; margin-bottom:3px; }
+  .warn{ background:#fff8e8; border-color:#e6c870; } .warn .lbl{ color:#9a6a00; }
+  .tip{ background:#eef9f0; border-color:#9bd0a8; } .tip .lbl{ color:#1f7a46; }
+  .note{ background:#eef4fb; border-color:#aac6e6; } .note .lbl{ color:#0b5cad; }
+  .danger{ background:#fdecec; border-color:#e09a9a; } .danger .lbl{ color:#a32020; }
+  .expect{ font-family:"SF Mono",Menlo,Consolas,monospace; font-size:12px; color:#41506a; background:#eef2f7; border-left:3px solid #9db4cf; padding:7px 11px; margin:2px 0 6px; border-radius:0 5px 5px 0; }
+  .expect b{ color:#1f7a46; }
+  table{ border-collapse:collapse; width:100%; margin:10px 0; font-size:13px; background:#fff; }
+  th,td{ border:1px solid #d8deea; padding:7px 9px; text-align:left; vertical-align:top; } th{ background:#eef1f5; }
+  .legend{ background:#fff; border:1px solid #e1e6ee; border-radius:11px; padding:13px 16px; margin:14px 0; font-size:14px; }
+  .kbd{ display:inline-block; border:1px solid #b8c0cc; border-bottom-width:2px; border-radius:4px;
+        padding:0 6px; font-size:12px; font-family:"SF Mono",Menlo,monospace; background:#f7f9fb; color:#1a1d24; }
+  .chain{ background:#15202e; color:#e8edf3; border-radius:11px; padding:14px 16px; margin:16px 0; font-size:14px; line-height:1.7; }
+  .chain b{ color:#9ec3ec; } .chain .here{ background:#1f7a46; color:#fff; border-radius:5px; padding:1px 7px; font-weight:700; }
+  .chain .next{ color:#cfe0f2; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <h1>Get Claude Code &mdash; First-Time Setup</h1>
+  <p class="sub">Never used Claude Code &mdash; or the Terminal &mdash; before? <b>Start here.</b> Every command has a <b>Copy</b> button: paste it into a Terminal window, press <span class="kbd">return</span>, wait for it to finish, then do the next one.</p>
+  <p class="meta">For macOS. Open this file in any browser &mdash; no internet needed for the page itself. (On Windows or Linux? See the box at the very bottom.)</p>
+
+  <div class="chain">
+    You are here &mdash; this page gets <b>Claude Code itself</b> working on your Mac. Then:<br>
+    <span class="here">1 · this page</span> &nbsp;→&nbsp; <span class="next">2 · <code>INSTALL.html</code> &mdash; install <b>Svaha</b> on top of it</span> &nbsp;→&nbsp; <span class="next">3 · <code>WELCOME.html</code> &mdash; learn the loop</span>
+  </div>
+
+  <div class="box warn">
+    <p><span class="lbl">One thing to check first &mdash; you need a paid Claude plan</span></p>
+    <p>Claude Code needs a <b>Claude Pro, Max, Team, or Enterprise</b> subscription, <b>or</b> a <b>Claude Console</b> (pay-as-you-go API) account. The <b>free</b> Claude.ai plan does <b>not</b> include Claude Code &mdash; if you only have the free plan, the login step at the end will turn you away. You also need <b>macOS 13 or newer</b>. Everything else below installs itself.</p>
+  </div>
+
+  <div class="legend">
+    <span class="where term">Terminal</span> = a command — paste it &amp; press return. &nbsp;
+    <span class="where screen">On screen</span> = do this with the mouse (a menu, a button, a dialog). &nbsp;
+    <span class="where chat">Claude</span> = type into a running Claude Code session.
+  </div>
+
+  <!-- ============ STEP 0 ============ -->
+  <h2>0 · Open the Terminal</h2>
+  <div class="step">
+    <div class="h"><span class="n">0</span><span class="where screen">On screen</span> &nbsp;The Terminal is the app where you paste these commands. To open it:</div>
+    <p style="margin:8px 0 0">Press <span class="kbd">⌘ Cmd</span> + <span class="kbd">Space</span> to open Spotlight search, type <b>Terminal</b>, and press <span class="kbd">return</span>. A small window opens with a blinking cursor.</p>
+    <div class="expect">You'll see a line ending in <code>%</code> (or <code>$</code>), like:  <b>yourname@MacBook ~ %</b>
+That's the prompt. It's waiting for you. Leave this window open for the whole guide.</div>
+  </div>
+  <div class="box tip">
+    <p><span class="lbl">Brand new to the Terminal?</span></p>
+    <p>Nothing here can harm your Mac &mdash; you're only ever pasting one short, known command at a time and watching what it prints. If a command seems to "hang," it's usually still working; give it a moment before touching anything. Anthropic also has a gentle <a href="https://code.claude.com/docs/en/terminal-guide">terminal guide</a> if you'd like the longer walkthrough.</p>
+  </div>
+
+  <!-- ============ STEP 1 ============ -->
+  <h2>1 · Install Claude Code</h2>
+  <div class="step">
+    <div class="h"><span class="n">1</span><span class="where term">Terminal</span> &nbsp;Paste this one line and press <span class="kbd">return</span>. It downloads and installs Claude Code &mdash; the <b>recommended</b> way, and it brings everything it needs with it (you do <b>not</b> need to install Node.js or anything else first):</div>
+    <div class="cmd"><pre>curl -fsSL https://claude.ai/install.sh | bash</pre><button onclick="cp(this)">Copy</button></div>
+    <div class="expect">It prints a few lines of progress and ends with a success message naming the installed version. From now on it <b>updates itself</b> quietly in the background &mdash; you won't have to reinstall.</div>
+  </div>
+  <div class="box note">
+    <p><span class="lbl">Prefer Homebrew or npm? (optional)</span></p>
+    <p>The line above is the simplest path. If you already live in one of these, they work too:</p>
+    <div class="cmd"><pre>brew install --cask claude-code</pre><button onclick="cp(this)">Copy</button></div>
+    <p style="margin:6px 0 2px">…or via npm <small>(this one needs <b>Node.js 18+</b> installed already — the native installer above does not):</small></p>
+    <div class="cmd"><pre>npm install -g @anthropic-ai/claude-code</pre><button onclick="cp(this)">Copy</button></div>
+  </div>
+
+  <!-- ============ STEP 2 ============ -->
+  <h2>2 · Check it installed</h2>
+  <div class="step">
+    <div class="h"><span class="n">2</span><span class="where term">Terminal</span> &nbsp;Confirm the <code>claude</code> command now exists:</div>
+    <div class="cmd"><pre>claude --version</pre><button onclick="cp(this)">Copy</button></div>
+    <div class="expect">prints a version number, e.g. <b>2.1.x (Claude Code)</b>. If instead you see <code>command not found</code>, <b>quit Terminal and reopen it</b> (the installer added <code>claude</code> to your path, and a fresh window picks it up), then try again. Still stuck? See <a href="#trouble">If something snags</a>.</div>
+  </div>
+
+  <!-- ============ STEP 3 ============ -->
+  <h2>3 · Log in</h2>
+  <div class="step">
+    <div class="h"><span class="n">3</span><span class="where term">Terminal</span> &nbsp;Start Claude Code for the first time:</div>
+    <div class="cmd"><pre>claude</pre><button onclick="cp(this)">Copy</button></div>
+    <div class="h" style="margin-top:10px"><span class="where screen">On screen</span> &nbsp;A browser window opens. Sign in with your Claude account (the paid plan from the box at the top), approve the request, then come back to the Terminal &mdash; it will say you're connected.</div>
+    <div class="expect">After this, your login is <b>remembered</b> &mdash; you won't have to do it again. (To switch accounts later, type <code>/login</code> inside a session.)</div>
+    <div class="h" style="margin-top:10px"><span class="where chat">Claude</span> &nbsp;You're now <i>inside</i> Claude Code. To step back out to the Terminal for the next steps, type:</div>
+    <div class="cmd"><pre>/exit</pre><button onclick="cp(this)">Copy</button></div>
+  </div>
+
+  <!-- ============ STEP 4 ============ -->
+  <h2>4 · Health check <span style="font-size:13px;color:#5b5f67">(optional, recommended)</span></h2>
+  <div class="step">
+    <div class="h"><span class="n">4</span><span class="where term">Terminal</span> &nbsp;Claude Code ships a built-in doctor that checks its own install and config:</div>
+    <div class="cmd"><pre>claude doctor</pre><button onclick="cp(this)">Copy</button></div>
+    <div class="expect">walks down a checklist &mdash; install, version, auth, paths &mdash; ideally all <b>✓</b>. It tells you exactly what to fix if anything's off.</div>
+  </div>
+
+  <!-- ============ STEP 5 ============ -->
+  <h2>5 · One more thing, so Svaha installs cleanly</h2>
+  <p>Svaha's install (<code>INSTALL.html</code>, your next stop) uses two small tools that don't ship with a fresh Mac: <b>git</b> (to download Svaha) and <b>python3</b> (its safety hooks are Python). One command from Apple installs both at once.</p>
+  <div class="step">
+    <div class="h"><span class="n">5</span><span class="where term">Terminal</span> &nbsp;Ask macOS to install the Command Line Tools:</div>
+    <div class="cmd"><pre>xcode-select --install</pre><button onclick="cp(this)">Copy</button></div>
+    <div class="h" style="margin-top:8px"><span class="where screen">On screen</span> &nbsp;A dialog pops up &mdash; click <b>Install</b> and let it finish (a few minutes). If it instead says <i>"already installed,"</i> you're already set &mdash; move on.</div>
+    <div class="h" style="margin-top:10px"><span class="where term">Terminal</span> &nbsp;Confirm both tools are now there:</div>
+    <div class="cmd"><pre>git --version && python3 --version</pre><button onclick="cp(this)">Copy</button></div>
+    <div class="expect">two version lines, one for <b>git</b> and one for <b>Python 3</b>. If both print, every check on <code>INSTALL.html</code>'s first step will pass.</div>
+  </div>
+
+  <!-- ============ DONE ============ -->
+  <div class="box tip">
+    <p><span class="lbl">✓ You're ready</span></p>
+    <p>Claude Code is installed, logged in, and the two helper tools are in place. <b>Next: open <code>INSTALL.html</code></b> (in this same folder) and follow it to install Svaha on top. Its very first step &mdash; the <code>claude --version &amp;&amp; python3 --version &amp;&amp; git --version</code> check &mdash; should now come up all green.</p>
+  </div>
+
+  <!-- ============ TROUBLESHOOTING ============ -->
+  <h2 id="trouble">If something snags</h2>
+  <table>
+    <tr><th>You see…</th><th>Do this</th></tr>
+    <tr><td><code>claude: command not found</code> right after installing</td><td>Quit Terminal completely (<span class="kbd">⌘ Cmd</span>+<span class="kbd">Q</span>) and reopen it, then retry <code>claude --version</code>. A new window reloads your path. If it still fails, run the installer line again.</td></tr>
+    <tr><td>The login browser rejects you / says no Claude Code access</td><td>You're on the <b>free</b> plan. Claude Code needs Pro, Max, Team, Enterprise, or a Console (API) account &mdash; upgrade at <a href="https://claude.com/pricing">claude.com/pricing</a>, then run <code>claude</code> again.</td></tr>
+    <tr><td>Spotlight doesn't find "Terminal"</td><td>Open <b>Finder → Applications → Utilities → Terminal</b>, or in Spotlight type the full word <code>Terminal.app</code>.</td></tr>
+    <tr><td>The command pasted oddly / "command not found" on a line you copied</td><td>Use the <b>Copy</b> button (it grabs the exact text) rather than selecting by hand, which can pick up stray characters. Paste one command at a time, never a block.</td></tr>
+    <tr><td><code>curl: command not found</code></td><td>Run <code>xcode-select --install</code> first (Step 5) &mdash; it provides <code>curl</code> too &mdash; then retry Step 1.</td></tr>
+    <tr><td>Anything else during install or login</td><td>Claude's own <a href="https://code.claude.com/docs/en/troubleshoot-install">install &amp; login troubleshooting</a> covers the rest, and <code>claude doctor</code> (Step 4) names most problems for you.</td></tr>
+  </table>
+
+  <div class="box note">
+    <p><span class="lbl">On Windows or Linux instead?</span></p>
+    <p>This guide is written for macOS. The Svaha steps that follow are the same everywhere, but getting Claude Code itself differs slightly:</p>
+    <p style="margin:6px 0 2px"><b>Windows (PowerShell):</b></p>
+    <div class="cmd"><pre>irm https://claude.ai/install.ps1 | iex</pre><button onclick="cp(this)">Copy</button></div>
+    <p style="margin:6px 0 2px"><b>Linux / WSL:</b> same line as macOS &mdash; <code>curl -fsSL https://claude.ai/install.sh | bash</code>.</p>
+    <p>Full platform-by-platform instructions: <a href="https://code.claude.com/docs/en/setup">code.claude.com/docs/en/setup</a>. On Windows, install <a href="https://git-scm.com/downloads/win">Git for Windows</a> (covers Step 5's <code>git</code>) and <a href="https://www.python.org/downloads/">Python 3</a> separately.</p>
+  </div>
+
+  <p class="meta" style="margin-top:22px">Source of these commands: Anthropic's official docs &mdash; <a href="https://code.claude.com/docs/en/setup">setup</a> &amp; <a href="https://code.claude.com/docs/en/quickstart">quickstart</a>. &nbsp;·&nbsp; Next: <code>INSTALL.html</code> &nbsp;·&nbsp; Tour: <code>WELCOME.html</code></p>
+</div>
+
+<script>
+  function cp(btn){
+    var text = btn.parentNode.querySelector('pre').textContent;
+    function flash(){ var o = btn.textContent; btn.textContent='Copied!'; btn.classList.add('ok');
+      setTimeout(function(){ btn.textContent=o; btn.classList.remove('ok'); }, 1200); }
+    function fallback(){ var ta=document.createElement('textarea'); ta.value=text; ta.style.position='fixed';
+      ta.style.top='0'; ta.style.opacity='0'; document.body.appendChild(ta); ta.focus(); ta.select();
+      try{ document.execCommand('copy'); }catch(e){} document.body.removeChild(ta); }
+    if(navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(text).then(flash, function(){ fallback(); flash(); });
+    } else { fallback(); flash(); }
+  }
+</script>
+</body>
+</html>

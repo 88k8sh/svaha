@@ -2,11 +2,11 @@
 
 # Portrait
 
-### A longitudinal self-portrait, anchored to evidence — an optional Throughline layer.
+### A longitudinal self-portrait, anchored to evidence — an optional Svaha layer.
 
-A mirror that reflects who you are *becoming* by reading your own corpus **and** Throughline's record of how you actually decide over time — every inference cited to the text that supports it, every portrait stored as a frozen dated snapshot, all of it local-first.
+A mirror that reflects who you are *becoming* by reading your own corpus **and** Svaha's record of how you actually decide over time — every inference cited to the text that supports it, every portrait stored as a frozen dated snapshot, all of it local-first.
 
-**[Throughline →](../README.md)** · [The behavior contract](../CLAUDE.md) · opt-in · MIT
+**[Svaha →](../README.md)** · [The behavior contract](../CLAUDE.md) · opt-in · MIT
 
 </div>
 
@@ -20,20 +20,20 @@ So this page makes a **modest, honest** claim: not that Portrait is first, only,
 
 ## What it is
 
-Portrait is an **optional bolt-on** that lives inside Throughline (`throughline/portrait/`). When you turn it on, it synthesizes a **longitudinal "becoming" portrait** — not a one-shot personality type or a mood-of-the-week, but an *arc*: who you were, who you're trending toward, and the diff between snapshots over time.
+Portrait is an **optional bolt-on** that lives inside Svaha (`svaha/portrait/`). When you turn it on, it synthesizes a **longitudinal "becoming" portrait** — not a one-shot personality type or a mood-of-the-week, but an *arc*: who you were, who you're trending toward, and the diff between snapshots over time.
 
 It draws from two sources at once:
 
 1. **Your own existing corpus** — chat exports, your writing, your work product. Multi-source, already-existing, not journal entries you have to start producing inside someone's app.
-2. **Throughline's own decision-history** — the frozen `_NEXT_NNN.md` handoffs, the conviction-vs-outcome calibration record, and the corrections that got promoted to rules. This is a record of *who you are as an operator*: what you actually do under uncertainty, where your high-conviction calls land, what mistakes you make twice.
+2. **Svaha's own decision-history** — the frozen `_NEXT_NNN.md` handoffs, the conviction-vs-outcome calibration record, and the corrections that got promoted to rules. This is a record of *who you are as an operator*: what you actually do under uncertainty, where your high-conviction calls land, what mistakes you make twice.
 
 It is a **mirror, not a mask.** It reflects you back to *you*. It does not build a clone that talks to other people in your voice — that's the opposite lane (Second Me, WeClone), and Portrait stays out of it deliberately.
 
 And it is **anti-Barnum.** The standard failure of every tool in this genre is the horoscope effect — vague, flattering, universally-true statements that feel personal but aren't (the Forer effect). Portrait fights this structurally: **every inference carries a citation to the corpus evidence that produced it, marked `✓VERIFIED` (grounded in a quoted passage) or `?INFERRED` (a reading you can dispute).** A claim you can't trace to evidence is a claim you can delete. The portrait is meant to be argued with.
 
-## How it reuses Throughline's own primitives
+## How it reuses Svaha's own primitives
 
-Portrait isn't a separate machine bolted on — it's built from the same spine Throughline already runs on:
+Portrait isn't a separate machine bolted on — it's built from the same spine Svaha already runs on:
 
 - **Frozen numbered snapshots.** A portrait is stored exactly like a handoff: an immutable, dated `identity/portraits/_PORTRAIT_NNN.md`. You never rewrite an old one. The **becoming-arc is the diff across snapshots** — the same way the handoff loop never rewrites history.
 - **Evidence markers + conviction tags.** The `✓VERIFIED` / `?INFERRED` anchoring and the graded conviction language are the ones already defined in `CLAUDE.md` — Portrait points an existing tool at a new target.
@@ -49,13 +49,13 @@ So the supportable claim is the modest one: **Portrait is an improvement on a na
 
 ## Activate it
 
-Portrait ships inside Throughline — there's nothing extra to clone. It's **off by default** and opt-in; `setup.sh` deliberately does *not* install its commands. To enable it, install the three command files once:
+Portrait ships inside Svaha — there's nothing extra to clone. It's **off by default** and opt-in; `setup.sh` deliberately does *not* install its commands. To enable it, install the three command files once:
 
 ```bash
-# opt in — install the Portrait commands (from your Throughline project root):
+# opt in — install the Portrait commands (from your Svaha project root):
 cp portrait/portrait.md portrait/mirror.md portrait/recall.md ~/.claude/commands/
 
-# then use them from your Throughline project root:
+# then use them from your Svaha project root:
 /portrait      # builds (or rebuilds) the current portrait + a new frozen snapshot from your corpus + decision-history
 /mirror        # read-only: shows what the portrait infers about you, every line cited and disputable
 /recall        # OPTIONAL local semantic search over your corpus — complements grep (one dependency; see below)
@@ -67,7 +67,7 @@ To turn it off, simply don't run it — nothing in the core loop depends on Port
 
 ## Optional: a local semantic-recall layer (`/recall`)
 
-By default, Portrait finds evidence with **grep** — exact, transparent, zero-dependency. That's the right tool for a small corpus or when you know the term. But on a **large imported corpus** (hundreds of chat conversations, a big writing folder) or a **long Throughline history** (dozens of `_NEXT_NNN.md` handoffs), grep misses things you phrased differently than you're now searching for — the passage that *means* "I felt carried" but never uses that word.
+By default, Portrait finds evidence with **grep** — exact, transparent, zero-dependency. That's the right tool for a small corpus or when you know the term. But on a **large imported corpus** (hundreds of chat conversations, a big writing folder) or a **long Svaha history** (dozens of `_NEXT_NNN.md` handoffs), grep misses things you phrased differently than you're now searching for — the passage that *means* "I felt carried" but never uses that word.
 
 `/recall` adds an **optional, local, by-meaning index** for exactly that case. It **complements grep — it does not replace it.** When a `recall.db` exists, `/portrait` and `/mirror` pull candidate evidence *both* ways (semantic **and** grep/structured reads) and cite from both under the same anti-Barnum discipline. When it doesn't exist, both commands behave exactly as today. Nothing changes for small corpora, and nothing in the core loop depends on it.
 
@@ -91,7 +91,7 @@ Full spec: [`recall.md`](recall.md).
 This is the hard line, and it's non-negotiable:
 
 - **The repo ships the *method*, not your portrait.** Templates, seeds, the synthesis prompt, and this README are the only Portrait files under version control. Your **filled-in corpus and your portrait snapshots are `.gitignored`** and never committed. Zero personal data in any shipped file.
-- **Corpus and portraits stay local.** Your imported corpus and every generated snapshot live on your machine and **never auto-leave it** — same local-first rule as the rest of Throughline. There is no upload, no cloud profile, no telemetry. (Contrast the incumbent, whose *inferred* profile lives on their servers and is hidden from you — its saved memories are visible, but the model it builds beyond them is not.)
+- **Corpus and portraits stay local.** Your imported corpus and every generated snapshot live on your machine and **never auto-leave it** — same local-first rule as the rest of Svaha. There is no upload, no cloud profile, no telemetry. (Contrast the incumbent, whose *inferred* profile lives on their servers and is hidden from you — its saved memories are visible, but the model it builds beyond them is not.)
 - **No hard deletes.** Superseded portraits are archived under `_ARCHIVE/`, not destroyed — your own history of becoming is preserved, the same way handoffs are.
 - **The optional recall index follows the same fence.** `identity/recall.db` and the local model cache hold real corpus content and are gitignored / local-only; only the recall *method* (`recall/recall.py` + `requirements.txt`) ships. Embeddings are computed locally — recall adds no path off the machine.
 
@@ -99,4 +99,4 @@ If you fork or share this layer, you share the recipe. You never share the meal.
 
 ## License
 
-[MIT](../LICENSE) — same as Throughline. The method is free; your portrait is yours and stays on your machine.
+[MIT](../LICENSE) — same as Svaha. The method is free; your portrait is yours and stays on your machine.

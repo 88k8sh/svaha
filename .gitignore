@@ -2,6 +2,9 @@
 __pycache__/
 *.py[cod]
 
+# setup.sh writes this when you already have a settings.json — local merge artifact
+settings.generated.json
+
 # macOS cruft
 .DS_Store
 

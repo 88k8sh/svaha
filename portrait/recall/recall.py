@@ -59,7 +59,7 @@ MODEL_CACHE = HERE / ".model_cache"                    # gitignored; fastembed c
 SOURCES_LIVE = IDENTITY_DIR / "sources.md"
 SOURCES_TEMPLATE = IDENTITY_DIR / "sources.template.md"
 
-# Throughline-loop corpus (always-on, structurally-unique source class).
+# Svaha-loop corpus (always-on, structurally-unique source class).
 NEXT_DIR = THROUGHLINE_DIR / "next"
 LEDGER_DIR = THROUGHLINE_DIR / "30_LEDGER"
 

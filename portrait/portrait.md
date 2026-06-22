@@ -3,12 +3,12 @@
 Execute immediately, no preamble. Do not ask for confirmation before reading.
 
 > The synthesis method behind the Portrait layer. See `portrait/README.md` for what
-> Portrait is and how it sits inside Throughline; this file is the **how** — the prompt
+> Portrait is and how it sits inside Svaha; this file is the **how** — the prompt
 > that ingests your corpus and your decision-history and writes (or updates) an
 > evidence-anchored, longitudinal portrait. Pure prompt/method: it runs locally in
 > Claude Code, reads only local files, and writes only local files. Nothing uploads.
 
-Portrait is an **optional, opt-in bolt-on**. Nothing in Throughline's core loop depends on
+Portrait is an **optional, opt-in bolt-on**. Nothing in Svaha's core loop depends on
 it. It is **off until you run this command.**
 
 It produces two things every run:
@@ -35,7 +35,7 @@ This command reads **real personal data** (your corpus + your decision-history) 
   it.** No upload, no cloud profile, no telemetry. Reading a chat export from a local path is
   fine; sending corpus text or portrait content to any external service is not. If the user
   ever asks to *share* a portrait, that is a deliberate, separate, manual act — it goes
-  through Throughline's release gate (an outbox + manual review), never automatically.
+  through Svaha's release gate (an outbox + manual review), never automatically.
 - **No hard deletes.** A superseded `PORTRAIT.md` is archived before being overwritten (Step 6),
   never destroyed. Frozen snapshots are never edited or deleted — the pass number is the history.
 
@@ -89,7 +89,7 @@ Check for `portrait/identity/PORTRAIT.md` and `portrait/identity/sources.md`.
   - "Where are your chat exports?" — ChatGPT (`conversations.json`), Claude exports, etc.
   - "Where's your own writing?" — a notes/essays/journal folder, Obsidian vault, drafts.
   - "Where's your work product?" — repos, docs, a projects directory.
-  - Confirm the Throughline decision-history sources are present (Step 1.B finds them automatically).
+  - Confirm the Svaha decision-history sources are present (Step 1.B finds them automatically).
 
   Record each source in `sources.md` as `label → absolute path → kind (chat|writing|work) →
   date-range (if known)`. This manifest is what makes every later citation reproducible.
@@ -134,10 +134,10 @@ files the user flags. **Say what you sampled** — an honest "read 40 of ~600 co
 stratified across 2023–2026" beats a false "analyzed your whole corpus." Never assert coverage
 you don't have (this is the `✓VERIFIED` / `?INFERRED` honesty applied to your own reading).
 
-### B. The Throughline loop itself — what you *do* (the input nothing else has)
+### B. The Svaha loop itself — what you *do* (the input nothing else has)
 
 This is the structurally-unique source. Journaling and chat tools can read what you *said*;
-only Throughline has been recording how you actually *operate over time*. Read all three:
+only Svaha has been recording how you actually *operate over time*. Read all three:
 
 1. **The frozen handoffs** — every `portrait/../next/_NEXT_NNN.md` (i.e. `<system-dir>/next/`).
    Each is a frozen snapshot of how a real session ended: what you set out to do, what

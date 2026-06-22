@@ -9,13 +9,13 @@ Execute immediately, no preamble.
 > never uses the word). Portrait uses **both** and cites from both.
 
 It is **optional, opt-in, and local-only.** Nothing in Portrait — and nothing in
-Throughline's core loop — depends on it. If it isn't set up, every other command
+Svaha's core loop — depends on it. If it isn't set up, every other command
 behaves exactly as it does today (it falls back to grep). Turning it on changes one
 thing: synthesis and `/mirror` gain a second way to *find* candidate evidence before
 they cite it.
 
 The implementation is `portrait/recall/recall.py` (the METHOD that ships) +
-`portrait/recall/requirements.txt`. Run it from the Throughline project root.
+`portrait/recall/requirements.txt`. Run it from the Svaha project root.
 
 ---
 
@@ -63,7 +63,7 @@ exactly like the live portrait:
   `recall/requirements.txt` are tracked (the *method*). The `.db` and the model cache
   are never committed (the *meal*). If you ever add another live recall artifact, add
   its ignore line in the same commit.
-- **No new data class leaves.** Sharing a portrait still goes through Throughline's
+- **No new data class leaves.** Sharing a portrait still goes through Svaha's
   release gate, manually — recall changes nothing about that.
 
 If `recall.db` is **not** matched by `portrait/.gitignore`, **stop and fix the fence
@@ -79,7 +79,7 @@ before indexing anything.**
   writing folder, where the passage you need uses *different words* than your query
   ("felt carried" vs. "stopped fighting it" vs. "let go"). grep needs the exact token;
   recall finds it by meaning.
-- **A long Throughline history** — dozens of `_NEXT_NNN.md` handoffs across a year,
+- **A long Svaha history** — dozens of `_NEXT_NNN.md` handoffs across a year,
   where a behavioral pattern recurs in varied phrasing across many files. recall
   surfaces the semantically-near handoffs grep would only find with a lucky keyword.
   (recall indexes the loop corpus — `next/` and `30_LEDGER/` — automatically, so the
@@ -107,7 +107,7 @@ differently evidence and the say/do gaps both matter for an anti-Barnum portrait
    ```
 2. **Point it at your corpus.** recall reads Portrait's existing manifest —
    `portrait/identity/sources.md` — for the `- path:` entries, and **always** also
-   indexes the Throughline loop (`next/`, `30_LEDGER/`). Placeholder paths (`<...>`)
+   indexes the Svaha loop (`next/`, `30_LEDGER/`). Placeholder paths (`<...>`)
    are skipped. (Run `/portrait` first if `sources.md` doesn't exist yet — Step 0
    creates it from the template; the template's placeholder paths simply don't resolve,
    which is fine.)

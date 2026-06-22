@@ -59,7 +59,7 @@ meta:
   ev: <source-id> → "<locator>"
 
 ## 4. Operator-patterns  ← the structurally-unique section
-*How you actually OPERATE over time — drawn from the Throughline loop's own record, which chat/journaling tools structurally lack. Sources: the frozen `_NEXT` handoffs, the conviction-vs-outcome calibration history, and corrections that got promoted to rules. This is the part no competitor can copy without a context-OS.*
+*How you actually OPERATE over time — drawn from the Svaha loop's own record, which chat/journaling tools structurally lack. Sources: the frozen `_NEXT` handoffs, the conviction-vs-outcome calibration history, and corrections that got promoted to rules. This is the part no competitor can copy without a context-OS.*
 
 - <pattern in how you decide / hand off / calibrate>  [✓VERIFIED] (confidence: high)
   ev: next/_NEXT_<NNN>.md → "<conviction:high … outcome:FAILED — a calibration miss>"; CLAUDE.md → "<the rule that miss promoted>"

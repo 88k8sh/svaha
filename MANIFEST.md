@@ -1,6 +1,6 @@
-# Throughline Core — Manifest
+# Svaha Core — Manifest
 
-The distilled, source-vetted Core of Throughline: afternoon-readable, fully functional,
+The distilled, source-vetted Core of Svaha: afternoon-readable, fully functional,
 charter-clean. Built from the full kit by keeping every safety/continuity primitive verbatim,
 slimming accretion, and cutting four enhancement/marketing components to the bolt-on tier.
 

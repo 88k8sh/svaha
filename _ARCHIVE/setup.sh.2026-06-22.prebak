@@ -1,17 +1,15 @@
 #!/usr/bin/env bash
 #
-# Svaha — turnkey installer.
+# Throughline — turnkey installer.
 #
-# Makes Svaha one-flow: copies the slash commands and hooks into your
-# global Claude config, offers to generate settings.json for you (only if you
-# don't already have one, and only with consent), and points you at the optional
-# MCP companions. Verify the result anytime with: bash bin/doctor.sh
+# Makes Throughline one-flow: copies the slash commands and hooks into your
+# global Claude config, then points you at the two manual steps that are too
+# risky to automate (merging settings.json, installing the MCP companions).
 #
 # SAFETY CONTRACT:
 #   - bash 3.2 compatible (macOS /bin/bash) — no mapfile, no associative arrays,
 #     no `set -e` foot-guns.
-#   - Non-destructive: creates dirs + copies files; writes settings.json ONLY with
-#     a y/N prompt and ONLY if absent — never clobbers an existing settings.json.
+#   - Non-destructive: only ever creates dirs and copies files into ~/.claude/.
 #   - Never overwrites an existing ~/.claude/CLAUDE.md without a y/N prompt.
 #   - Idempotent: safe to re-run; re-running just refreshes the copied files.
 #
@@ -48,7 +46,7 @@ HOOK_DIR="$CLAUDE_DIR/hooks"
 
 echo ""
 echo "=========================================================="
-echo " Svaha installer"
+echo " Throughline installer"
 echo "=========================================================="
 echo "Step 1/6  Kit root resolved:"
 echo "          $KIT_ROOT"
@@ -139,72 +137,28 @@ if [ -f "$KIT_ROOT/CLAUDE.md" ]; then
 fi
 
 # ----------------------------------------------------------------------------
-# Step 4 — Wire up settings.json. Offer to generate it (with consent); NEVER
-#          clobber an existing one.
+# Step 4 — Point the user at the settings.json merge (do NOT auto-edit it).
 # ----------------------------------------------------------------------------
-# Auto-editing a user's EXISTING settings.json risks corrupting JSON they rely
-# on — so we only ever write a fresh one (behind a y/N prompt), or, if one
-# already exists, produce a placeholder-filled, JSON-validated copy to merge.
-echo "Step 4/6  Wire up the hooks + permissions via settings.json"
-SNIPPET="$KIT_ROOT/settings.json.snippet"
-TARGET_SETTINGS="$CLAUDE_DIR/settings.json"
-
-# Strip the // comment header, substitute <system-dir>, validate JSON; write to $1.
-# Returns non-zero (and cleans up the temp) on any failure — never leaves a half file.
-gen_settings() {
-  local out tmp
-  out="$1"; tmp="$out.tmp.$$"
-  sed '/^[[:space:]]*\/\//d' "$SNIPPET" 2>/dev/null | sed "s|<system-dir>|$KIT_ROOT|g" > "$tmp" 2>/dev/null || { rm -f "$tmp"; return 1; }
-  if command -v python3 >/dev/null 2>&1; then
-    python3 -m json.tool "$tmp" >/dev/null 2>&1 || { rm -f "$tmp"; return 1; }
-  fi
-  mv "$tmp" "$out"
-}
-
-if [ ! -f "$SNIPPET" ]; then
-  echo "          (settings.json.snippet not found in kit — skipping)"
-elif [ -f "$TARGET_SETTINGS" ]; then
-  # Existing settings — never touch them. Hand over a ready-to-merge copy.
-  GEN="$KIT_ROOT/settings.generated.json"
-  if gen_settings "$GEN"; then
-    echo "          You already have $TARGET_SETTINGS — leaving it untouched."
-    echo "          Wrote a ready-to-merge copy (path filled in, JSON-validated):"
-    echo "            $GEN"
-    echo "          Merge its \"permissions\" + \"hooks\" blocks into your settings.json"
-    echo "          (per-array / per-event if you already have those keys)."
-  else
-    echo "          Couldn't build the merge file — merge $SNIPPET by hand"
-    echo "          (replace <system-dir> with $KIT_ROOT)."
-  fi
-else
-  # No settings.json yet — offer to generate it.
-  echo "          No $TARGET_SETTINGS yet."
-  printf "          Generate it now (fills in the path, validates the JSON)? [y/N] "
-  read REPLY
-  case "$REPLY" in
-    y|Y|yes|YES)
-      mkdir -p "$CLAUDE_DIR"
-      if gen_settings "$TARGET_SETTINGS"; then
-        echo "          wrote $TARGET_SETTINGS  (<system-dir> -> $KIT_ROOT, JSON valid)"
-        echo "          Edit mode A (edits granted once) is the default — see the"
-        echo "          snippet header to switch to per-session before first use."
-      else
-        echo "          generation failed (python3 missing, or unexpected) — merge"
-        echo "          $SNIPPET by hand instead (replace <system-dir> with $KIT_ROOT)."
-      fi
-      ;;
-    *)
-      echo "          skipped — merge $SNIPPET into $TARGET_SETTINGS yourself"
-      echo "          (replace <system-dir> with $KIT_ROOT)."
-      ;;
-  esac
-fi
+# Editing a user's settings.json programmatically risks corrupting JSON they
+# rely on. We print the snippet path + the placeholder they must replace, and
+# stop. The merge is a deliberate manual step.
+echo "Step 4/6  Wire up the hooks via settings.json (MANUAL — not auto-edited)"
+echo "          Merge this snippet into your settings:"
+echo "            snippet : $KIT_ROOT/settings.json.snippet"
+echo "            target  : $CLAUDE_DIR/settings.json"
+echo "          In the snippet, replace every <system-dir> placeholder with"
+echo "          your system root (the folder holding bin/, next/, 30_LEDGER/)."
+echo "          For this kit that absolute path is:"
+echo "            $KIT_ROOT"
+echo "          (The ~/.claude/hooks/* paths in the snippet are literal —"
+echo "           leave them as-is.) If you already have a \"hooks\" key, merge"
+echo "          per-event (PreToolUse / PostToolUse / Stop), don't replace it."
 echo ""
 
 # ----------------------------------------------------------------------------
 # Step 5 — Optional companions (print only — install knowingly, by hand).
 # ----------------------------------------------------------------------------
-# Svaha never auto-installs a third party or reads an API key. These are
+# Throughline never auto-installs a third party or reads an API key. These are
 # the canonical install lines; run the one you want yourself. See README / CREDITS.
 echo "Step 5/6  Optional companions (install yourself — not auto-run)"
 echo "          Context7 (up-to-date library docs, MCP) — run in your SHELL"
@@ -218,7 +172,6 @@ echo ""
 # Step 6 — How to start.
 # ----------------------------------------------------------------------------
 echo "Step 6/6  All set."
-echo "          Verify the wiring:  bash $KIT_ROOT/bin/doctor.sh"
 echo "          To start: open Claude Code and run  /session"
 echo "=========================================================="
 echo ""

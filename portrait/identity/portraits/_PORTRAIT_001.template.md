@@ -38,7 +38,7 @@ synthesized by: /portrait (manual seed for 001)
   ev: <source-id> → "<locator>"
 
 ## 4. Operator-patterns
-- <pattern from the Throughline loop — placeholder>  [✓VERIFIED] (confidence: medium)
+- <pattern from the Svaha loop — placeholder>  [✓VERIFIED] (confidence: medium)
   ev: next/_NEXT_<NNN>.md → "<conviction/outcome locator>"
 
 ---

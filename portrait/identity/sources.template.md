@@ -45,7 +45,7 @@ machine: <hostname — local only>
 - span: <date range>
 - notes: <placeholder>
 
-## B. Throughline-loop corpus  ← the structurally-unique source
+## B. Svaha-loop corpus  ← the structurally-unique source
 *How you actually operate, recorded by the loop itself. This is the source class
 chat/journaling tools structurally lack — it's why §4 Operator-patterns exists.*
 
