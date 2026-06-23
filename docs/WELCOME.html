@@ -146,7 +146,7 @@
 <body>
 
 <header class="topbar" id="topbar">
-  <a class="brand" href="#top">
+  <a class="brand" href="index.html">
     <span style="font-family:'Noto Serif Devanagari',serif;color:var(--accent);font-weight:600;font-size:1.25em;line-height:1;" aria-hidden="true">स्वाहा</span>
     svaha <span class="tail">· welcome</span>
   </a>
@@ -161,7 +161,7 @@
 
   <section class="hero">
     <p class="kicker">Welcome</p>
-    <h1>svaha</h1>
+    <h1><span style="font-family:'Noto Serif Devanagari',serif;color:var(--accent);font-weight:600">स्वाहा</span> svaha</h1>
     <p class="dek">Claude Code that learns from its own track record. One contract + a small scaffold turn a fresh session that starts cold into a loop that picks up exactly where the last one stopped — and gets a little sharper every pass.</p>
   </section>
 
@@ -183,7 +183,7 @@
   <div class="feat"><b>Sessions stop starting cold</b> <span class="k">handoff loop</span><br>
     When context fills up — or you just say <i>"that's it"</i> — the session writes a frozen, numbered <code>_NEXT_NNN.md</code>: where you are, what's next, the decisions made. The next session reads it and resumes. Run several at once; each gets its own numbered slot, so none clobbers another.</div>
 
-  <div class="feat"><b>It decides ask-vs-act for you</b> <span class="k">Risk Gate</span><br>
+  <div class="feat"><b>It decides ask-vs-act for you</b> <span class="k">risk gate</span><br>
     Every action is weighed on three axes at once — <b>conviction</b> (is this right), <b>reversibility</b> (how cheaply it undoes), <b>blast-radius</b> (how much it touches). Cheap, reversible, confident → it just does it. Expensive-to-undo or wide-reaching → it stops and confirms, no matter how sure it is. Money, external writes, deletes, and big diffs always stop.</div>
 
   <div class="feat"><b>It blocks the genuinely dangerous</b> <span class="k">guards</span><br>
@@ -252,7 +252,7 @@
   <h2>Make it yours</h2>
   <div class="box tip">
     <p><span class="lbl">Two things to know</span></p>
-    <p><b>1. It's modular.</b> <code>CLAUDE.md</code> is split along the Risk Gate. The <b>core</b> is the safety skeleton + handoff loop. The clearly-fenced <b>Operator layer</b> is the opinionated judgment half (conviction calibration, premortem, weigh-before-you-ask). Keep it for the full self-tuning experience, or delete that one block for a lean core that still stops on everything dangerous.</p>
+    <p><b>1. It's modular.</b> <code>CLAUDE.md</code> is split along the risk gate. The <b>core</b> is the safety skeleton + handoff loop. The clearly-fenced <b>operator layer</b> is the opinionated judgment half (conviction calibration, premortem, weigh-before-you-ask). Keep it for the full self-tuning experience, or delete that one block for a lean core that still stops on everything dangerous.</p>
     <p><b>2. Editing is your call.</b> The permission posture ships frictionless-but-fenced: reads run silently, <code>push</code>/<code>rm</code>/network/secrets always confirm or block, and file edits are granted once at install (or set to ask once per session — your pick, see the snippet header).</p>
   </div>
 
