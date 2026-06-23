@@ -53,7 +53,7 @@ git clone https://github.com/88k8sh/svaha && cd svaha
 ./setup.sh
 ```
 
-`setup.sh` copies the slash commands + hooks into `~/.claude/`, **offers to generate your `settings.json`** (only if you don't already have one, and only with consent — it never clobbers an existing `settings.json` or `CLAUDE.md`), and points you at the optional MCP companions. After it runs, **verify the wiring with `bash bin/doctor.sh`** and start with `/session`. The snippet ships a **safe-by-default permission posture** — reads & inspection run silently, `git push` / `gh` / `rm` / network / secret-reads always confirm or hard-deny, and **editing is your pick:** Mode A grants edit permission once at install (silent edits, ships as default), Mode B asks once per session (delete three lines). The header comment spells out both.
+`setup.sh` copies the slash commands + hooks into `~/.claude/`, **offers to generate your `settings.json`** (only if you don't already have one, and only with consent — it never clobbers an existing `settings.json` or `CLAUDE.md`), and points you at the optional MCP companions. After it runs, **verify the wiring with `bash bin/doctor.sh`** and start with `/session` (or just say **svaha**). The snippet ships a **safe-by-default permission posture** — reads & inspection run silently, `git push` / `gh` / `rm` / network / secret-reads always confirm or hard-deny, and **editing is your pick:** Mode A grants edit permission once at install (silent edits, ships as default), Mode B asks once per session (delete three lines). The header comment spells out both.
 
 ### Track A — just the behavior (~1 minute)
 

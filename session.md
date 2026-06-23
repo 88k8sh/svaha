@@ -6,6 +6,8 @@ Three modes:
 - `/session list` — show all open sessions with a summary of each
 - `/session N` — boot from `_NEXT_NNN.md` directly (e.g. `/session 41` → `_NEXT_041.md`)
 
+**Alias:** saying **"svaha"** as the opening word of a session is an alias for `/session list` (show the live set, then pick) — see `CLAUDE.md` "## Boot". It's the opening counterpart to the स्वाहा handoff seal; a svaha-boot shows the list and leads the eventual boot with the status block, never echoing the seal back.
+
 ---
 
 ## `/session list`

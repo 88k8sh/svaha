@@ -2,6 +2,8 @@
 
 Execute immediately, no preamble. Do not ask for confirmation.
 
+**Alias:** saying **"svaha"** as a *close* (work done, nothing pending — per `CLAUDE.md` "## Boot" position rule), or **"that's it"** / "wrapping up" / "done for now", is the user's keyword for this command — the closing counterpart to the svaha-boot. The closing svaha is their **input**; the assistant echoes the **स्वाहा** seal (output) only once this handoff actually completes.
+
 ## Pre-flight check (do this before any other step)
 
 Scan the session for ambiguities that would force a follow-up in the next session — specifically:

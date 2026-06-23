@@ -7,6 +7,28 @@ Written by `/handoff` (or manually after structural edits). Do not edit existing
 
 ---
 
+## 2026-06-23 — svaha as the FULL bookend: wired as the close trigger + guides reframed keyword-first
+
+Completed the keyword-replaces-command north star (the prior entry wired only the *opening* half). **svaha** now drives the whole loop:
+- **`CLAUDE.md` "## Boot":** the svaha bullet rewritten to a **three-way position rule (priority order)** — (1) first message, nothing loaded → **open** (`/session list`); (2) right after a specific proposal → **assent**; (3) work done / nothing pending → **close** (`/handoff`, same path as "that's it"; Warrant gate decides mint-vs-downgrade). The slash commands stay the explicit equivalents.
+- **Auto-handoff HARD RULE:** added **svaha** (said as a *close*, per the position rule) to trigger list (b) alongside "that's it".
+- **"Svaha — the assent word" (Operator):** updated so the user's closing svaha is **input** (open/assent/close) and the **स्वाहा seal stays the assistant's output**, firing once when the handoff actually completes. Bright line unchanged.
+- **`handoff.md`:** symmetric alias reverse-pointer added (mirrors `session.md`'s svaha-boot pointer). **No new slash command** — svaha maps to existing `/session` + `/handoff`, so the boot-trigger↔command-file coupling (SYNC_MAP §3/§6) holds; drift-guard reconciled.
+- **Guides reframed keyword-first:** `WELCOME.html` — new **"One word runs it"** section (the 3 uses + a note explaining the seal स्वाहा is the assistant's *reply*, not your input), commands table demoted to "The explicit commands", first-ten-minutes steps lead with svaha. `INSTALL.html` Step 4 — boot keyword-first + a one-line "svaha to begin, svaha to wrap, seals with स्वाहा" loop note. `INSTALL-CLAUDE-CODE.html` untouched (pre-install, no boot content).
+- **Scope:** the shippable package only. Porting the svaha-close to the live `aakash_os` contract is a separate follow-on (not done here).
+
+## 2026-06-23 — "svaha" as a boot trigger (the opening bookend)
+
+Wired **"svaha"** (said as the opening word of a session) as an alias for `/session list` — "make it so / begin." It opens the launchpad; the **स्वाहा** seal still closes a `/handoff`. So svaha now **bookends the loop**: the user *opens* with it (input), the assistant *closes* a handoff with it (output) — same word, opposite directions, no collision (one is input, one is output; the seal's bright-line constraint binds only the assistant's output).
+- **EDIT** `CLAUDE.md` "## Boot" — added the svaha boot bullet (→ `/session list`) with the **position-based disambiguation** rule (first message → show the list; mid-session after a proposal → plain assent) and the no-echo-seal guard; added a reciprocal clause in "Svaha — the assent word" clarifying input-vs-output so the seal bright-line isn't misread as forbidding the user's boot use.
+- **EDIT** `session.md` — alias reverse pointer (satisfies SYNC_MAP §3's "every `CLAUDE.md` boot trigger must resolve to a real command file"; `/session` already exists, so no new-command registration).
+- **EDIT** `WELCOME.html` (commands table + first-ten-minutes step 1), `README.md` (install "start with…") — surfaced the alias where boot is already taught, so users discover it.
+- **Website:** deliberately **not** touched — the live site (`bin/context-system-site`) is the conceptual essay, names no commands, and isn't Svaha-branded yet; the svaha-boot/seal bookend belongs in the pending Svaha website rebuild as a unit, not bolted on as the page's only command.
+
+## 2026-06-23 — Onboarding HTMLs reskinned to the website brand
+
+Restyled the three package guides — `INSTALL-CLAUDE-CODE.html`, `INSTALL.html`, `WELCOME.html` — to match the **website's** (`context-system-site`, now at `~/Claude/bin/context-system-site/`) visual identity: warm cream paper (`#FBFAF6`) / terracotta accent (`#B0562A`), Fraunces (headings/wordmark) + Newsreader (body) serif, the two-offset-rectangles continuity glyph in a sticky brand bar, and the site's **full light/dark theme system** (defaults to system preference, toggle in the bar) ported verbatim from the site's CSS variables. Replaced the old cool grey-blue / system-sans GitHub-doc look. WELCOME's navy gradient hero → editorial cream hero (kicker + Fraunces title); loop nodes → pillar cards; feature `.k` tags → accent-soft pills. Command/terminal blocks stay dark in both themes (warm `--term-bg`) with an amber Copy button. **Deliberate departure from the "force `color-scheme: light only`" rendered-artifact rule:** these now ship dual-theme to match the site (which is itself theme-aware and defaults to dark) — safe because dark is *explicitly* themed (not left to invert), which satisfies the rule's intent. Fonts load via Google Fonts (offline → graceful serif fallback). Verified in-browser: both themes render faithfully (screenshots). Prior versions archived → `_ARCHIVE/*.2026-06-23.prerestyle`.
+
 ## 2026-06-23 — Svaha rebrand: repo/folder rename (the deferred step) + package as current best
 
 Completed the **repo/folder rename** that the 2026-06-22 content-sweep entry deliberately deferred. Decision (Aakash, this session): the original full Throughline is redundant — **ship the Core as Svaha** as the current best version. Public brand **Svaha**; distilled product keeps the `-core` distribution semantic.

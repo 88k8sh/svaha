@@ -3,59 +3,183 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Get Claude Code — First-Time Setup (click to copy)</title>
+<title>Get Claude Code — First-Time Setup · Svaha</title>
+
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%2314130f'/%3E%3Crect x='7' y='9' width='12' height='15' rx='2.5' fill='none' stroke='%23e0a24e' stroke-width='2'/%3E%3Crect x='14' y='6' width='12' height='15' rx='2.5' fill='%2314130f' stroke='%23ece8de' stroke-width='2'/%3E%3C/svg%3E">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&family=Noto+Serif+Devanagari:wght@500;600&display=swap" rel="stylesheet">
+
+<script>
+  (function () {
+    document.documentElement.classList.add('js');
+    try {
+      var saved = localStorage.getItem('theme');
+      var sysDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+      document.documentElement.setAttribute('data-theme', saved || (sysDark ? 'dark' : 'light'));
+    } catch (e) { document.documentElement.setAttribute('data-theme', 'light'); }
+  })();
+</script>
+
 <style>
-  :root{ color-scheme: light only; }
+  :root{
+    --bg:#FBFAF6; --bg-soft:#F2F0E8; --ink:#1B1A17; --muted:#6E6A60; --faint:#9A958A;
+    --rule:#E5E1D6; --accent:#B0562A; --accent-ink:#B0562A; --accent-soft:rgba(176,86,42,.10);
+    --card:#FFFFFF; --card-rule:#E8E4D9; --shadow:0 1px 2px rgba(27,26,23,.04),0 8px 30px rgba(27,26,23,.05);
+    --term-bg:#14130F; --term-ink:#ECE8DE; --term-rule:#2A2722; --term-btn:#E0A24E; --term-btn-ink:#1B1A17;
+    --tip:#3f7d4e; --warn:#9a6a2a; --danger:#a8432e;
+    color-scheme:light;
+  }
+  [data-theme="dark"]{
+    --bg:#141310; --bg-soft:#1C1A16; --ink:#ECE8DE; --muted:#A39D8F; --faint:#6F6A5E;
+    --rule:#2A2722; --accent:#E0A24E; --accent-ink:#E8B25F; --accent-soft:rgba(224,162,78,.13);
+    --card:#1B1915; --card-rule:#2C2922; --shadow:0 1px 2px rgba(0,0,0,.3),0 10px 40px rgba(0,0,0,.35);
+    --term-bg:#0F0E0B; --term-rule:#33302A; --tip:#7bbf86; --warn:#d6a24e; --danger:#e08a78;
+    color-scheme:dark;
+  }
   *{ box-sizing:border-box; }
-  html,body{ background:#f5f7fa; color:#1a1d24; margin:0; }
-  body{ font-family:-apple-system,"Helvetica Neue",Arial,sans-serif; font-size:15px; line-height:1.55; }
-  .wrap{ max-width:840px; margin:0 auto; padding:26px 18px 90px; }
-  h1{ font-size:28px; margin:0 0 4px; letter-spacing:-0.4px; }
-  h2{ font-size:20px; margin:34px 0 10px; padding-bottom:7px; border-bottom:2px solid #1a1d24; }
-  h3{ font-size:15px; margin:20px 0 6px; color:#0b3d6b; }
-  .sub{ color:#5b5f67; font-size:15px; margin:0 0 4px; }
-  .meta{ color:#8a8f98; font-size:12px; }
-  p{ margin:8px 0; }
-  code{ font-family:"SF Mono",Menlo,Consolas,monospace; font-size:13px; background:#e7ebf1; padding:1px 5px; border-radius:4px; color:#15324f; }
-  .where{ display:inline-block; padding:2px 9px; border-radius:5px; font-size:11px; font-weight:800; letter-spacing:.4px; color:#fff; text-transform:uppercase; vertical-align:middle; }
-  .term{ background:#1f7a46; } .screen{ background:#6a3aa8; } .chat{ background:#1c64b3; }
-  .cmd{ display:flex; align-items:stretch; margin:8px 0; border-radius:9px; overflow:hidden; box-shadow:0 1px 3px rgba(20,40,70,.12); }
-  .cmd pre{ flex:1; margin:0; padding:12px 14px; background:#15202e; color:#e8edf3;
-            font-family:"SF Mono",Menlo,Consolas,monospace; font-size:13px; line-height:1.5; white-space:pre-wrap; word-break:break-word; }
-  .cmd button{ flex:0 0 86px; border:0; background:#27384b; color:#cfe0f2; font-weight:700; font-size:13px; cursor:pointer; transition:background .15s; border-left:1px solid #0d1622; }
-  .cmd button:hover{ background:#33495f; } .cmd button.ok{ background:#1f7a46; color:#fff; }
-  .step{ background:#fff; border:1px solid #e1e6ee; border-radius:11px; padding:14px 16px; margin:12px 0; }
-  .step .h{ font-weight:700; margin-bottom:2px; }
-  .step .n{ display:inline-block; min-width:24px; height:24px; line-height:24px; text-align:center; background:#1a1d24; color:#fff; border-radius:50%; font-size:13px; font-weight:700; margin-right:8px; }
-  .box{ border-radius:10px; padding:12px 15px; margin:14px 0; border:1px solid; }
+  html{ scroll-behavior:smooth; }
+  html,body{ background:var(--bg); color:var(--ink); margin:0; }
+  body{ font-family:"Newsreader",Georgia,"Times New Roman",serif; font-size:18px; line-height:1.6;
+        -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility; transition:background .4s ease,color .4s ease; }
+  @media (prefers-reduced-motion:reduce){ html{ scroll-behavior:auto; } }
+  ::selection{ background:var(--accent-soft); }
+  a{ color:var(--accent-ink); text-decoration-thickness:1px; text-underline-offset:2px; }
+  .wrap{ max-width:760px; margin:0 auto; padding:8px clamp(18px,5vw,30px) 90px; }
+
+  /* brand bar */
+  .topbar{ position:sticky; top:0; z-index:60; display:flex; align-items:center; justify-content:space-between;
+           padding:13px clamp(18px,5vw,30px); backdrop-filter:saturate(1.2) blur(8px);
+           background:color-mix(in srgb,var(--bg) 82%, transparent); border-bottom:1px solid transparent; transition:border-color .3s,background .4s; }
+  .topbar.scrolled{ border-bottom-color:var(--rule); }
+  .brand{ font-family:"Fraunces",serif; font-weight:600; font-size:16px; letter-spacing:.2px; color:var(--ink);
+          text-decoration:none; display:inline-flex; align-items:center; gap:9px; }
+  .brand .glyph{ width:19px; height:19px; flex:none; color:var(--accent); }
+  .brand .tail{ color:var(--faint); font-weight:500; }
+  .theme-toggle{ appearance:none; border:1px solid var(--rule); background:var(--card); color:var(--muted);
+                 width:36px; height:36px; border-radius:999px; cursor:pointer; display:grid; place-items:center;
+                 transition:color .2s,border-color .2s,transform .2s,background .4s; }
+  .theme-toggle:hover{ color:var(--ink); border-color:var(--faint); transform:translateY(-1px); }
+  .theme-toggle svg{ width:17px; height:17px; }
+  .theme-toggle .sun{ display:none; }
+  [data-theme="dark"] .theme-toggle .sun{ display:block; }
+  [data-theme="dark"] .theme-toggle .moon{ display:none; }
+
+  /* headings */
+  h1{ font-family:"Fraunces",serif; font-weight:600; font-size:clamp(30px,5.4vw,44px); line-height:1.07;
+      letter-spacing:-0.016em; margin:0 0 10px; text-wrap:balance; }
+  h2{ font-family:"Fraunces",serif; font-weight:600; font-size:clamp(22px,3.2vw,28px); line-height:1.16;
+      letter-spacing:-0.01em; margin:44px 0 14px; padding-top:22px; position:relative; }
+  h2::before{ content:""; position:absolute; top:0; left:0; width:36px; height:3px; background:var(--accent); border-radius:2px; }
+  h3{ font-family:"Fraunces",serif; font-weight:600; font-size:16px; margin:20px 0 6px; color:var(--accent-ink); }
+  .kicker{ font-family:"Newsreader",serif; font-style:italic; color:var(--accent-ink); font-size:15px;
+           letter-spacing:.3px; margin:18px 0 14px; display:flex; align-items:center; gap:11px; }
+  .kicker::before{ content:""; width:24px; height:1px; background:var(--accent); opacity:.6; }
+  .sub{ color:var(--muted); font-size:clamp(17px,2vw,19px); line-height:1.5; margin:0 0 10px; max-width:62ch; }
+  .meta{ color:var(--faint); font-size:13px; }
+  p{ margin:9px 0; }
+
+  /* inline code */
+  code{ font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace; font-size:.8em; background:var(--bg-soft);
+        color:var(--accent-ink); padding:1px 6px; border-radius:5px; border:1px solid var(--card-rule); }
+
+  /* badges */
+  .where{ display:inline-block; padding:2px 9px; border-radius:6px; font-family:ui-monospace,"SF Mono",Menlo,monospace;
+          font-size:10.5px; font-weight:700; letter-spacing:.4px; text-transform:uppercase; vertical-align:middle; }
+  .where.term{ background:var(--accent); color:#fff; }
+  [data-theme="dark"] .where.term{ color:#1B1A17; }
+  .where.screen{ background:var(--ink); color:var(--bg); }
+  .where.chat,.where.edit{ background:transparent; color:var(--accent-ink); border:1px solid var(--accent); }
+
+  /* command block */
+  .cmd{ display:flex; align-items:stretch; margin:9px 0; border-radius:10px; overflow:hidden;
+        border:1px solid var(--term-rule); box-shadow:var(--shadow); }
+  .cmd pre{ flex:1; margin:0; padding:12px 14px; background:var(--term-bg); color:var(--term-ink);
+            font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace; font-size:13px; line-height:1.5;
+            white-space:pre-wrap; word-break:break-word; }
+  .cmd button{ flex:0 0 86px; border:0; background:var(--term-btn); color:var(--term-btn-ink);
+               font-family:"Newsreader",serif; font-weight:600; font-size:14px; cursor:pointer; transition:filter .15s; }
+  .cmd button:hover{ filter:brightness(1.07); }
+  .cmd button.ok{ background:var(--tip); color:#fff; }
+
+  /* step card */
+  .step{ background:var(--card); border:1px solid var(--card-rule); border-radius:12px; padding:15px 17px; margin:13px 0; box-shadow:var(--shadow); }
+  .step .h{ font-weight:500; color:var(--ink); margin-bottom:2px; }
+  .step .n{ display:inline-flex; align-items:center; justify-content:center; width:25px; height:25px; background:var(--accent);
+            color:#fff; border-radius:50%; font-family:ui-monospace,"SF Mono",Menlo,monospace; font-size:13px; font-weight:600;
+            margin-right:9px; vertical-align:middle; }
+  [data-theme="dark"] .step .n{ color:#1B1A17; }
+
+  /* callout boxes */
+  .box{ border-radius:12px; padding:13px 16px; margin:15px 0; border:1px solid var(--card-rule); background:var(--card); box-shadow:var(--shadow); }
   .box p:first-child{ margin-top:0; } .box p:last-child{ margin-bottom:0; }
-  .lbl{ font-weight:800; text-transform:uppercase; font-size:11px; letter-spacing:.6px; display:block; margin-bottom:3px; }
-  .warn{ background:#fff8e8; border-color:#e6c870; } .warn .lbl{ color:#9a6a00; }
-  .tip{ background:#eef9f0; border-color:#9bd0a8; } .tip .lbl{ color:#1f7a46; }
-  .note{ background:#eef4fb; border-color:#aac6e6; } .note .lbl{ color:#0b5cad; }
-  .danger{ background:#fdecec; border-color:#e09a9a; } .danger .lbl{ color:#a32020; }
-  .expect{ font-family:"SF Mono",Menlo,Consolas,monospace; font-size:12px; color:#41506a; background:#eef2f7; border-left:3px solid #9db4cf; padding:7px 11px; margin:2px 0 6px; border-radius:0 5px 5px 0; }
-  .expect b{ color:#1f7a46; }
-  table{ border-collapse:collapse; width:100%; margin:10px 0; font-size:13px; background:#fff; }
-  th,td{ border:1px solid #d8deea; padding:7px 9px; text-align:left; vertical-align:top; } th{ background:#eef1f5; }
-  .legend{ background:#fff; border:1px solid #e1e6ee; border-radius:11px; padding:13px 16px; margin:14px 0; font-size:14px; }
-  .kbd{ display:inline-block; border:1px solid #b8c0cc; border-bottom-width:2px; border-radius:4px;
-        padding:0 6px; font-size:12px; font-family:"SF Mono",Menlo,monospace; background:#f7f9fb; color:#1a1d24; }
-  .chain{ background:#15202e; color:#e8edf3; border-radius:11px; padding:14px 16px; margin:16px 0; font-size:14px; line-height:1.7; }
-  .chain b{ color:#9ec3ec; } .chain .here{ background:#1f7a46; color:#fff; border-radius:5px; padding:1px 7px; font-weight:700; }
-  .chain .next{ color:#cfe0f2; }
+  .lbl{ font-family:ui-monospace,"SF Mono",Menlo,monospace; font-weight:700; text-transform:uppercase; font-size:10.5px;
+        letter-spacing:.6px; display:block; margin-bottom:5px; }
+  .box.note{ background:var(--accent-soft); border-color:color-mix(in srgb,var(--accent) 35%,transparent); }
+  .box.note .lbl{ color:var(--accent-ink); }
+  .box.tip{ border-color:color-mix(in srgb,var(--tip) 42%,transparent); } .box.tip .lbl{ color:var(--tip); }
+  .box.warn{ border-color:color-mix(in srgb,var(--warn) 48%,transparent); } .box.warn .lbl{ color:var(--warn); }
+  .box.danger{ border-color:color-mix(in srgb,var(--danger) 52%,transparent); } .box.danger .lbl{ color:var(--danger); }
+
+  /* "what you'll see" inset */
+  .expect{ font-family:ui-monospace,"SF Mono",Menlo,monospace; font-size:12px; color:var(--muted); background:var(--bg-soft);
+           border-left:3px solid var(--accent); padding:8px 12px; margin:3px 0 7px; border-radius:0 6px 6px 0; white-space:pre-wrap; }
+  .expect b{ color:var(--accent-ink); font-weight:600; }
+
+  /* table */
+  table{ border-collapse:collapse; width:100%; margin:12px 0; font-size:14px; background:var(--card);
+         border:1px solid var(--card-rule); border-radius:10px; overflow:hidden; box-shadow:var(--shadow); }
+  th,td{ border-bottom:1px solid var(--card-rule); border-right:1px solid var(--card-rule); padding:9px 11px; text-align:left; vertical-align:top; }
+  tr td:last-child,tr th:last-child{ border-right:0; } tr:last-child td{ border-bottom:0; }
+  th{ background:var(--bg-soft); font-family:"Fraunces",serif; font-weight:600; }
+  td code{ font-size:12.5px; white-space:nowrap; }
+
+  /* legend + chain */
+  .legend{ background:var(--card); border:1px solid var(--card-rule); border-radius:12px; padding:14px 16px; margin:15px 0; font-size:14.5px; box-shadow:var(--shadow); }
+  .chain{ background:var(--accent-soft); border:1px solid color-mix(in srgb,var(--accent) 35%,transparent);
+          border-radius:12px; padding:14px 17px; margin:16px 0; font-size:14.5px; line-height:1.75; color:var(--ink); }
+  .chain b{ color:var(--accent-ink); }
+  .chain .here{ background:var(--accent); color:#fff; border-radius:6px; padding:1px 8px; font-weight:600; }
+  [data-theme="dark"] .chain .here{ color:#1B1A17; }
+  .chain .next{ color:var(--muted); }
+
+  /* keycap */
+  .kbd{ display:inline-block; border:1px solid var(--card-rule); border-bottom-width:2px; border-radius:5px; padding:0 6px;
+        font-family:ui-monospace,"SF Mono",Menlo,monospace; font-size:12px; background:var(--bg-soft); color:var(--ink); }
+
+  /* footer */
+  .sitefoot{ margin-top:56px; padding-top:22px; border-top:1px solid var(--rule); color:var(--faint); font-size:13.5px;
+             display:flex; flex-wrap:wrap; gap:6px 16px; align-items:center; justify-content:space-between; }
+  .sitefoot .sig{ font-family:"Fraunces",serif; color:var(--muted); font-size:15px; }
+
+  @media (max-width:560px){ body{ font-size:17px; } td code{ white-space:normal; } }
 </style>
 </head>
 <body>
+
+<header class="topbar" id="topbar">
+  <a class="brand" href="#top">
+    <span style="font-family:'Noto Serif Devanagari',serif;color:var(--accent);font-weight:600;font-size:1.25em;line-height:1;" aria-hidden="true">स्वाहा</span>
+    Svaha <span class="tail">· setup</span>
+  </a>
+  <button class="theme-toggle" id="themeToggle" aria-label="Toggle light and dark theme" title="Toggle theme">
+    <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+    <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4.2"/><path d="M12 2v2.5M12 19.5V22M4.2 4.2l1.8 1.8M18 18l1.8 1.8M2 12h2.5M19.5 12H22M4.2 19.8 6 18M18 6l1.8-1.8"/></svg>
+  </button>
+</header>
+<span id="top"></span>
+
 <div class="wrap">
 
-  <h1>Get Claude Code &mdash; First-Time Setup</h1>
+  <p class="kicker">First-time setup</p>
+  <h1>Get Claude Code</h1>
   <p class="sub">Never used Claude Code &mdash; or the Terminal &mdash; before? <b>Start here.</b> Every command has a <b>Copy</b> button: paste it into a Terminal window, press <span class="kbd">return</span>, wait for it to finish, then do the next one.</p>
-  <p class="meta">For macOS. Open this file in any browser &mdash; no internet needed for the page itself. (On Windows or Linux? See the box at the very bottom.)</p>
+  <p class="meta">For macOS. Works offline once the page has loaded (the brand fonts fetch when you're online). On Windows or Linux? See the box at the very bottom.</p>
 
   <div class="chain">
     You are here &mdash; this page gets <b>Claude Code itself</b> working on your Mac. Then:<br>
-    <span class="here">1 · this page</span> &nbsp;→&nbsp; <span class="next">2 · <code>INSTALL.html</code> &mdash; install <b>Svaha</b> on top of it</span> &nbsp;→&nbsp; <span class="next">3 · <code>WELCOME.html</code> &mdash; learn the loop</span>
+    <span class="here">1 · this page</span> &nbsp;→&nbsp; <span class="next">2 · <code>INSTALL.html</code> &mdash; install <b>Svaha</b> on top</span> &nbsp;→&nbsp; <span class="next">3 · <code>WELCOME.html</code> &mdash; learn the loop</span>
   </div>
 
   <div class="box warn">
@@ -93,7 +217,7 @@ That's the prompt. It's waiting for you. Leave this window open for the whole gu
     <p><span class="lbl">Prefer Homebrew or npm? (optional)</span></p>
     <p>The line above is the simplest path. If you already live in one of these, they work too:</p>
     <div class="cmd"><pre>brew install --cask claude-code</pre><button onclick="cp(this)">Copy</button></div>
-    <p style="margin:6px 0 2px">…or via npm <small>(this one needs <b>Node.js 18+</b> installed already — the native installer above does not):</small></p>
+    <p style="margin:8px 0 2px">…or via npm <small>(this one needs <b>Node.js 18+</b> installed already — the native installer above does not):</small></p>
     <div class="cmd"><pre>npm install -g @anthropic-ai/claude-code</pre><button onclick="cp(this)">Copy</button></div>
   </div>
 
@@ -117,7 +241,7 @@ That's the prompt. It's waiting for you. Leave this window open for the whole gu
   </div>
 
   <!-- ============ STEP 4 ============ -->
-  <h2>4 · Health check <span style="font-size:13px;color:#5b5f67">(optional, recommended)</span></h2>
+  <h2>4 · Health check <span style="font-size:14px;color:var(--faint);font-style:italic;font-family:'Newsreader',serif">(optional, recommended)</span></h2>
   <div class="step">
     <div class="h"><span class="n">4</span><span class="where term">Terminal</span> &nbsp;Claude Code ships a built-in doctor that checks its own install and config:</div>
     <div class="cmd"><pre>claude doctor</pre><button onclick="cp(this)">Copy</button></div>
@@ -157,16 +281,31 @@ That's the prompt. It's waiting for you. Leave this window open for the whole gu
   <div class="box note">
     <p><span class="lbl">On Windows or Linux instead?</span></p>
     <p>This guide is written for macOS. The Svaha steps that follow are the same everywhere, but getting Claude Code itself differs slightly:</p>
-    <p style="margin:6px 0 2px"><b>Windows (PowerShell):</b></p>
+    <p style="margin:8px 0 2px"><b>Windows (PowerShell):</b></p>
     <div class="cmd"><pre>irm https://claude.ai/install.ps1 | iex</pre><button onclick="cp(this)">Copy</button></div>
-    <p style="margin:6px 0 2px"><b>Linux / WSL:</b> same line as macOS &mdash; <code>curl -fsSL https://claude.ai/install.sh | bash</code>.</p>
+    <p style="margin:8px 0 2px"><b>Linux / WSL:</b> same line as macOS &mdash; <code>curl -fsSL https://claude.ai/install.sh | bash</code>.</p>
     <p>Full platform-by-platform instructions: <a href="https://code.claude.com/docs/en/setup">code.claude.com/docs/en/setup</a>. On Windows, install <a href="https://git-scm.com/downloads/win">Git for Windows</a> (covers Step 5's <code>git</code>) and <a href="https://www.python.org/downloads/">Python 3</a> separately.</p>
   </div>
 
-  <p class="meta" style="margin-top:22px">Source of these commands: Anthropic's official docs &mdash; <a href="https://code.claude.com/docs/en/setup">setup</a> &amp; <a href="https://code.claude.com/docs/en/quickstart">quickstart</a>. &nbsp;·&nbsp; Next: <code>INSTALL.html</code> &nbsp;·&nbsp; Tour: <code>WELCOME.html</code></p>
+  <footer class="sitefoot">
+    <span class="sig">Svaha</span>
+    <span>Commands verified against Anthropic's <a href="https://code.claude.com/docs/en/setup">setup</a> &amp; <a href="https://code.claude.com/docs/en/quickstart">quickstart</a> docs · next: <code>INSTALL.html</code></span>
+  </footer>
 </div>
 
 <script>
+  var toggle = document.getElementById('themeToggle');
+  toggle && toggle.addEventListener('click', function () {
+    var cur = document.documentElement.getAttribute('data-theme');
+    var next = cur === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', next);
+    try { localStorage.setItem('theme', next); } catch (e) {}
+  });
+  var topbar = document.getElementById('topbar');
+  window.addEventListener('scroll', function () {
+    if (topbar) topbar.classList.toggle('scrolled', window.scrollY > 8);
+  }, { passive: true });
+
   function cp(btn){
     var text = btn.parentNode.querySelector('pre').textContent;
     function flash(){ var o = btn.textContent; btn.textContent='Copied!'; btn.classList.add('ok');

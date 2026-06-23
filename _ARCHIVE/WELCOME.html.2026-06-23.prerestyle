@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Welcome to Svaha</title>
+<style>
+  :root{ color-scheme: light only; }
+  *{ box-sizing:border-box; }
+  html,body{ background:#f5f7fa; color:#1a1d24; margin:0; }
+  body{ font-family:-apple-system,"Helvetica Neue",Arial,sans-serif; font-size:15px; line-height:1.6; }
+  .wrap{ max-width:860px; margin:0 auto; padding:0 18px 90px; }
+  .hero{ background:linear-gradient(135deg,#15202e,#1c3a5e); color:#fff; border-radius:0 0 18px 18px;
+         padding:40px 30px 34px; margin:0 -0px 8px; }
+  .hero h1{ font-size:34px; margin:0 0 8px; letter-spacing:-0.6px; }
+  .hero p{ font-size:17px; line-height:1.5; color:#d6e2f0; margin:0; max-width:640px; }
+  .hero .tag{ display:inline-block; font-size:12px; font-weight:700; letter-spacing:1px; text-transform:uppercase;
+              color:#9ec3ec; margin-bottom:10px; }
+  h2{ font-size:21px; margin:34px 0 10px; padding-bottom:7px; border-bottom:2px solid #1a1d24; }
+  h3{ font-size:15px; margin:18px 0 4px; color:#0b3d6b; }
+  p{ margin:9px 0; }
+  code{ font-family:"SF Mono",Menlo,Consolas,monospace; font-size:13px; background:#e7ebf1; padding:1px 5px; border-radius:4px; color:#15324f; }
+  .lede{ font-size:16px; color:#3a4150; }
+  /* the loop */
+  .loop{ display:flex; flex-wrap:wrap; gap:10px; margin:16px 0; }
+  .loop .node{ flex:1; min-width:150px; background:#fff; border:1px solid #e1e6ee; border-radius:11px; padding:13px 15px; position:relative; }
+  .loop .node b{ display:block; color:#0b3d6b; font-size:14px; margin-bottom:3px; }
+  .loop .node span{ font-size:13px; color:#5b5f67; }
+  .loop .num{ position:absolute; top:-9px; left:13px; background:#1c3a5e; color:#fff; width:20px; height:20px; border-radius:50%; font-size:11px; font-weight:700; text-align:center; line-height:20px; }
+  .feat{ background:#fff; border:1px solid #e1e6ee; border-radius:12px; padding:15px 17px; margin:11px 0; }
+  .feat b{ font-size:15px; }
+  .feat .k{ display:inline-block; font-size:11px; font-weight:700; color:#1f7a46; background:#eef9f0; border:1px solid #cfe9d6; border-radius:6px; padding:1px 7px; margin-left:6px; vertical-align:middle; }
+  table{ border-collapse:collapse; width:100%; margin:10px 0; font-size:13.5px; background:#fff; }
+  th,td{ border:1px solid #d8deea; padding:8px 10px; text-align:left; vertical-align:top; } th{ background:#eef1f5; }
+  td code{ font-size:12.5px; }
+  .cmd{ display:flex; align-items:stretch; margin:8px 0; border-radius:9px; overflow:hidden; box-shadow:0 1px 3px rgba(20,40,70,.12); }
+  .cmd pre{ flex:1; margin:0; padding:11px 14px; background:#15202e; color:#e8edf3; font-family:"SF Mono",Menlo,monospace; font-size:13px; white-space:pre-wrap; }
+  .cmd button{ flex:0 0 84px; border:0; background:#27384b; color:#cfe0f2; font-weight:700; font-size:13px; cursor:pointer; border-left:1px solid #0d1622; }
+  .cmd button:hover{ background:#33495f; } .cmd button.ok{ background:#1f7a46; color:#fff; }
+  ol.walk{ counter-reset:w; list-style:none; padding-left:0; margin:12px 0; }
+  ol.walk > li{ position:relative; padding-left:34px; margin:0 0 14px; }
+  ol.walk > li::before{ counter-increment:w; content:counter(w); position:absolute; left:0; top:-1px; width:24px; height:24px; background:#1c3a5e; color:#fff; border-radius:50%; text-align:center; line-height:24px; font-weight:700; font-size:13px; }
+  .box{ border-radius:10px; padding:12px 15px; margin:14px 0; border:1px solid; }
+  .tip{ background:#eef9f0; border-color:#9bd0a8; } .note{ background:#eef4fb; border-color:#aac6e6; }
+  .lbl{ font-weight:800; text-transform:uppercase; font-size:11px; letter-spacing:.6px; display:block; margin-bottom:3px; }
+  .tip .lbl{ color:#1f7a46; } .note .lbl{ color:#0b5cad; }
+  .foot{ color:#8a8f98; font-size:13px; margin-top:26px; border-top:1px solid #dde3ec; padding-top:12px; }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div style="max-width:860px;margin:0 auto;padding:0 12px;">
+    <span class="tag">Welcome</span>
+    <h1>Svaha</h1>
+    <p>Claude Code that learns from its own track record. One contract + a small scaffold turn a fresh session that starts cold into a loop that picks up exactly where the last one stopped — and gets a little sharper every pass.</p>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <p class="lede">New here? This page explains <b>what Svaha does, how the pieces fit, and your first ten minutes.</b> If you haven't installed it yet, open <code>INSTALL.html</code> first &mdash; or, if you've <i>never used Claude Code at all</i>, start one step earlier with <code>INSTALL-CLAUDE-CODE.html</code>.</p>
+
+  <h2>The one idea: a single closed loop</h2>
+  <p>Most of the cost of working with an AI isn't the thinking — it's <b>re-introducing yourself every session</b>, and the <b>drift</b> that creeps in across the gaps. Svaha closes both with one circuit instead of a pile of features. Each pass leaves the next one better calibrated:</p>
+
+  <div class="loop">
+    <div class="node"><span class="num">1</span><b>Decide with conviction</b><span>A recommendation carries how sure it is and the real tradeoff — not a flat menu.</span></div>
+    <div class="node"><span class="num">2</span><b>Record in the handoff</b><span>At wrap-up it freezes a numbered <code>_NEXT</code> — where things stand, decisions + their outcomes.</span></div>
+    <div class="node"><span class="num">3</span><b>Verify at next boot</b><span>The next session reconciles the handoff's claims against the actual files before acting.</span></div>
+    <div class="node"><span class="num">4</span><b>A miss becomes a rule</b><span>A high-conviction call that didn't pan out gets promoted to a rule that retunes the gate.</span></div>
+  </div>
+  <p>Continuity feeds coherence feeds better decisions feeds continuity. <b>That circuit is the product</b> — everything below is a piece of it.</p>
+
+  <h2>What it does for you</h2>
+
+  <div class="feat"><b>Sessions stop starting cold</b> <span class="k">handoff loop</span><br>
+    When context fills up — or you just say <i>"that's it"</i> — the session writes a frozen, numbered <code>_NEXT_NNN.md</code>: where you are, what's next, the decisions made. The next session reads it and resumes. Run several at once; each gets its own numbered slot, so none clobbers another.</div>
+
+  <div class="feat"><b>It decides ask-vs-act for you</b> <span class="k">Risk Gate</span><br>
+    Every action is weighed on three axes at once — <b>conviction</b> (is this right), <b>reversibility</b> (how cheaply it undoes), <b>blast-radius</b> (how much it touches). Cheap, reversible, confident → it just does it. Expensive-to-undo or wide-reaching → it stops and confirms, no matter how sure it is. Money, external writes, deletes, and big diffs always stop.</div>
+
+  <div class="feat"><b>It blocks the genuinely dangerous</b> <span class="k">guards</span><br>
+    A runtime guard denies reads of secret files (<code>.env</code>, keys, <code>.ssh</code>) and catastrophic shell ops (<code>rm -rf ~</code>, <code>curl | sh</code>); a version guard hard-blocks edits to frozen handoffs; a drift guard flags coupled files before a structural edit. You set the permission posture once — reads run silent, the dangerous stuff always confirms.</div>
+
+  <div class="feat"><b>It gets better calibrated over time</b> <span class="k">optional · operator layer</span><br>
+    Decisions are recorded <i>with</i> their conviction; the next boot checks whether they held. A confident call that failed is a calibration miss — and on the second miss of a kind, it's promoted to a rule that makes the next call of that shape more careful. This whole layer is opt-in; delete it for a lean core that still stops on everything dangerous.</div>
+
+  <div class="feat"><b>It watches its own context budget</b> <span class="k">canary</span><br>
+    A transcript-size signal nudges a wrap-up before you hit the wall and lose the thread — a heads-up, not a hard stop, so your explicit <i>"that's it"</i> stays the reliable path.</div>
+
+  <h2>The commands you'll use</h2>
+  <table>
+    <tr><th>Command</th><th>What it does</th></tr>
+    <tr><td><code>/session</code></td><td>Boot. Auto-picks the open handoff and resumes it — verified against the files. <code>/session list</code> shows live slots; <code>/session N</code> boots a specific one.</td></tr>
+    <tr><td><code>/handoff</code></td><td>Wrap up. Freezes a numbered <code>_NEXT</code> with where things stand + the decisions. Runs on its own when you say "that's it."</td></tr>
+    <tr><td><code>/reflect</code></td><td>Memory + lessons pass — promotes durable corrections into the rules.</td></tr>
+    <tr><td><code>/audit</code></td><td>Checks the system's own coherence — catches the slow rot a growing config accumulates.</td></tr>
+    <tr><td><code>/foldin</code></td><td>Adopt an ungoverned conversation into the system (start mid-stream).</td></tr>
+    <tr><td><code>/boot</code></td><td>The lower-level two-file boot that <code>/session</code> wraps.</td></tr>
+  </table>
+
+  <h2>Your first ten minutes</h2>
+  <p>The fastest way to feel the loop is to run it once, end to end:</p>
+  <ol class="walk">
+    <li><b>Boot it.</b> In a project, start Claude Code and run:
+      <div class="cmd"><pre>/session</pre><button onclick="cp(this)">Copy</button></div>
+      A brand-new project has nothing to resume yet — that's expected. It prints which files it loaded.</li>
+    <li><b>Do a small task</b> — fix a bug, add a function. Notice it states <i>decisions with conviction</i> and acts on the safe stuff without nagging, but stops to confirm anything risky.</li>
+    <li><b>Wrap up.</b> When you're done (or context is filling), just say <b>"that's it"</b> — or run:
+      <div class="cmd"><pre>/handoff</pre><button onclick="cp(this)">Copy</button></div>
+      It freezes a numbered <code>_NEXT</code> capturing where you stopped and what you decided.</li>
+    <li><b>Start fresh.</b> Open a <i>new</i> session and run <code>/session</code> again. This time it <b>recovers where you left off</b> — and reconciles its claims against the actual files before doing anything.</li>
+    <li><b>That's the loop.</b> Each pass is a little better calibrated than the last. The longer you run it, the more it knows.</li>
+  </ol>
+
+  <div class="box note">
+    <p><span class="lbl">Not sure it's wired up?</span></p>
+    <p>Run the doctor any time — it checks commands, hooks, settings, and paths, and tells you exactly what to fix:</p>
+    <div class="cmd"><pre>bash bin/doctor.sh</pre><button onclick="cp(this)">Copy</button></div>
+  </div>
+
+  <h2>Where things live</h2>
+  <table>
+    <tr><th>Folder / file</th><th>What's in it</th></tr>
+    <tr><td><code>next/</code></td><td>Your frozen handoffs — one numbered <code>_NEXT_NNN.md</code> per session. Immutable, like commits.</td></tr>
+    <tr><td><code>30_LEDGER/</code></td><td>The system log: <code>CHANGELOG</code>, <code>DECISIONS</code>, <code>LESSONS</code>, fixes, and the <code>_ARCHIVE/</code>.</td></tr>
+    <tr><td><code>memory/</code></td><td>Durable context about you and your project — the surprises, not the derivable facts.</td></tr>
+    <tr><td><code>bin/</code></td><td>The guards (<code>security-guard</code>, <code>version-guard</code>, <code>drift-guard</code>, <code>coherence-check</code>) + the handoff writer.</td></tr>
+    <tr><td><code>CLAUDE.md</code></td><td>The behavior contract — the actual rules. Read it once; it's the whole system in one file.</td></tr>
+  </table>
+
+  <h2>Make it yours</h2>
+  <div class="box tip">
+    <p><span class="lbl">Two things to know</span></p>
+    <p><b>1. It's modular.</b> <code>CLAUDE.md</code> is split along the Risk Gate. The <b>core</b> is the safety skeleton + handoff loop. The clearly-fenced <b>Operator layer</b> is the opinionated judgment half (conviction calibration, premortem, weigh-before-you-ask). Keep it for the full self-tuning experience, or delete that one block for a lean core that still stops on everything dangerous.</p>
+    <p><b>2. Editing is your call.</b> The permission posture ships frictionless-but-fenced: reads run silently, <code>push</code>/<code>rm</code>/network/secrets always confirm or block, and file edits are granted once at install (or set to ask once per session — your pick, see the snippet header).</p>
+  </div>
+
+  <p class="foot">Install: <code>INSTALL.html</code> &nbsp;·&nbsp; the full rules: <code>CLAUDE.md</code> &nbsp;·&nbsp; reference: <code>README.md</code> &nbsp;·&nbsp; the why: <code>docs/essay.md</code> &nbsp;·&nbsp; verify: <code>bash bin/doctor.sh</code></p>
+</div>
+
+<script>
+  function cp(btn){
+    var text = btn.parentNode.querySelector('pre').textContent;
+    function flash(){ var o = btn.textContent; btn.textContent='Copied!'; btn.classList.add('ok'); setTimeout(function(){ btn.textContent=o; btn.classList.remove('ok'); }, 1200); }
+    function fallback(){ var ta=document.createElement('textarea'); ta.value=text; ta.style.position='fixed'; ta.style.top='0'; ta.style.opacity='0'; document.body.appendChild(ta); ta.focus(); ta.select(); try{ document.execCommand('copy'); }catch(e){} document.body.removeChild(ta); }
+    if(navigator.clipboard && navigator.clipboard.writeText){ navigator.clipboard.writeText(text).then(flash, function(){ fallback(); flash(); }); } else { fallback(); flash(); }
+  }
+</script>
+</body>
+</html>

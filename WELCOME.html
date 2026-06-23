@@ -4,60 +4,166 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Welcome to Svaha</title>
+
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%2314130f'/%3E%3Crect x='7' y='9' width='12' height='15' rx='2.5' fill='none' stroke='%23e0a24e' stroke-width='2'/%3E%3Crect x='14' y='6' width='12' height='15' rx='2.5' fill='%2314130f' stroke='%23ece8de' stroke-width='2'/%3E%3C/svg%3E">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,900&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&family=Noto+Serif+Devanagari:wght@500;600&display=swap" rel="stylesheet">
+
+<script>
+  (function () {
+    document.documentElement.classList.add('js');
+    try {
+      var saved = localStorage.getItem('theme');
+      var sysDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+      document.documentElement.setAttribute('data-theme', saved || (sysDark ? 'dark' : 'light'));
+    } catch (e) { document.documentElement.setAttribute('data-theme', 'light'); }
+  })();
+</script>
+
 <style>
-  :root{ color-scheme: light only; }
+  :root{
+    --bg:#FBFAF6; --bg-soft:#F2F0E8; --ink:#1B1A17; --muted:#6E6A60; --faint:#9A958A;
+    --rule:#E5E1D6; --accent:#B0562A; --accent-ink:#B0562A; --accent-soft:rgba(176,86,42,.10);
+    --card:#FFFFFF; --card-rule:#E8E4D9; --shadow:0 1px 2px rgba(27,26,23,.04),0 8px 30px rgba(27,26,23,.05);
+    --term-bg:#14130F; --term-ink:#ECE8DE; --term-rule:#2A2722; --term-btn:#E0A24E; --term-btn-ink:#1B1A17;
+    --tip:#3f7d4e; --warn:#9a6a2a; --danger:#a8432e;
+    color-scheme:light;
+  }
+  [data-theme="dark"]{
+    --bg:#141310; --bg-soft:#1C1A16; --ink:#ECE8DE; --muted:#A39D8F; --faint:#6F6A5E;
+    --rule:#2A2722; --accent:#E0A24E; --accent-ink:#E8B25F; --accent-soft:rgba(224,162,78,.13);
+    --card:#1B1915; --card-rule:#2C2922; --shadow:0 1px 2px rgba(0,0,0,.3),0 10px 40px rgba(0,0,0,.35);
+    --term-bg:#0F0E0B; --term-rule:#33302A; --tip:#7bbf86; --warn:#d6a24e; --danger:#e08a78;
+    color-scheme:dark;
+  }
   *{ box-sizing:border-box; }
-  html,body{ background:#f5f7fa; color:#1a1d24; margin:0; }
-  body{ font-family:-apple-system,"Helvetica Neue",Arial,sans-serif; font-size:15px; line-height:1.6; }
-  .wrap{ max-width:860px; margin:0 auto; padding:0 18px 90px; }
-  .hero{ background:linear-gradient(135deg,#15202e,#1c3a5e); color:#fff; border-radius:0 0 18px 18px;
-         padding:40px 30px 34px; margin:0 -0px 8px; }
-  .hero h1{ font-size:34px; margin:0 0 8px; letter-spacing:-0.6px; }
-  .hero p{ font-size:17px; line-height:1.5; color:#d6e2f0; margin:0; max-width:640px; }
-  .hero .tag{ display:inline-block; font-size:12px; font-weight:700; letter-spacing:1px; text-transform:uppercase;
-              color:#9ec3ec; margin-bottom:10px; }
-  h2{ font-size:21px; margin:34px 0 10px; padding-bottom:7px; border-bottom:2px solid #1a1d24; }
-  h3{ font-size:15px; margin:18px 0 4px; color:#0b3d6b; }
+  html{ scroll-behavior:smooth; }
+  html,body{ background:var(--bg); color:var(--ink); margin:0; }
+  body{ font-family:"Newsreader",Georgia,"Times New Roman",serif; font-size:18px; line-height:1.62;
+        -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility; transition:background .4s ease,color .4s ease; }
+  @media (prefers-reduced-motion:reduce){ html{ scroll-behavior:auto; } }
+  ::selection{ background:var(--accent-soft); }
+  a{ color:var(--accent-ink); text-decoration-thickness:1px; text-underline-offset:2px; }
+  .wrap{ max-width:820px; margin:0 auto; padding:8px clamp(18px,5vw,30px) 90px; }
+
+  /* brand bar */
+  .topbar{ position:sticky; top:0; z-index:60; display:flex; align-items:center; justify-content:space-between;
+           padding:13px clamp(18px,5vw,30px); backdrop-filter:saturate(1.2) blur(8px);
+           background:color-mix(in srgb,var(--bg) 82%, transparent); border-bottom:1px solid transparent; transition:border-color .3s,background .4s; }
+  .topbar.scrolled{ border-bottom-color:var(--rule); }
+  .brand{ font-family:"Fraunces",serif; font-weight:600; font-size:16px; letter-spacing:.2px; color:var(--ink);
+          text-decoration:none; display:inline-flex; align-items:center; gap:9px; }
+  .brand .glyph{ width:19px; height:19px; flex:none; color:var(--accent); }
+  .brand .tail{ color:var(--faint); font-weight:500; }
+  .theme-toggle{ appearance:none; border:1px solid var(--rule); background:var(--card); color:var(--muted);
+                 width:36px; height:36px; border-radius:999px; cursor:pointer; display:grid; place-items:center;
+                 transition:color .2s,border-color .2s,transform .2s,background .4s; }
+  .theme-toggle:hover{ color:var(--ink); border-color:var(--faint); transform:translateY(-1px); }
+  .theme-toggle svg{ width:17px; height:17px; }
+  .theme-toggle .sun{ display:none; }
+  [data-theme="dark"] .theme-toggle .sun{ display:block; }
+  [data-theme="dark"] .theme-toggle .moon{ display:none; }
+
+  /* hero */
+  .hero{ padding:18px 0 8px; }
+  .kicker{ font-family:"Newsreader",serif; font-style:italic; color:var(--accent-ink); font-size:16px;
+           letter-spacing:.3px; margin:0 0 16px; display:flex; align-items:center; gap:12px; }
+  .kicker::before{ content:""; width:26px; height:1px; background:var(--accent); opacity:.6; }
+  .hero h1{ font-family:"Fraunces",serif; font-weight:600; font-size:clamp(44px,9vw,76px); line-height:1.02;
+            letter-spacing:-0.02em; margin:0 0 16px; }
+  .dek{ font-size:clamp(18px,2.4vw,22px); color:var(--muted); line-height:1.45; margin:0; max-width:44ch; }
+
+  /* headings */
+  h2{ font-family:"Fraunces",serif; font-weight:600; font-size:clamp(23px,3.4vw,30px); line-height:1.15;
+      letter-spacing:-0.012em; margin:48px 0 14px; padding-top:24px; position:relative; }
+  h2::before{ content:""; position:absolute; top:0; left:0; width:38px; height:3px; background:var(--accent); border-radius:2px; }
+  h3{ font-family:"Fraunces",serif; font-weight:600; font-size:17px; margin:18px 0 4px; color:var(--accent-ink); }
   p{ margin:9px 0; }
-  code{ font-family:"SF Mono",Menlo,Consolas,monospace; font-size:13px; background:#e7ebf1; padding:1px 5px; border-radius:4px; color:#15324f; }
-  .lede{ font-size:16px; color:#3a4150; }
-  /* the loop */
-  .loop{ display:flex; flex-wrap:wrap; gap:10px; margin:16px 0; }
-  .loop .node{ flex:1; min-width:150px; background:#fff; border:1px solid #e1e6ee; border-radius:11px; padding:13px 15px; position:relative; }
-  .loop .node b{ display:block; color:#0b3d6b; font-size:14px; margin-bottom:3px; }
-  .loop .node span{ font-size:13px; color:#5b5f67; }
-  .loop .num{ position:absolute; top:-9px; left:13px; background:#1c3a5e; color:#fff; width:20px; height:20px; border-radius:50%; font-size:11px; font-weight:700; text-align:center; line-height:20px; }
-  .feat{ background:#fff; border:1px solid #e1e6ee; border-radius:12px; padding:15px 17px; margin:11px 0; }
-  .feat b{ font-size:15px; }
-  .feat .k{ display:inline-block; font-size:11px; font-weight:700; color:#1f7a46; background:#eef9f0; border:1px solid #cfe9d6; border-radius:6px; padding:1px 7px; margin-left:6px; vertical-align:middle; }
-  table{ border-collapse:collapse; width:100%; margin:10px 0; font-size:13.5px; background:#fff; }
-  th,td{ border:1px solid #d8deea; padding:8px 10px; text-align:left; vertical-align:top; } th{ background:#eef1f5; }
+  .lede{ font-size:19px; color:var(--muted); line-height:1.55; margin:20px 0; }
+
+  /* inline code */
+  code{ font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace; font-size:.8em; background:var(--bg-soft);
+        color:var(--accent-ink); padding:1px 6px; border-radius:5px; border:1px solid var(--card-rule); }
+
+  /* the loop — pillar cards */
+  .loop{ display:grid; grid-template-columns:repeat(2,1fr); gap:14px; margin:24px 0 10px; }
+  .loop .node{ background:var(--card); border:1px solid var(--card-rule); border-radius:13px; padding:20px 18px 16px; position:relative; box-shadow:var(--shadow); }
+  .loop .node .num{ position:absolute; top:-11px; left:18px; background:var(--accent); color:#fff; width:23px; height:23px;
+                    border-radius:50%; font-family:ui-monospace,"SF Mono",Menlo,monospace; font-size:12px; font-weight:600; text-align:center; line-height:23px; }
+  [data-theme="dark"] .loop .node .num{ color:#1B1A17; }
+  .loop .node b{ display:block; font-family:"Fraunces",serif; font-weight:600; font-size:17px; margin:2px 0 7px; color:var(--ink); }
+  .loop .node span{ font-size:14.5px; color:var(--muted); line-height:1.5; }
+  @media (max-width:560px){ .loop{ grid-template-columns:1fr; } }
+
+  /* feature cards */
+  .feat{ background:var(--card); border:1px solid var(--card-rule); border-radius:13px; padding:17px 19px; margin:13px 0; box-shadow:var(--shadow); }
+  .feat > b{ font-family:"Fraunces",serif; font-weight:600; font-size:18px; }
+  .feat .k{ display:inline-block; font-family:ui-monospace,"SF Mono",Menlo,monospace; font-size:11px; font-weight:600;
+            color:var(--accent-ink); background:var(--accent-soft); border:1px solid color-mix(in srgb,var(--accent) 28%,transparent);
+            border-radius:6px; padding:1px 8px; margin-left:6px; vertical-align:middle; letter-spacing:.2px; }
+
+  /* command block */
+  .cmd{ display:flex; align-items:stretch; margin:9px 0; border-radius:10px; overflow:hidden; border:1px solid var(--term-rule); box-shadow:var(--shadow); }
+  .cmd pre{ flex:1; margin:0; padding:11px 14px; background:var(--term-bg); color:var(--term-ink);
+            font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace; font-size:13px; line-height:1.5; white-space:pre-wrap; word-break:break-word; }
+  .cmd button{ flex:0 0 84px; border:0; background:var(--term-btn); color:var(--term-btn-ink);
+               font-family:"Newsreader",serif; font-weight:600; font-size:14px; cursor:pointer; transition:filter .15s; }
+  .cmd button:hover{ filter:brightness(1.07); } .cmd button.ok{ background:var(--tip); color:#fff; }
+
+  /* first-ten-minutes walk */
+  ol.walk{ counter-reset:w; list-style:none; padding-left:0; margin:16px 0; }
+  ol.walk > li{ position:relative; padding-left:40px; margin:0 0 16px; }
+  ol.walk > li::before{ counter-increment:w; content:counter(w); position:absolute; left:0; top:-1px; width:27px; height:27px;
+                        background:var(--accent); color:#fff; border-radius:50%; text-align:center; line-height:27px;
+                        font-family:ui-monospace,"SF Mono",Menlo,monospace; font-weight:600; font-size:13px; }
+  [data-theme="dark"] ol.walk > li::before{ color:#1B1A17; }
+
+  /* tables */
+  table{ border-collapse:collapse; width:100%; margin:12px 0; font-size:14.5px; background:var(--card);
+         border:1px solid var(--card-rule); border-radius:10px; overflow:hidden; box-shadow:var(--shadow); }
+  th,td{ border-bottom:1px solid var(--card-rule); border-right:1px solid var(--card-rule); padding:9px 11px; text-align:left; vertical-align:top; }
+  tr td:last-child,tr th:last-child{ border-right:0; } tr:last-child td{ border-bottom:0; }
+  th{ background:var(--bg-soft); font-family:"Fraunces",serif; font-weight:600; }
   td code{ font-size:12.5px; }
-  .cmd{ display:flex; align-items:stretch; margin:8px 0; border-radius:9px; overflow:hidden; box-shadow:0 1px 3px rgba(20,40,70,.12); }
-  .cmd pre{ flex:1; margin:0; padding:11px 14px; background:#15202e; color:#e8edf3; font-family:"SF Mono",Menlo,monospace; font-size:13px; white-space:pre-wrap; }
-  .cmd button{ flex:0 0 84px; border:0; background:#27384b; color:#cfe0f2; font-weight:700; font-size:13px; cursor:pointer; border-left:1px solid #0d1622; }
-  .cmd button:hover{ background:#33495f; } .cmd button.ok{ background:#1f7a46; color:#fff; }
-  ol.walk{ counter-reset:w; list-style:none; padding-left:0; margin:12px 0; }
-  ol.walk > li{ position:relative; padding-left:34px; margin:0 0 14px; }
-  ol.walk > li::before{ counter-increment:w; content:counter(w); position:absolute; left:0; top:-1px; width:24px; height:24px; background:#1c3a5e; color:#fff; border-radius:50%; text-align:center; line-height:24px; font-weight:700; font-size:13px; }
-  .box{ border-radius:10px; padding:12px 15px; margin:14px 0; border:1px solid; }
-  .tip{ background:#eef9f0; border-color:#9bd0a8; } .note{ background:#eef4fb; border-color:#aac6e6; }
-  .lbl{ font-weight:800; text-transform:uppercase; font-size:11px; letter-spacing:.6px; display:block; margin-bottom:3px; }
-  .tip .lbl{ color:#1f7a46; } .note .lbl{ color:#0b5cad; }
-  .foot{ color:#8a8f98; font-size:13px; margin-top:26px; border-top:1px solid #dde3ec; padding-top:12px; }
+
+  /* boxes */
+  .box{ border-radius:12px; padding:13px 16px; margin:15px 0; border:1px solid var(--card-rule); background:var(--card); box-shadow:var(--shadow); }
+  .box p:first-child{ margin-top:0; } .box p:last-child{ margin-bottom:0; }
+  .lbl{ font-family:ui-monospace,"SF Mono",Menlo,monospace; font-weight:700; text-transform:uppercase; font-size:10.5px; letter-spacing:.6px; display:block; margin-bottom:5px; }
+  .box.note{ background:var(--accent-soft); border-color:color-mix(in srgb,var(--accent) 35%,transparent); } .box.note .lbl{ color:var(--accent-ink); }
+  .box.tip{ border-color:color-mix(in srgb,var(--tip) 42%,transparent); } .box.tip .lbl{ color:var(--tip); }
+
+  /* footer */
+  .sitefoot{ margin-top:56px; padding-top:22px; border-top:1px solid var(--rule); color:var(--faint); font-size:13.5px;
+             display:flex; flex-wrap:wrap; gap:6px 16px; align-items:center; justify-content:space-between; }
+  .sitefoot .sig{ font-family:"Fraunces",serif; color:var(--muted); font-size:15px; }
+
+  @media (max-width:560px){ body{ font-size:17px; } }
 </style>
 </head>
 <body>
 
-<div class="hero">
-  <div style="max-width:860px;margin:0 auto;padding:0 12px;">
-    <span class="tag">Welcome</span>
-    <h1>Svaha</h1>
-    <p>Claude Code that learns from its own track record. One contract + a small scaffold turn a fresh session that starts cold into a loop that picks up exactly where the last one stopped — and gets a little sharper every pass.</p>
-  </div>
-</div>
+<header class="topbar" id="topbar">
+  <a class="brand" href="#top">
+    <span style="font-family:'Noto Serif Devanagari',serif;color:var(--accent);font-weight:600;font-size:1.25em;line-height:1;" aria-hidden="true">स्वाहा</span>
+    Svaha <span class="tail">· welcome</span>
+  </a>
+  <button class="theme-toggle" id="themeToggle" aria-label="Toggle light and dark theme" title="Toggle theme">
+    <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+    <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4.2"/><path d="M12 2v2.5M12 19.5V22M4.2 4.2l1.8 1.8M18 18l1.8 1.8M2 12h2.5M19.5 12H22M4.2 19.8 6 18M18 6l1.8-1.8"/></svg>
+  </button>
+</header>
+<span id="top"></span>
 
 <div class="wrap">
+
+  <section class="hero">
+    <p class="kicker">Welcome</p>
+    <h1>Svaha</h1>
+    <p class="dek">Claude Code that learns from its own track record. One contract + a small scaffold turn a fresh session that starts cold into a loop that picks up exactly where the last one stopped — and gets a little sharper every pass.</p>
+  </section>
 
   <p class="lede">New here? This page explains <b>what Svaha does, how the pieces fit, and your first ten minutes.</b> If you haven't installed it yet, open <code>INSTALL.html</code> first &mdash; or, if you've <i>never used Claude Code at all</i>, start one step earlier with <code>INSTALL-CLAUDE-CODE.html</code>.</p>
 
@@ -89,11 +195,24 @@
   <div class="feat"><b>It watches its own context budget</b> <span class="k">canary</span><br>
     A transcript-size signal nudges a wrap-up before you hit the wall and lose the thread — a heads-up, not a hard stop, so your explicit <i>"that's it"</i> stays the reliable path.</div>
 
-  <h2>The commands you'll use</h2>
+  <h2>One word runs it</h2>
+  <p>Svaha is driven by a single keyword — you rarely type a slash command. <b>svaha</b> means <i>"so be it / offered into the fire,"</i> and <i>where</i> you say it decides what it does:</p>
+  <ul>
+    <li><b>svaha to begin</b> — opens the launchpad and resumes where you left off. <small>(explicit: <code>/session</code>)</small></li>
+    <li><b>svaha to a proposal</b> — "yes, go ahead." <small>(a plain yes)</small></li>
+    <li><b>svaha to wrap up</b> — freezes the handoff, then Svaha seals it with <b>स्वाहा</b> — the receipt that your work is recorded. <small>(explicit: <code>/handoff</code>)</small></li>
+  </ul>
+  <div class="box note">
+    <p><span class="lbl">The seal — स्वाहा — is the reply, not your input</span></p>
+    <p>You type the plain word <code>svaha</code>. When a wrap actually completes, Svaha echoes <b>स्वाहा</b> (Devanagari) back so you know it landed and is recorded. Same word, two directions: you say it to act; it says it to confirm.</p>
+  </div>
+
+  <h2>The explicit commands</h2>
+  <p>Each keyword maps to one of these — reach for them directly when you want to be precise, but you never have to.</p>
   <table>
     <tr><th>Command</th><th>What it does</th></tr>
-    <tr><td><code>/session</code></td><td>Boot. Auto-picks the open handoff and resumes it — verified against the files. <code>/session list</code> shows live slots; <code>/session N</code> boots a specific one.</td></tr>
-    <tr><td><code>/handoff</code></td><td>Wrap up. Freezes a numbered <code>_NEXT</code> with where things stand + the decisions. Runs on its own when you say "that's it."</td></tr>
+    <tr><td><code>/session</code></td><td>Boot. Auto-picks the open handoff and resumes it — verified against the files. <code>/session list</code> shows live slots; <code>/session N</code> boots a specific one. Keyword: just say <b>svaha</b> to open the launchpad.</td></tr>
+    <tr><td><code>/handoff</code></td><td>Wrap up. Freezes a numbered <code>_NEXT</code> with where things stand + the decisions, then seals with <b>स्वाहा</b>. Keyword: runs on its own when you say <b>svaha</b> (or "that's it").</td></tr>
     <tr><td><code>/reflect</code></td><td>Memory + lessons pass — promotes durable corrections into the rules.</td></tr>
     <tr><td><code>/audit</code></td><td>Checks the system's own coherence — catches the slow rot a growing config accumulates.</td></tr>
     <tr><td><code>/foldin</code></td><td>Adopt an ungoverned conversation into the system (start mid-stream).</td></tr>
@@ -103,14 +222,14 @@
   <h2>Your first ten minutes</h2>
   <p>The fastest way to feel the loop is to run it once, end to end:</p>
   <ol class="walk">
-    <li><b>Boot it.</b> In a project, start Claude Code and run:
+    <li><b>Boot it.</b> In a project, start Claude Code and <b>just say svaha</b> — it opens the launchpad and resumes where you left off. <small>(Or run the explicit command, <code>/session</code>:)</small>
       <div class="cmd"><pre>/session</pre><button onclick="cp(this)">Copy</button></div>
       A brand-new project has nothing to resume yet — that's expected. It prints which files it loaded.</li>
     <li><b>Do a small task</b> — fix a bug, add a function. Notice it states <i>decisions with conviction</i> and acts on the safe stuff without nagging, but stops to confirm anything risky.</li>
-    <li><b>Wrap up.</b> When you're done (or context is filling), just say <b>"that's it"</b> — or run:
+    <li><b>Wrap up.</b> When you're done (or context is filling), <b>just say svaha</b> again (or <b>"that's it"</b>) — it freezes the handoff and seals with <b>स्वाहा</b>, the receipt that it's recorded. <small>(Explicit command, <code>/handoff</code>:)</small>
       <div class="cmd"><pre>/handoff</pre><button onclick="cp(this)">Copy</button></div>
       It freezes a numbered <code>_NEXT</code> capturing where you stopped and what you decided.</li>
-    <li><b>Start fresh.</b> Open a <i>new</i> session and run <code>/session</code> again. This time it <b>recovers where you left off</b> — and reconciles its claims against the actual files before doing anything.</li>
+    <li><b>Start fresh.</b> Open a <i>new</i> session and <b>say svaha</b> again. This time it <b>recovers where you left off</b> — and reconciles its claims against the actual files before doing anything.</li>
     <li><b>That's the loop.</b> Each pass is a little better calibrated than the last. The longer you run it, the more it knows.</li>
   </ol>
 
@@ -137,15 +256,35 @@
     <p><b>2. Editing is your call.</b> The permission posture ships frictionless-but-fenced: reads run silently, <code>push</code>/<code>rm</code>/network/secrets always confirm or block, and file edits are granted once at install (or set to ask once per session — your pick, see the snippet header).</p>
   </div>
 
-  <p class="foot">Install: <code>INSTALL.html</code> &nbsp;·&nbsp; the full rules: <code>CLAUDE.md</code> &nbsp;·&nbsp; reference: <code>README.md</code> &nbsp;·&nbsp; the why: <code>docs/essay.md</code> &nbsp;·&nbsp; verify: <code>bash bin/doctor.sh</code></p>
+  <footer class="sitefoot">
+    <span class="sig">Svaha</span>
+    <span>Install: <code>INSTALL.html</code> · first time? <code>INSTALL-CLAUDE-CODE.html</code> · the rules: <code>CLAUDE.md</code> · the why: <code>docs/essay.md</code></span>
+  </footer>
 </div>
 
 <script>
+  var toggle = document.getElementById('themeToggle');
+  toggle && toggle.addEventListener('click', function () {
+    var cur = document.documentElement.getAttribute('data-theme');
+    var next = cur === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', next);
+    try { localStorage.setItem('theme', next); } catch (e) {}
+  });
+  var topbar = document.getElementById('topbar');
+  window.addEventListener('scroll', function () {
+    if (topbar) topbar.classList.toggle('scrolled', window.scrollY > 8);
+  }, { passive: true });
+
   function cp(btn){
     var text = btn.parentNode.querySelector('pre').textContent;
-    function flash(){ var o = btn.textContent; btn.textContent='Copied!'; btn.classList.add('ok'); setTimeout(function(){ btn.textContent=o; btn.classList.remove('ok'); }, 1200); }
-    function fallback(){ var ta=document.createElement('textarea'); ta.value=text; ta.style.position='fixed'; ta.style.top='0'; ta.style.opacity='0'; document.body.appendChild(ta); ta.focus(); ta.select(); try{ document.execCommand('copy'); }catch(e){} document.body.removeChild(ta); }
-    if(navigator.clipboard && navigator.clipboard.writeText){ navigator.clipboard.writeText(text).then(flash, function(){ fallback(); flash(); }); } else { fallback(); flash(); }
+    function flash(){ var o = btn.textContent; btn.textContent='Copied!'; btn.classList.add('ok');
+      setTimeout(function(){ btn.textContent=o; btn.classList.remove('ok'); }, 1200); }
+    function fallback(){ var ta=document.createElement('textarea'); ta.value=text; ta.style.position='fixed';
+      ta.style.top='0'; ta.style.opacity='0'; document.body.appendChild(ta); ta.focus(); ta.select();
+      try{ document.execCommand('copy'); }catch(e){} document.body.removeChild(ta); }
+    if(navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(text).then(flash, function(){ fallback(); flash(); });
+    } else { fallback(); flash(); }
   }
 </script>
 </body>
