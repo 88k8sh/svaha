@@ -33,7 +33,13 @@
 # a desync — it is the normal, expected state. We do not flag it.
 #
 # Modes:
-#   (default)  live list + recently-consumed + any desync warnings
+#   (default)  live list + recently-consumed + any desync warnings. A live slot
+#              carrying a parenthesized "(_NEXT_NNN)" CHANGELOG completion marker
+#              but no .consumed gets a "⚠ DONE-PROBABLE" flag (the consume-leak
+#              fix, layer C) — review-only, never auto-stamps; it surfaces a
+#              logged-done-but-unstamped slot on every list. Keys on the bracket
+#              token ONLY (a loose verb-match false-flags the superseder + any
+#              "left live" slot named on the same retire line).
 #   --check    print ONLY real desyncs (DONE-UNCONSUMED / ORPHAN); exit 1 if any
 #
 # Usage: next-live.sh <system-dir>
@@ -45,6 +51,13 @@ SYSTEM_DIR="${1:?Usage: next-live.sh <system-dir> [--check]}"
 MODE="${2:-list}"
 NEXT_DIR="${SYSTEM_DIR}/next"
 RECENT_MIN="${NEXT_RECENT_MIN:-120}"
+
+# Layer C (consume-leak fix): cross-reference live slots against logged
+# completions. Probe both ledger layouts so the same script serves any install.
+CHANGELOG=""
+for _c in "${SYSTEM_DIR}/ledger/CHANGELOG.md" "${SYSTEM_DIR}/30_LEDGER/CHANGELOG.md"; do
+  [[ -f "${_c}" ]] && { CHANGELOG="${_c}"; break; }
+done
 
 if [[ ! -d "${NEXT_DIR}" ]]; then
   echo "next-live.sh: '${NEXT_DIR}' not found — SYSTEM_DIR is not the system root." >&2
@@ -87,6 +100,16 @@ label_for() {
                                 print substr(line,1,70); exit }
     }
   ' "$f"
+}
+
+# DONE-PROBABLE test (layer C): does the CHANGELOG record this slot as done?
+# 0 = yes. ONLY the parenthesized (_NEXT_NNN) completion marker — unambiguous.
+# A looser "_NEXT_NNN near a retire verb" match was rejected: one retire line
+# names the superseder ("superseded by _NEXT_059") and other slots, false-
+# flagging them. The bracket token marks ONE specific slot done. Review-only.
+done_probable() {
+  [[ -n "${CHANGELOG}" ]] || return 1
+  grep -qE "\(_NEXT_$1\)" "${CHANGELOG}" 2>/dev/null
 }
 
 shopt -s nullglob
@@ -143,7 +166,11 @@ if (( ${#live_open[@]} == 0 )); then
 else
   echo "live sessions (${#live_open[@]}):"
   printf '%s\n' "${live_open[@]}" | sort | while IFS='|' read -r n l; do
-    echo "  ${n} — ${l}"
+    flag=""
+    if done_probable "${n}"; then
+      flag="   ⚠ DONE-PROBABLE (CHANGELOG has a (_NEXT_${n}) completion marker but no .consumed — verify, then: bin/next-consume.sh <system-dir> ${n} \"done: …\")"
+    fi
+    echo "  ${n} — ${l}${flag}"
   done
 fi
 

@@ -7,6 +7,16 @@ Written by `/handoff` (or manually after structural edits). Do not edit existing
 
 ---
 
+## 2026-06-24 — consume-leak fix: `_NEXT` slots retire reliably (A+B+C)
+
+The `.consumed` stamp that retires a `_NEXT` slot had no writer — it was a manual `touch` typed by hand in several specs (handoff boot-stamp, audit remediation), firing only on the boot→handoff path. Any slot finished *off* that path — a reflection-downgrade close, a cold finish, a `/foldin`, a branch-off supersede — silently never got stamped and sat falsely "live" forever (because `_NEXT` files are frozen, their move-text always parses open, so `next-live.sh --check` can't see it). Three-layer fix:
+
+- **A (prevent):** `bin/next-write.sh` gains `--consume NNN` — after writing + checkpoint-stamping the new slot (confirmed non-empty) it atomically retires the booted-from slot. Mint-and-retire is one act; you can't mint a successor while forgetting the predecessor, and never before the successor exists. `handoff.md` step 2 passes it.
+- **B (primitive):** **NEW** `bin/next-consume.sh <system-dir> NNN [reason]` — the single `.consumed` writer: validates the slot, idempotent no-op if already stamped, records when+why into the sidecar. Replaces every manual `touch`.
+- **C (detect):** `bin/next-live.sh` gains a review-only **DONE-PROBABLE** flag — surfaces any live slot with a parenthesized `(_NEXT_NNN)` CHANGELOG completion marker but no `.consumed`, on every list. Catches the off-boot leaks A can't see; never auto-stamps. Keys on the bracket token only (a loose verb-match false-flags the superseder).
+- Closed the two silent-leak close paths: `handoff.md` gained a **Supersede stamp** sub-step (consumption is now completion-coupled, not only boot-coupled); `foldin.md` + `reflect.md` now carry the supersede stamp too (they previously reached neither stamp).
+- **NEW** `bin/next-consume.sh`. **EDIT** `bin/next-write.sh`, `bin/next-live.sh`, `bin/drift-guard.py` (boot-loop pattern), `handoff.md`, `audit.md`, `foldin.md`, `reflect.md`, `SYNC_MAP.md` rows 52/53. Adapted to the kit's checkpoint-stamped `next-write.sh` and `<system-dir>` convention.
+
 ## 2026-06-23 — First-handoff teaching note for the स्वाहा seal (one-time)
 
 `handoff.md` now emits a single one-time gloss the *first* time a system seals — detected when `next/` holds only the seed `_NEXT_001` plus the just-written `_NEXT`. An italic line sits between the bottom line and the seal-banner, explaining स्वाहा = the receipt that this session's work is recorded; omitted on every later handoff (the seal stands alone thereafter). This is the *earned* placement of the "say svaha, the system answers in the sacred tongue" moment — at the first real close, never on a cold open (which would be a false seal, against the seal discipline).

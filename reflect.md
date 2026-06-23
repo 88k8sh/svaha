@@ -58,7 +58,7 @@ After the memory + bug passes, decide whether this session actually warranted a 
 
 **If warranted:** emit `handoff suggested — running it`, then invoke `/handoff` directly. The memory + bug passes you just ran are idempotent, so handoff's delegated steps 4–5 will correctly find nothing new — no double-writing. Let handoff produce the gauge, `_NEXT` file, and session closer (`Next session: /session NNN`); do **not** also emit the reflect `## Output` line — handoff's output supersedes it.
 
-**If not warranted:** emit the reflect `## Output` line, append `handoff not needed — [light/clean: nothing in-flight, no queue]`, then close with the **reflection-banner** (`# ◇ ◇ ◇` framed by a `---` rule above and below — the grand hollow sibling of the `# स्वाहा` seal; a reflection ran, so it still earns a banner, but hollow because nothing is carried forward). Do not run handoff.
+**If not warranted:** emit the reflect `## Output` line, append `handoff not needed — [light/clean: nothing in-flight, no queue]`, then close with the **reflection-banner** (`# ◇ ◇ ◇` framed by a `---` rule above and below — the grand hollow sibling of the `# स्वाहा` seal; a reflection ran, so it still earns a banner, but hollow because nothing is carried forward). Do not run handoff. **Supersede note:** a reflection never runs handoff step 2, so if this session *finished* work that renders a live `_NEXT_MMM` done or moot, retire it explicitly with `<system-dir>/bin/next-consume.sh <system-dir> MMM "done: <why>"` before closing — otherwise the completion leaks until `next-live.sh`'s DONE-PROBABLE flag catches it.
 
 ## Output
 

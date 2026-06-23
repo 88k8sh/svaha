@@ -16,13 +16,24 @@
 #                      is the Verified-Handoff anchor the next boot diffs against.
 # Both stamps are no-ops if the sentinel is absent (backward-compatible).
 #
-# Usage: next-write.sh /absolute/path/to/system-dir /tmp/handoff_content.md
+# Usage: next-write.sh /absolute/path/to/system-dir /tmp/handoff_content.md [--consume NNN]
 
 set -euo pipefail
 
-SYSTEM_DIR="${1:?Usage: next-write.sh <system-dir> <content-file>}"
-CONTENT_FILE="${2:?Usage: next-write.sh <system-dir> <content-file>}"
+SYSTEM_DIR="${1:?Usage: next-write.sh <system-dir> <content-file> [--consume NNN]}"
+CONTENT_FILE="${2:?Usage: next-write.sh <system-dir> <content-file> [--consume NNN]}"
 NEXT_DIR="${SYSTEM_DIR}/next"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+# Optional --consume NNN: the slot THIS handoff booted from, retired atomically
+# AFTER the new slot is written + checkpoint-stamped (consume-leak fix, layer A).
+# Folding the retire into the mint makes "mint successor + retire predecessor"
+# ONE operation — you cannot mint a successor while forgetting to retire the
+# predecessor, and the predecessor is never retired before its successor exists.
+CONSUME_NNN=""
+if [[ "${3:-}" == "--consume" ]]; then
+  CONSUME_NNN="${4:?--consume requires a slot number, e.g. --consume 065}"
+fi
 
 # Sanity guard: SYSTEM_DIR must be the real system root, identified by its
 # permanent _NEXT.md pointer/spec. Without this, a cwd-relative or mistyped path
@@ -92,6 +103,19 @@ if grep -q '__CHECKPOINT__' "${out}"; then
     !done && /__CHECKPOINT__/ { sub(/__CHECKPOINT__/, sha); done=1 }
     { print }
   ' "${out}" > "${tmp}" && mv "${tmp}" "${out}"
+fi
+
+# Layer A: retire the booted-from slot ONLY now that the successor exists and is
+# non-empty — so carry-forward (which lives in the new slot) always precedes the
+# retire, and a failed/empty write never retires its predecessor. Consume output
+# goes to stderr so stdout stays the single new-filename contract callers read.
+if [[ -n "${CONSUME_NNN}" ]]; then
+  if [[ ! -s "${out}" ]]; then
+    echo "next-write.sh: new slot '${out}' is empty — NOT consuming _NEXT_${CONSUME_NNN}." >&2
+    exit 1
+  fi
+  "${SCRIPT_DIR}/next-consume.sh" "${SYSTEM_DIR}" "${CONSUME_NNN}" "superseded by $(basename "${out}" .md)" >&2 \
+    || echo "next-write.sh: warning — wrote ${out} but failed to consume _NEXT_${CONSUME_NNN}; stamp it by hand with bin/next-consume.sh." >&2
 fi
 
 echo "${out}"

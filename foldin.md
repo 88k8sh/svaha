@@ -40,7 +40,7 @@ Apply the USER_TASKS test (per `handoff.md` step 3 — can the assistant execute
 
 Write the `_NEXT` exactly as specified in `~/.claude/commands/handoff.md` step 2 — same `# __FOCUS__ <label>` sentinel, same 3-section format (`## Pending` / `## Next moves` / `## Push to _LOADUP`), same `bin/next-write.sh <system-dir> <temp-file>` call, same read-back. **`handoff.md` is the single source of truth for the write mechanics — do not restate them here, so the two can't drift.** Apply the move-quality bar: every move passes the **cold-reader test** (specific enough that someone with no memory of this chat could start move 1), and every blocked item names its **resolution trigger**.
 
-There is no `_NEXT` to mark consumed (this thread had none) — skip the consumed stamp.
+There is no `_NEXT` to mark consumed *for this thread* (it had none) — skip the boot-coupled stamp. **But run the supersede check (`handoff.md` step-2 "Supersede stamp"):** if the work this thread completed renders any *other* live `_NEXT_MMM` done or moot, retire that slot with `<system-dir>/bin/next-consume.sh <system-dir> MMM "done: superseded by this fold-in"` plus a one-line CHANGELOG note. Judgment-gated — stamp only a slot you can name as genuinely done; else `next-live.sh`'s DONE-PROBABLE flag is the backstop.
 
 ## STEP 6 — Confirm migration complete
 
