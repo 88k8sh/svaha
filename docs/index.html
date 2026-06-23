@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>svaha — pick up where you left off, from files you own</title>
+<meta name="author" content="Aakash Raj">
+<meta name="description" content="svaha is a context system for working with an AI: a handoff trail, a guard layer, and a behavioral contract — plain files in your own repo, so the assistant resumes mid-sentence on whatever model is best this month.">
+
+<!-- Open Graph / social -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://88k8sh.github.io/svaha/">
+<meta property="og:title" content="svaha — context that survives the session boundary">
+<meta property="og:description" content="A handoff trail, a guard layer, a behavioral contract. Plain files you own, so your AI picks up where it left off.">
+<meta property="og:site_name" content="svaha">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="svaha — context that survives the session boundary">
+<meta name="twitter:description" content="A handoff trail, a guard layer, a behavioral contract. Plain files you own, so your AI picks up where it left off.">
+
+<!-- Favicon: two offset files = continuity across the boundary -->
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%2314130f'/%3E%3Crect x='7' y='9' width='12' height='15' rx='2.5' fill='none' stroke='%23e0a24e' stroke-width='2'/%3E%3Crect x='14' y='6' width='12' height='15' rx='2.5' fill='%2314130f' stroke='%23ece8de' stroke-width='2'/%3E%3C/svg%3E">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,900&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&family=Noto+Serif+Devanagari:wght@500;600&display=swap" rel="stylesheet">
+
+<script>
+  // Set theme before paint to avoid a flash.
+  (function () {
+    document.documentElement.classList.add('js');
+    try {
+      var saved = localStorage.getItem('theme');
+      var sysDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+      var theme = saved || (sysDark ? 'dark' : 'light');
+      document.documentElement.setAttribute('data-theme', theme);
+    } catch (e) {
+      document.documentElement.setAttribute('data-theme', 'dark');
+    }
+  })();
+</script>
+
+<style>
+  :root {
+    --bg: #FBFAF6;
+    --bg-soft: #F2F0E8;
+    --ink: #1B1A17;
+    --muted: #6E6A60;
+    --faint: #9A958A;
+    --rule: #E5E1D6;
+    --accent: #B0562A;
+    --accent-ink: #B0562A;
+    --accent-soft: rgba(176, 86, 42, 0.10);
+    --card: #FFFFFF;
+    --card-rule: #E8E4D9;
+    --shadow: 0 1px 2px rgba(27,26,23,.04), 0 8px 30px rgba(27,26,23,.05);
+  }
+  [data-theme="dark"] {
+    --bg: #141310;
+    --bg-soft: #1C1A16;
+    --ink: #ECE8DE;
+    --muted: #A39D8F;
+    --faint: #6F6A5E;
+    --rule: #2A2722;
+    --accent: #E0A24E;
+    --accent-ink: #E8B25F;
+    --accent-soft: rgba(224, 162, 78, 0.13);
+    --card: #1B1915;
+    --card-rule: #2C2922;
+    --shadow: 0 1px 2px rgba(0,0,0,.3), 0 10px 40px rgba(0,0,0,.35);
+  }
+
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: "Newsreader", Georgia, "Times New Roman", serif;
+    font-size: 20px;
+    line-height: 1.62;
+    font-weight: 400;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    transition: background .4s ease, color .4s ease;
+  }
+
+  ::selection { background: var(--accent-soft); }
+
+  a { color: var(--accent-ink); text-decoration-thickness: 1px; text-underline-offset: 2px; }
+
+  /* ---- Reading progress ---- */
+  .progress {
+    position: fixed; top: 0; left: 0; height: 3px; width: 0%;
+    background: var(--accent); z-index: 100;
+    transition: width .08s linear;
+  }
+
+  /* ---- Top bar ---- */
+  .topbar {
+    position: sticky; top: 0; z-index: 60;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 14px clamp(18px, 5vw, 40px);
+    backdrop-filter: saturate(1.2) blur(8px);
+    background: color-mix(in srgb, var(--bg) 82%, transparent);
+    border-bottom: 1px solid transparent;
+    transition: border-color .3s ease, background .4s ease;
+  }
+  .topbar.scrolled { border-bottom-color: var(--rule); }
+  .brand {
+    font-family: "Fraunces", serif; font-weight: 600; font-size: 15px;
+    letter-spacing: .2px; color: var(--ink); text-decoration: none;
+    display: inline-flex; align-items: center; gap: 9px;
+  }
+  .brand .glyph { width: 18px; height: 18px; flex: none; color: var(--accent); }
+  .theme-toggle {
+    appearance: none; border: 1px solid var(--rule); background: var(--card);
+    color: var(--muted); width: 38px; height: 38px; border-radius: 999px;
+    cursor: pointer; display: grid; place-items: center;
+    transition: color .2s, border-color .2s, transform .2s, background .4s;
+  }
+  .theme-toggle:hover { color: var(--ink); border-color: var(--faint); transform: translateY(-1px); }
+  .theme-toggle svg { width: 18px; height: 18px; }
+  .theme-toggle .sun { display: none; }
+  [data-theme="dark"] .theme-toggle .sun { display: block; }
+  [data-theme="dark"] .theme-toggle .moon { display: none; }
+
+  /* ---- Layout ---- */
+  .wrap { max-width: 720px; margin: 0 auto; padding: 0 clamp(20px, 5vw, 32px); }
+
+  /* ---- Hero ---- */
+  .hero { padding: clamp(46px, 9vw, 92px) 0 clamp(28px, 5vw, 48px); }
+  .kicker {
+    font-family: "Newsreader", serif; font-style: italic; color: var(--accent-ink);
+    font-size: 16px; letter-spacing: .3px; margin: 0 0 22px;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .kicker::before { content: ""; width: 26px; height: 1px; background: var(--accent); opacity: .6; }
+  h1.title {
+    font-family: "Fraunces", serif; font-weight: 600;
+    font-size: clamp(34px, 6.4vw, 60px); line-height: 1.06;
+    letter-spacing: -0.018em; margin: 0 0 24px; text-wrap: balance;
+  }
+  .dek {
+    font-size: clamp(19px, 2.4vw, 23px); color: var(--muted);
+    line-height: 1.5; margin: 0 0 30px; max-width: 36ch;
+  }
+  .byline {
+    display: flex; align-items: center; gap: 14px;
+    font-size: 15px; color: var(--faint);
+    padding-top: 22px; border-top: 1px solid var(--rule);
+  }
+  .byline .name { color: var(--ink); font-weight: 500; }
+  .byline .dot { width: 3px; height: 3px; border-radius: 50%; background: var(--faint); }
+
+  /* ---- Hero diagram ---- */
+  .hero-fig { margin: clamp(30px, 6vw, 54px) 0 0; }
+  .hero-fig svg { width: 100%; height: auto; display: block; overflow: visible; }
+  .hf-card { fill: var(--card); stroke: var(--card-rule); }
+  .hf-card-accent { fill: var(--accent-soft); stroke: var(--accent); }
+  .hf-label { fill: var(--muted); font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: 13px; }
+  .hf-label-accent { fill: var(--accent-ink); font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: 13px; }
+  .hf-arrow { stroke: var(--faint); stroke-width: 1.6; fill: none; }
+  .hf-boundary { stroke: var(--accent); stroke-width: 1.4; stroke-dasharray: 4 5; opacity: .55; }
+  .hf-boundary-label { fill: var(--faint); font-family: "Newsreader", serif; font-style: italic; font-size: 13px; }
+  .hf-tick { stroke: var(--accent); stroke-width: 1.8; fill: none; }
+
+  /* draw-in animation */
+  .js .hf-anim { opacity: 0; }
+  .reveal-fig .hf-anim { animation: fadeUp .7s ease forwards; }
+  .reveal-fig .d1 { animation-delay: .05s; }
+  .reveal-fig .d2 { animation-delay: .22s; }
+  .reveal-fig .d3 { animation-delay: .39s; }
+  .reveal-fig .d4 { animation-delay: .56s; }
+  .reveal-fig .d5 { animation-delay: .70s; }
+
+  /* ---- Article ---- */
+  article { padding: clamp(20px, 4vw, 36px) 0 0; }
+  article p { margin: 0 0 24px; }
+  .lead { font-size: 23px; line-height: 1.5; }
+  .lead::first-letter {
+    float: left; font-family: "Fraunces", serif; font-weight: 600;
+    font-size: 4.4em; line-height: .82; padding: 6px 12px 0 0; color: var(--accent-ink);
+  }
+  article strong { font-weight: 500; color: var(--ink); }
+  [data-theme="dark"] article strong { font-weight: 500; }
+  .mono {
+    font-family: ui-monospace, "SF Mono", Menlo, monospace;
+    font-size: .82em; background: var(--bg-soft); color: var(--accent-ink);
+    padding: 1px 6px; border-radius: 5px; border: 1px solid var(--card-rule);
+    white-space: nowrap;
+  }
+
+  h2.section {
+    font-family: "Fraunces", serif; font-weight: 600;
+    font-size: clamp(25px, 3.6vw, 33px); line-height: 1.14; letter-spacing: -0.012em;
+    margin: clamp(52px, 8vw, 78px) 0 22px; scroll-margin-top: 90px;
+    position: relative; padding-top: 26px;
+  }
+  h2.section::before {
+    content: ""; position: absolute; top: 0; left: 0;
+    width: 38px; height: 3px; background: var(--accent); border-radius: 2px;
+  }
+  h2.section .num {
+    font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: 13px;
+    color: var(--faint); font-weight: 400; display: block; margin-bottom: 8px; letter-spacing: 1px;
+  }
+
+  /* ---- Pillars panel ---- */
+  .pillars {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;
+    margin: 40px 0 8px;
+  }
+  .pillar {
+    background: var(--card); border: 1px solid var(--card-rule); border-radius: 12px;
+    padding: 22px 22px 24px; box-shadow: var(--shadow);
+  }
+  .pillar .pnum {
+    font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: 12px;
+    color: var(--accent-ink); letter-spacing: 1px;
+  }
+  .pillar h3 {
+    font-family: "Fraunces", serif; font-weight: 600; font-size: 19px;
+    margin: 12px 0 8px; line-height: 1.2;
+  }
+  .pillar p { font-size: 16px; line-height: 1.5; color: var(--muted); margin: 0; }
+
+  /* ---- Falls-out cards ---- */
+  .cards { display: grid; gap: 16px; margin: 34px 0 8px; }
+  .card {
+    background: var(--card); border: 1px solid var(--card-rule); border-radius: 12px;
+    padding: 24px 26px; box-shadow: var(--shadow);
+    display: grid; grid-template-columns: 30px 1fr; gap: 0 18px; align-items: start;
+  }
+  .card .ci { color: var(--accent); width: 26px; height: 26px; margin-top: 4px; }
+  .card h3 {
+    font-family: "Fraunces", serif; font-weight: 600; font-size: 21px;
+    margin: 0 0 8px; line-height: 1.2; align-self: center;
+  }
+  .card .cbody { grid-column: 2; }
+  .card p { margin: 0; font-size: 17px; line-height: 1.55; color: var(--muted); }
+
+  /* ---- Pull quote ---- */
+  .pull {
+    margin: clamp(48px, 7vw, 72px) 0; padding: 4px 0;
+    text-align: center;
+    font-family: "Fraunces", serif; font-weight: 500;
+    font-size: clamp(23px, 3.2vw, 30px); line-height: 1.3; letter-spacing: -0.01em;
+    color: var(--ink); text-wrap: balance;
+  }
+
+  /* ---- closing line ---- */
+  .coda {
+    margin: clamp(46px, 7vw, 70px) 0 0; padding-top: 36px;
+    border-top: 1px solid var(--rule);
+  }
+  .coda p { font-size: 21px; line-height: 1.55; }
+
+  /* ---- Footer ---- */
+  footer {
+    margin-top: clamp(60px, 9vw, 100px); padding: 40px 0 64px;
+    border-top: 1px solid var(--rule);
+    color: var(--faint); font-size: 15px;
+    display: flex; flex-wrap: wrap; gap: 8px 18px; align-items: center; justify-content: space-between;
+  }
+  footer .sig { font-family: "Fraunces", serif; color: var(--muted); font-size: 16px; }
+
+  /* ---- Side TOC ---- */
+  .toc {
+    position: fixed; top: 50%; left: 28px; transform: translateY(-50%);
+    z-index: 40; display: none; max-width: 190px;
+  }
+  .toc ol { list-style: none; margin: 0; padding: 0; border-left: 1px solid var(--rule); }
+  .toc li { margin: 0; }
+  .toc a {
+    display: block; padding: 6px 0 6px 16px; margin-left: -1px;
+    border-left: 2px solid transparent;
+    font-family: "Newsreader", serif; font-size: 13.5px; line-height: 1.25;
+    color: var(--faint); text-decoration: none; transition: color .2s, border-color .2s;
+  }
+  .toc a:hover { color: var(--muted); }
+  .toc a.active { color: var(--ink); border-left-color: var(--accent); }
+  @media (min-width: 1180px) { .toc { display: block; } }
+
+  /* ---- Reveal on scroll ---- */
+  .js .reveal { opacity: 0; transform: translateY(16px); }
+  .reveal.in { animation: fadeUp .7s cubic-bezier(.22,.61,.36,1) forwards; }
+  @keyframes fadeUp { to { opacity: 1; transform: translateY(0); } }
+  @media (prefers-reduced-motion: reduce) {
+    .js .reveal, .js .hf-anim { opacity: 1 !important; transform: none !important; animation: none !important; }
+  }
+
+  @media (max-width: 560px) {
+    body { font-size: 18px; }
+    .pillars { grid-template-columns: 1fr; }
+    .lead { font-size: 20px; }
+    .card { padding: 20px; }
+    .guides { grid-template-columns: 1fr; }
+    .lockup .mark { font-size: 48px; }
+  }
+
+  /* ---- svaha brand ---- */
+  .brand .bmark { font-family: "Noto Serif Devanagari", serif; color: var(--accent); font-weight: 600; font-size: 19px; line-height: 1; }
+  .brand .wm { font-family: "Fraunces", serif; font-weight: 600; }
+
+  .lockup { display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap; margin: 0 0 20px; }
+  .lockup .mark {
+    font-family: "Noto Serif Devanagari", serif; color: var(--accent-ink);
+    font-weight: 600; font-size: clamp(50px, 8.5vw, 74px); line-height: 1;
+  }
+  .lockup .wordmark { font-family: "Fraunces", serif; font-weight: 600; font-size: clamp(21px, 2.6vw, 26px); color: var(--ink); letter-spacing: .3px; }
+  .lockup .tag { font-family: "Newsreader", serif; font-style: italic; color: var(--faint); font-size: 16px; }
+
+  .cta { display: flex; flex-wrap: wrap; gap: 11px; margin: 28px 0 4px; }
+  .btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-family: "Newsreader", serif; font-size: 16px; padding: 10px 21px;
+    border-radius: 999px; border: 1px solid var(--rule); color: var(--ink);
+    text-decoration: none; transition: transform .2s, border-color .2s, background .3s;
+  }
+  .btn:hover { transform: translateY(-1px); border-color: var(--faint); }
+  .btn-primary { background: var(--accent); color: #fff; border-color: var(--accent); }
+  [data-theme="dark"] .btn-primary { color: #1B1A17; }
+
+  .guides { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin: 18px 0 8px; }
+  .prenote { font-size: 16px; color: var(--muted); margin: 20px 0 0; }
+  .prenote a { color: var(--accent-ink); text-decoration: none; border-bottom: 1px solid var(--card-rule); }
+  .prenote a:hover { border-bottom-color: var(--accent); }
+  .guide {
+    background: var(--card); border: 1px solid var(--card-rule); border-radius: 12px;
+    padding: 22px 22px 24px; box-shadow: var(--shadow);
+    text-decoration: none; display: block; transition: transform .2s, border-color .2s;
+  }
+  .guide:hover { transform: translateY(-2px); border-color: var(--accent); }
+  .guide b { font-family: "Fraunces", serif; font-weight: 600; font-size: 18px; color: var(--ink); display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+  .guide b::after { content: "→"; color: var(--accent-ink); margin-left: auto; font-weight: 400; }
+  .guide > span { font-size: 15px; line-height: 1.5; color: var(--muted); display: block; }
+
+  .bookend { margin-top: 24px; padding-top: 24px; border-top: 1px solid var(--rule); color: var(--muted); font-size: 19px; line-height: 1.58; }
+  .bookend .bmk { font-family: "Noto Serif Devanagari", serif; color: var(--accent-ink); font-weight: 600; font-size: 1.25em; }
+  .bookend b { color: var(--ink); font-weight: 500; }
+</style>
+</head>
+<body>
+
+<div class="progress" id="progress"></div>
+
+<header class="topbar" id="topbar">
+  <a class="brand" href="#top">
+    <span class="bmark">स्वाहा</span>
+    <span class="wm">svaha</span>
+  </a>
+  <button class="theme-toggle" id="themeToggle" aria-label="Toggle light and dark theme" title="Toggle theme">
+    <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+    <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4.2"/><path d="M12 2v2.5M12 19.5V22M4.2 4.2l1.8 1.8M18 18l1.8 1.8M2 12h2.5M19.5 12H22M4.2 19.8 6 18M18 6l1.8-1.8"/></svg>
+  </button>
+</header>
+
+<nav class="toc" id="toc" aria-label="Sections">
+  <ol>
+    <li><a href="#top">The problem</a></li>
+    <li><a href="#data">How it works</a></li>
+    <li><a href="#falls-out">Why it's different</a></li>
+    <li><a href="#start">Get svaha</a></li>
+  </ol>
+</nav>
+
+<span id="top"></span>
+
+<main>
+  <div class="wrap">
+
+    <section class="hero">
+      <div class="lockup reveal">
+        <span class="mark">स्वाहा</span>
+        <span class="wordmark">svaha</span>
+        <span class="tag">· so be it</span>
+      </div>
+      <h1 class="title reveal">Pick up exactly where you left off.</h1>
+      <p class="dek reveal">Stop any time, drop a checkpoint, and resume right where you were — no pasting context back in, no re-explaining. Lean checkpoints keep each session small and cheap, and it all lives in plain files you own.</p>
+      <p class="reveal" style="margin:2px 0 28px;font-size:17px;line-height:1.55;color:var(--ink)"><b>And one word runs the whole loop</b> — <span class="mono">svaha</span> to begin · <span class="mono">svaha</span> to confirm · <span class="mono">svaha</span> to wrap. No commands to memorize; a finished wrap seals back, once, as <span style="font-family:'Noto Serif Devanagari',serif;color:var(--accent-ink);font-weight:600">स्वाहा</span>.</p>
+      <div class="cta reveal">
+        <a class="btn btn-primary" href="INSTALL.html">Install</a>
+        <a class="btn" href="INSTALL-CLAUDE-CODE.html">Set up with Claude Code</a>
+        <a class="btn" href="https://github.com/88k8sh/svaha">GitHub</a>
+      </div>
+      <div class="byline reveal">
+        <span class="name">Aakash Raj</span>
+        <span class="dot"></span>
+        <span>open source · MIT</span>
+        <span class="dot"></span>
+        <span>5 min read</span>
+      </div>
+
+      <figure class="hero-fig reveal" id="heroFig" aria-label="Diagram: one session bookended by the same word — svaha opens it (/session), svaha confirms each step (continue), and svaha closes it (/handoff), which writes the checkpoint the next session resumes from.">
+        <svg viewBox="0 0 720 128" role="img">
+          <!-- one session as a thread: heavy while it fills, lean once handed off -->
+          <line class="hf-anim d1" x1="40" y1="64" x2="496" y2="64" stroke="var(--accent)" stroke-width="2.4" stroke-linecap="round" opacity="0.85"/>
+          <line class="hf-anim d4" x1="524" y1="64" x2="690" y2="64" stroke="var(--faint)" stroke-width="1.3" stroke-linecap="round"/>
+          <!-- the session boundary the thread crosses unbroken -->
+          <line class="hf-boundary hf-anim d2" x1="510" y1="38" x2="510" y2="90"/>
+
+          <!-- beat 1: open -->
+          <circle class="hf-anim d1" cx="98" cy="64" r="4.5" fill="var(--accent)"/>
+          <text class="hf-label hf-anim d1" x="98" y="44" text-anchor="middle">/session</text>
+          <text class="hf-label-accent hf-anim d1" x="98" y="89" text-anchor="middle" style="font-size:12.5px">svaha</text>
+
+          <!-- beat 2: confirm, keep going -->
+          <circle class="hf-anim d3" cx="304" cy="64" r="4.5" fill="var(--accent)"/>
+          <text class="hf-label hf-anim d3" x="304" y="44" text-anchor="middle">continue</text>
+          <text class="hf-label-accent hf-anim d3" x="304" y="89" text-anchor="middle" style="font-size:12.5px">svaha</text>
+
+          <!-- beat 3: close — the checkpoint ember, writes the next handoff -->
+          <circle class="hf-anim d3" cx="510" cy="64" r="11" fill="none" stroke="var(--accent)" stroke-width="1.2" opacity="0.35"/>
+          <circle class="hf-anim d3" cx="510" cy="64" r="5.5" fill="var(--accent)"/>
+          <text class="hf-label hf-anim d3" x="510" y="44" text-anchor="middle">/handoff</text>
+          <text class="hf-label-accent hf-anim d3" x="510" y="89" text-anchor="middle" style="font-size:12.5px">svaha</text>
+          <text class="hf-label hf-anim d5" x="510" y="107" text-anchor="middle" style="font-size:10px">writes _NEXT_007</text>
+
+          <!-- the next session, lean, resumes from the checkpoint -->
+          <text class="hf-boundary-label hf-anim d4" x="628" y="60" text-anchor="middle">next session</text>
+        </svg>
+      </figure>
+    </section>
+
+    <article>
+
+      <p class="lead reveal">This was never about an assistant that can't remember. Models remember plenty. The friction is everything around that: to actually resume, you paste the project back in, re-explain the decisions you already made and the ones you threw out, and hunt for the exact line where you stopped. And the longer a session runs to hold all of it, the slower and more expensive it gets. The cost isn't forgetting — it's re-establishing, every single time.</p>
+
+      <p class="reveal">So the fix is a checkpoint. When the window fills up — or you're just done for the day — you stop and save a small, frozen snapshot: where things stand and the exact next moves. The next session reads it and picks up precisely there, fresh and lean, with nothing to paste. The window never has to carry the whole history, so each session stays fast and cheap, and the thread never drops between them.</p>
+
+      <p class="reveal">This is the part a memory feature doesn't give you. Provider-side memory accumulates somewhere you can't see — you can't read it, can't correct it when it's wrong, and can't carry it to a better model the day one ships. A checkpoint is the opposite: plain files in your own repo, exact and yours, that you can open, edit, and take anywhere.</p>
+
+      <blockquote class="pull reveal" aria-hidden="true">The cost was never forgetting.<br>It's <span style="white-space:nowrap">re-establishing</span> — every single time.</blockquote>
+
+      <h2 class="section reveal" id="data"><span class="num">01</span>It's a data problem</h2>
+      <p class="reveal">Three pieces make it work: a way to record exactly where things stand, something to keep those records honest as they pile up, and a fast path to load the right one when a session opens. A handoff trail, a guard layer, a boot path.</p>
+
+      <div class="pillars reveal">
+        <div class="pillar">
+          <div class="pnum">01 / RECORD</div>
+          <h3>The handoff</h3>
+          <p>A frozen, numbered snapshot of where the work stands and the exact next move.</p>
+        </div>
+        <div class="pillar">
+          <div class="pnum">02 / KEEP HONEST</div>
+          <h3>The guard layer</h3>
+          <p>Cheap checks that fight the silent decay of the handoff trail as it grows.</p>
+        </div>
+        <div class="pillar">
+          <div class="pnum">03 / BE CONSISTENT</div>
+          <h3>The contract</h3>
+          <p>A written account of how the assistant works, the same on every session and every model.</p>
+        </div>
+      </div>
+
+      <h2 class="section reveal" id="handoff"><span class="num">02</span>The handoff is the spine</h2>
+      <p class="reveal">When a session ends, it writes a single numbered file: a frozen snapshot of where the work stands, what's in flight, and the exact next move. It is never edited again — a correction becomes the next file, the way a commit is never rewritten, only followed by another. A fresh session reads the latest open snapshot and resumes mid-sentence.</p>
+      <p class="reveal">Run several sessions at once and each takes its own numbered slot, so parallel work never collides — a higher number is a different session's handoff, not a newer draft of mine. The whole point is that no session ever again opens with <span class="mono">so, what were we doing?</span></p>
+
+      <h2 class="section reveal" id="falls-out"><span class="num">what falls out</span>Why it's different</h2>
+      <p class="reveal">A few things fall out that the checkpoints alone don't cover.</p>
+
+      <div class="cards">
+        <div class="card reveal">
+          <svg class="ci" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 7v4a2 2 0 0 1-2 2H5"/><path d="M9 9l-4 4 4 4"/></svg>
+          <h3>It's one word</h3>
+          <div class="cbody"><p>The whole loop turns on a single word — <span class="mono">svaha</span> to open, to confirm, to close. No command palette, no syntax to memorize. The simplest possible surface over everything running underneath.</p></div>
+        </div>
+        <div class="card reveal">
+          <svg class="ci" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 4h11l5 5v11a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1z"/><path d="M14 4v5h5"/><path d="M8 14h7M8 17h5"/></svg>
+          <h3>It's mine, and I can read it</h3>
+          <div class="cbody"><p>Plain files in my own repo. When the assistant has something wrong, I open the file and fix it. Nothing inferred silently and parked somewhere I'll never see.</p></div>
+        </div>
+        <div class="card reveal">
+          <svg class="ci" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h13"/><path d="M13 6l6 6-6 6"/><path d="M20 4v16"/></svg>
+          <h3>It's portable</h3>
+          <div class="cbody"><p>Context lives in my system, not a provider's. Move to a better model the day it ships — the handoff is my checkpoint file, nothing else. The question "which model is best this month" stops costing me my project's history.</p></div>
+        </div>
+        <div class="card reveal">
+          <svg class="ci" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 19h14"/><path d="M12 4 5 14h14z"/></svg>
+          <h3>It's future-proof</h3>
+          <div class="cbody"><p>Plain files and a few hooks — no database, nothing that locks you in. The day a model ships this natively, or you simply outgrow it, you delete a folder and walk away. Nothing to migrate, nothing to rip out.</p></div>
+        </div>
+        <div class="card reveal">
+          <svg class="ci" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.24 12.24a6 6 0 0 0-8.49-8.49L5 10.5V19h8.5z"/><path d="M16 8 2 22"/><path d="M17.5 15H9"/></svg>
+          <h3>It stays lean</h3>
+          <div class="cbody"><p>Each session opens from a small checkpoint, not the whole history — so the window never bloats and you don't pay to re-load everything you've ever done. Fast and cheap, every single time.</p></div>
+        </div>
+        <div class="card reveal">
+          <svg class="ci" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 17l5-5 4 4 8-8"/><path d="M16 8h4v4"/></svg>
+          <h3>It compounds</h3>
+          <div class="cbody"><p>Most working setups degrade as they accumulate — more drift, more stale instructions. The guard layer is why this one doesn't: worth more after six months, not quietly a liability.</p></div>
+        </div>
+      </div>
+
+      <h2 class="section reveal" id="start"><span class="num">get it</span>Get svaha</h2>
+      <p class="reveal">It's a small kit of plain files — the slash commands, a few guard hooks, the handoff scripts. Clone it, run <span class="mono">./setup.sh</span>, and start a session.</p>
+      <p class="prenote reveal">New to Claude Code itself? <a href="INSTALL-CLAUDE-CODE.html">Set up the basics first →</a></p>
+
+      <div class="guides reveal">
+        <a class="guide" href="INSTALL.html"><b>Install</b><span>From scratch — clone, run setup, generate <span class="mono">settings.json</span>, verify with the doctor.</span></a>
+        <a class="guide" href="WELCOME.html"><b>How it works</b><span>The loop, the commands, and your first ten minutes, end to end.</span></a>
+      </div>
+
+      <div class="coda reveal">
+        <p>I built it to stop paying that tax. What I didn't expect was how much steadier the work itself became once the thread stopped living in my own head between sessions and the system was responsible for holding it.</p>
+        <p class="bookend"><b>One word turns the loop.</b> You open a session with <b>svaha</b> — <i>so be it</i> — confirm a step with it, and close the day on it too. When a handoff lands, the system says the word back, once, as a receipt: <span class="bmk">स्वाहा</span> — the offering let go into the fire. Seeing it is your all-clear: the work is written to file, the old session safe to close. Open a new window, say <b>svaha</b>, and you're already there. Begun and carried on, on a single breath.</p>
+      </div>
+
+    </article>
+
+    <footer>
+      <span class="sig">svaha</span>
+      <span>built by Aakash Raj · open source (MIT) · <a href="https://github.com/88k8sh/svaha">GitHub</a> · 2026</span>
+    </footer>
+
+  </div>
+</main>
+
+<script>
+  // ---- Theme toggle ----
+  var toggle = document.getElementById('themeToggle');
+  toggle.addEventListener('click', function () {
+    var cur = document.documentElement.getAttribute('data-theme');
+    var next = cur === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', next);
+    try { localStorage.setItem('theme', next); } catch (e) {}
+  });
+
+  // ---- Reading progress + topbar shadow ----
+  var progress = document.getElementById('progress');
+  var topbar = document.getElementById('topbar');
+  var ticking = false;
+  function onScroll() {
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(function () {
+      var h = document.documentElement;
+      var max = h.scrollHeight - h.clientHeight;
+      var pct = max > 0 ? (h.scrollTop / max) * 100 : 0;
+      progress.style.width = pct + '%';
+      topbar.classList.toggle('scrolled', h.scrollTop > 8);
+      ticking = false;
+    });
+  }
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+
+  // ---- Reveal on scroll ----
+  var reveals = document.querySelectorAll('.reveal');
+  if ('IntersectionObserver' in window) {
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+      });
+    }, { rootMargin: '0px 0px -8% 0px', threshold: 0.08 });
+    reveals.forEach(function (el) { io.observe(el); });
+
+    // hero figure draw
+    var fig = document.getElementById('heroFig');
+    var figIo = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) { if (e.isIntersecting) { fig.classList.add('reveal-fig'); figIo.unobserve(e.target); } });
+    }, { threshold: 0.15 });
+    figIo.observe(fig);
+  } else {
+    reveals.forEach(function (el) { el.classList.add('in'); });
+    document.getElementById('heroFig').classList.add('reveal-fig');
+  }
+
+  // ---- Active section in TOC ----
+  var tocLinks = Array.prototype.slice.call(document.querySelectorAll('.toc a'));
+  var sections = tocLinks.map(function (a) {
+    var id = a.getAttribute('href').slice(1);
+    return document.getElementById(id);
+  });
+  function setActive() {
+    var pos = window.scrollY + window.innerHeight * 0.32;
+    var idx = 0;
+    for (var i = 0; i < sections.length; i++) {
+      if (sections[i] && sections[i].offsetTop <= pos) idx = i;
+    }
+    tocLinks.forEach(function (a, i) { a.classList.toggle('active', i === idx); });
+  }
+  window.addEventListener('scroll', function () { requestAnimationFrame(setActive); }, { passive: true });
+  setActive();
+</script>
+
+</body>
+</html>

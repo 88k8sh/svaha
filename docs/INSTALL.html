@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Svaha — Install (click to copy)</title>
+<title>svaha — Install (click to copy)</title>
 
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%2314130f'/%3E%3Crect x='7' y='9' width='12' height='15' rx='2.5' fill='none' stroke='%23e0a24e' stroke-width='2'/%3E%3Crect x='14' y='6' width='12' height='15' rx='2.5' fill='%2314130f' stroke='%23ece8de' stroke-width='2'/%3E%3C/svg%3E">
 
@@ -152,7 +152,7 @@
 <header class="topbar" id="topbar">
   <a class="brand" href="#top">
     <span style="font-family:'Noto Serif Devanagari',serif;color:var(--accent);font-weight:600;font-size:1.25em;line-height:1;" aria-hidden="true">स्वाहा</span>
-    Svaha <span class="tail">· install</span>
+    svaha <span class="tail">· install</span>
   </a>
   <button class="theme-toggle" id="themeToggle" aria-label="Toggle light and dark theme" title="Toggle theme">
     <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
@@ -164,7 +164,7 @@
 <div class="wrap">
 
   <p class="kicker">Install</p>
-  <h1>Svaha &mdash; Install</h1>
+  <h1>svaha &mdash; Install</h1>
   <p class="sub">From scratch, click-to-copy. Every command has a <b>Copy</b> button — paste it into a Terminal, press return.</p>
   <p class="meta">Open this file in any browser. Works offline (the brand fonts fetch when you're online).</p>
 
@@ -177,13 +177,13 @@
   <h2>0 · Prerequisites</h2>
   <div class="box note">
     <p><span class="lbl">Never used Claude Code before?</span></p>
-    <p>This page installs <b>Svaha on top of Claude Code</b> — it assumes <code>claude</code> already runs. If you're starting from a fresh Mac, do <b><code>INSTALL-CLAUDE-CODE.html</code> first</b> (in this same folder): it installs Claude Code, logs you in, and sets up <code>git</code> + <code>python3</code> so the check below comes up all green. Then come back here.</p>
+    <p>This page installs <b>svaha on top of Claude Code</b> — it assumes <code>claude</code> already runs. If you're starting from a fresh Mac, do <b><code>INSTALL-CLAUDE-CODE.html</code> first</b> (in this same folder): it installs Claude Code, logs you in, and sets up <code>git</code> + <code>python3</code> so the check below comes up all green. Then come back here.</p>
   </div>
-  <p><span class="where term">Terminal</span> Check you have the three things Svaha needs. Each should print a version, not "command not found":</p>
+  <p><span class="where term">Terminal</span> Check you have the three things svaha needs. Each should print a version, not "command not found":</p>
   <div class="cmd"><pre>claude --version && python3 --version && git --version</pre><button onclick="cp(this)">Copy</button></div>
   <div class="expect">If <b>claude</b> is missing → install Claude Code first (see <b>INSTALL-CLAUDE-CODE.html</b>). If <b>python3</b> is missing → install Python 3 (the guard hooks need it). <b>git</b> is only needed for the clone in Step 1 — you can download the folder instead.</div>
 
-  <h2>1 · Get Svaha</h2>
+  <h2>1 · Get svaha</h2>
   <div class="step">
     <div class="h"><span class="n">1</span><span class="where term">Terminal</span> &nbsp;Clone it and move into the folder:</div>
     <div class="cmd"><pre>git clone https://github.com/88k8sh/svaha && cd svaha</pre><button onclick="cp(this)">Copy</button></div>
@@ -262,7 +262,7 @@ hooks: the six <b>*.sh</b> files (context-canary, launchpad-nudge, memory-reflec
   </table>
 
   <footer class="sitefoot">
-    <span class="sig">Svaha</span>
+    <span class="sig">svaha</span>
     <span>Full reference: <code>README.md</code> · the contract: <code>CLAUDE.md</code> · the why: <code>docs/essay.md</code> · new here? <code>INSTALL-CLAUDE-CODE.html</code></span>
   </footer>
 </div>

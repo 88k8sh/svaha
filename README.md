@@ -12,7 +12,7 @@ One `CLAUDE.md` + a small scaffold turn the loose pieces of a good Claude Code s
 
 ---
 
-> **New here?** Open **[`WELCOME.html`](WELCOME.html)** for a visual tour of how it works + your first ten minutes. Installing? **[`INSTALL.html`](INSTALL.html)** is click-to-copy from scratch. **Never used Claude Code before?** Start one step earlier with **[`INSTALL-CLAUDE-CODE.html`](INSTALL-CLAUDE-CODE.html)** — it installs Claude Code itself, then hands off to `INSTALL.html`.
+> **New here?** Open **[`WELCOME.html`](docs/WELCOME.html)** for a visual tour of how it works + your first ten minutes. Installing? **[`INSTALL.html`](docs/INSTALL.html)** is click-to-copy from scratch. **Never used Claude Code before?** Start one step earlier with **[`INSTALL-CLAUDE-CODE.html`](docs/INSTALL-CLAUDE-CODE.html)** — it installs Claude Code itself, then hands off to `INSTALL.html`.
 
 ## The problem
 
@@ -44,7 +44,7 @@ It travels, too: `CLAUDE.md` is canonical; [`AGENTS.md`](AGENTS.md) is the vendo
 
 ## Install
 
-> **Prefer click-to-copy?** Open **[`INSTALL.html`](INSTALL.html)** in a browser — the full from-scratch walkthrough with a Copy button on every command, and the `<system-dir>` substitution + JSON validation done for you in one paste.
+> **Prefer click-to-copy?** Open **[`INSTALL.html`](docs/INSTALL.html)** in a browser — the full from-scratch walkthrough with a Copy button on every command, and the `<system-dir>` substitution + JSON validation done for you in one paste.
 
 ### Quickest — run the installer
 
