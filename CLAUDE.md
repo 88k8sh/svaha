@@ -19,8 +19,62 @@ Do the boot immediately when asked, without other work.
 
 **End-of-turn bottom line.** End every substantive turn with one plain-English line — the **bottom line** — answering, in order: (1) **status** — done / blocked on you / still working; (2) **read-up** — `nothing above needs you`, or name the *exact* part worth reading (`read the 2nd paragraph — there's a choice for you`); (3) **handoff** — governed by the auto-handoff HARD RULE below; never *ask* about it.
 
+**Rendering (end-of-turn block).** The bottom line is the *bright signal* — emit it bold inside a **three-row `▌` side-bar**: two bare `▌` rows above, with `▌ **Bottom line** — …` as the bottom (third) row. Plain bright text, **never a blockquote** (quoted text renders muted; the bottom line must stay bright). The context gauge and conviction tag go inside **one blockquote (`>`)** directly below (blank line between), so they render greyed and recessive. Assembled (the blockquote appears only when the gauge and/or conviction fire):
+
 ```
-Bottom line: <status>. <read-up signal>.
+▌
+▌
+▌ **Bottom line** — <status>. <read-up signal>.
+
+> context: ~<medium|heavy> · <wrap up soon | start fresh> · next: <Sonnet|Opus> / <low|medium|high|max|ultra>
+> conviction: <high|medium|low> — <one-line why>
+```
+
+**Boot status block — the `◈` emblem.** A session *opens* with a three-row `◈` emblem — the mirror of the `▌` bottom-line block, so a session opens with three ◈ rising into the first status line and closes with three ▌ rising into the bottom line:
+
+```
+◈
+◈
+◈ loaded: _NEXT_NNN ✓  _LOADUP ✓
+phase: [current work mode]
+tasks: N open
+next: move 1 — <move text> (<model> / <effort>)
+```
+
+**Handoff seal — placement.** When a handoff closes: `Next session:` closer → bottom line → **seal-banner** (`# स्वाहा` framed by `---` rules above and below):
+
+```
+Next session: /session NNN — <focus label>
+
+▌
+▌
+▌ **Bottom line** — <session-end status>
+
+---
+
+# स्वाहा
+
+---
+```
+
+**Reflection-banner — the lighter close.** When `/handoff` downgrades to a reflection (nothing live to carry → no seal), use `# ◇ ◇ ◇` instead — hollow because a reflection carries nothing forward; grand because it is still a real close. No `Next session:` line:
+
+```
+▌
+▌
+▌ **Bottom line** — <session-end status>
+
+---
+
+# ◇ ◇ ◇
+
+---
+```
+
+**`Next session:` closer — bare line only.** The `resume-line-guard.sh` Stop hook matches `^Next session: /session NNN` — any prefix (bold, `>`, indent) breaks the match:
+
+```
+Next session: /session NNN — <focus label>
 ```
 
 **Context gauge — conditional, not every turn.** The technical gauge no longer fires on every task — it collapses into the bottom line. Emit it as a second line ONLY when (a) context is **medium or heavy**, or (b) the recommended model/effort for the next task **differs from what you're running now** — a mechanical test, not a judgment call: compute the best fit, compare to current, emit only if they differ. Otherwise omit it: on a light, mid-session turn the bottom line is the whole story. (`/context` and `/handoff` step 1 still emit the full gauge on demand, regardless of tier.)
