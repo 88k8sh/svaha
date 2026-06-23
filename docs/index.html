@@ -388,7 +388,7 @@
       </div>
       <h1 class="title reveal">Pick up exactly where you left off.</h1>
       <p class="dek reveal">Stop any time, drop a checkpoint, and resume right where you were — no pasting context back in, no re-explaining. Lean checkpoints keep each session small and cheap, and it all lives in plain files you own.</p>
-      <p class="reveal" style="margin:2px 0 28px;font-size:17px;line-height:1.55;color:var(--ink)"><b>One word runs the whole loop</b> — <span class="mono">svaha</span> to begin · <span class="mono">svaha</span> to confirm · <span class="mono">svaha</span> to wrap. No commands to memorize; a finished wrap seals back, once, as <span style="font-family:'Noto Serif Devanagari',serif;color:var(--accent-ink);font-weight:600">स्वाहा</span>.</p>
+      <p class="reveal" style="margin:2px 0 28px;font-size:17px;line-height:1.55;color:var(--ink)"><b>One word fuels the loop</b> — <span class="mono">svaha</span> to begin · <span class="mono">svaha</span> to confirm · <span class="mono">svaha</span> to wrap. No commands to memorize; a finished wrap seals back, once, as <span style="font-family:'Noto Serif Devanagari',serif;color:var(--accent-ink);font-weight:600">स्वाहा</span>.</p>
       <div class="cta reveal">
         <a class="btn btn-primary" href="INSTALL.html">Install</a>
         <a class="btn" href="WELCOME.html">How it works</a>
@@ -404,32 +404,35 @@
       </div>
 
       <figure class="hero-fig reveal" id="heroFig" aria-label="Diagram: one session bookended by the same word — svaha opens it (/session), svaha confirms each step (continue), and svaha closes it (/handoff), which writes the checkpoint the next session resumes from.">
-        <svg viewBox="0 0 720 150" role="img">
+        <!-- y-coords are coupled to viewBox height (160); keep them in sync if height changes.
+             Thread at y=80. Top labels at y=42 (38px gap). Bottom labels at y=118 (38px gap).
+             Sub-label at y=136 (18px below svaha). Bottom padding: 24px. -->
+        <svg viewBox="0 0 720 160" role="img">
           <!-- one session as a thread: heavy while it fills, lean once handed off -->
-          <line class="hf-anim d1" x1="40" y1="72" x2="496" y2="72" stroke="var(--accent)" stroke-width="1.6" stroke-linecap="round" opacity="0.55"/>
-          <line class="hf-anim d4" x1="524" y1="72" x2="690" y2="72" stroke="var(--faint)" stroke-width="1.2" stroke-linecap="round"/>
+          <line class="hf-anim d1" x1="40" y1="80" x2="496" y2="80" stroke="var(--accent)" stroke-width="1.6" stroke-linecap="round" opacity="0.55"/>
+          <line class="hf-anim d4" x1="524" y1="80" x2="690" y2="80" stroke="var(--faint)" stroke-width="1.2" stroke-linecap="round"/>
           <!-- the session boundary the thread crosses unbroken -->
-          <line class="hf-boundary hf-anim d2" x1="510" y1="60" x2="510" y2="84"/>
+          <line class="hf-boundary hf-anim d2" x1="510" y1="64" x2="510" y2="96"/>
 
           <!-- beat 1: open -->
-          <circle class="hf-anim d1" cx="98" cy="72" r="4.5" fill="var(--accent)"/>
-          <text class="hf-label hf-anim d1" x="98" y="34" text-anchor="middle">/session</text>
-          <text class="hf-label-accent hf-anim d1" x="98" y="116" text-anchor="middle" style="font-size:12.5px">svaha</text>
+          <circle class="hf-anim d1" cx="98" cy="80" r="4.5" fill="var(--accent)"/>
+          <text class="hf-label hf-anim d1" x="98" y="42" text-anchor="middle">/session</text>
+          <text class="hf-label-accent hf-anim d1" x="98" y="118" text-anchor="middle" style="font-size:12.5px">svaha</text>
 
           <!-- beat 2: confirm, keep going -->
-          <circle class="hf-anim d3" cx="304" cy="72" r="4.5" fill="var(--accent)"/>
-          <text class="hf-label hf-anim d3" x="304" y="34" text-anchor="middle">continue</text>
-          <text class="hf-label-accent hf-anim d3" x="304" y="116" text-anchor="middle" style="font-size:12.5px">svaha</text>
+          <circle class="hf-anim d3" cx="304" cy="80" r="4.5" fill="var(--accent)"/>
+          <text class="hf-label hf-anim d3" x="304" y="42" text-anchor="middle">continue</text>
+          <text class="hf-label-accent hf-anim d3" x="304" y="118" text-anchor="middle" style="font-size:12.5px">svaha</text>
 
           <!-- beat 3: close — the checkpoint ember, writes the next handoff -->
-          <circle class="hf-anim d3" cx="510" cy="72" r="11" fill="none" stroke="var(--accent)" stroke-width="1.2" opacity="0.35"/>
-          <circle class="hf-anim d3" cx="510" cy="72" r="5.5" fill="var(--accent)"/>
-          <text class="hf-label hf-anim d3" x="510" y="34" text-anchor="middle">/handoff</text>
-          <text class="hf-label-accent hf-anim d3" x="510" y="116" text-anchor="middle" style="font-size:12.5px">svaha</text>
+          <circle class="hf-anim d3" cx="510" cy="80" r="11" fill="none" stroke="var(--accent)" stroke-width="1.2" opacity="0.35"/>
+          <circle class="hf-anim d3" cx="510" cy="80" r="5.5" fill="var(--accent)"/>
+          <text class="hf-label hf-anim d3" x="510" y="42" text-anchor="middle">/handoff</text>
+          <text class="hf-label-accent hf-anim d3" x="510" y="118" text-anchor="middle" style="font-size:12.5px">svaha</text>
           <text class="hf-label hf-anim d5" x="510" y="136" text-anchor="middle" style="font-size:10px">writes _NEXT_007</text>
 
           <!-- the next session, lean, resumes from the checkpoint -->
-          <text class="hf-boundary-label hf-anim d4" x="628" y="68" text-anchor="middle">next session</text>
+          <text class="hf-boundary-label hf-anim d4" x="628" y="76" text-anchor="middle">next session</text>
         </svg>
       </figure>
     </section>
@@ -442,7 +445,7 @@
 
       <blockquote class="pull reveal" aria-hidden="true">The cost was never forgetting.<br>It's <span style="white-space:nowrap">re-establishing</span> — every single time.</blockquote>
 
-      <h2 class="section reveal" id="data"><span class="num">01</span>It's a data problem</h2>
+      <h2 class="section reveal" id="data"><span class="num">the problem</span>Data management</h2>
       <p class="reveal">Three pieces make it work: a way to record exactly where things stand, something to keep those records honest as they pile up, and a fast path to load the right one when a session opens. A handoff trail, a guard layer, a boot path.</p>
 
       <div class="pillars reveal">
@@ -463,18 +466,18 @@
         </div>
       </div>
 
-      <h2 class="section reveal" id="handoff"><span class="num">02</span>The handoff is the spine</h2>
+      <h2 class="section reveal" id="handoff"><span class="num">the handoff</span>The spine</h2>
       <p class="reveal">When a session ends, it writes a single numbered file: a frozen snapshot of where the work stands, what's in flight, and the exact next move. It is never edited again — a correction becomes the next file, the way a commit is never rewritten, only followed by another. A fresh session reads the latest open snapshot and resumes mid-sentence.</p>
       <p class="reveal">Run several sessions at once and each takes its own numbered slot, so parallel work never collides — a higher number is a different session's handoff, not a newer draft of mine. The whole point is that no session ever again opens with <span class="mono">so, what were we doing?</span></p>
 
-      <h2 class="section reveal" id="falls-out"><span class="num">what falls out</span>Why it's different</h2>
+      <h2 class="section reveal" id="falls-out">Why it's different</h2>
       <p class="reveal">A few things fall out that the checkpoints alone don't cover.</p>
 
       <div class="cards">
         <div class="card reveal">
           <svg class="ci" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 7v4a2 2 0 0 1-2 2H5"/><path d="M9 9l-4 4 4 4"/></svg>
           <h3>It's one word</h3>
-          <div class="cbody"><p>The whole loop turns on a single word — <span class="mono">svaha</span> to open, to confirm, to close. No command palette, no syntax to memorize. The simplest possible surface over everything running underneath.</p></div>
+          <div class="cbody"><p>One word fuels the whole loop — <span class="mono">svaha</span> to open, to confirm, to close. No command palette, no syntax to memorize. The simplest possible surface over everything running underneath.</p></div>
         </div>
         <div class="card reveal">
           <svg class="ci" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 4h11l5 5v11a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1z"/><path d="M14 4v5h5"/><path d="M8 14h7M8 17h5"/></svg>
@@ -519,7 +522,7 @@
 
       <div class="coda reveal">
         <p>I built it to stop paying that tax. What I didn't expect was how much steadier the work itself became once the thread stopped living in my own head between sessions and the system was responsible for holding it.</p>
-        <p class="bookend"><b>One word turns the loop — three beats of the same word, a small ritual.</b> You <i>open</i> a session with <b>svaha</b> — <i>so be it</i> — <i>confirm</i> a step with it, and <i>close</i> the day on it too. When a handoff lands, the system says the word back, once, as a receipt: <span class="bmk">स्वाहा</span> — the offering let go into the fire. Seeing it is your all-clear: the work is written to file, the old session safe to close. Open a new window, say <b>svaha</b>, and you're already there. Begun and carried on, on a single breath.</p>
+        <p class="bookend"><b>One word fuels the loop — three beats of the same word, a small ritual.</b> You <i>open</i> a session with <b>svaha</b> — <i>so be it</i> — <i>confirm</i> a step with it, and <i>close</i> the day on it too. When a handoff lands, the system says the word back, once, as a receipt: <span class="bmk">स्वाहा</span> — the offering let go into the fire. Seeing it is your all-clear: the work is written to file, the old session safe to close. Open a new window, say <b>svaha</b>, and you're already there. Begun and carried on, on a single breath.</p>
       </div>
 
     </article>
