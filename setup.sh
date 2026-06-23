@@ -65,8 +65,15 @@ cmd_ok=0
 cmd_miss=0
 for f in $COMMANDS; do
   if [ -f "$KIT_ROOT/$f" ]; then
-    cp "$KIT_ROOT/$f" "$CMD_DIR/$f"
-    echo "          copied  $f"
+    # Substitute <system-dir> so the commands know where the kit lives at runtime.
+    # Same pattern as the hooks step below — without this, the model sees the literal
+    # placeholder and starts exploring the filesystem to resolve it (permissions storm).
+    sed "s|<system-dir>|$KIT_ROOT|g" "$KIT_ROOT/$f" > "$CMD_DIR/$f"
+    if grep -q '<system-dir>' "$CMD_DIR/$f" 2>/dev/null; then
+      echo "          copied  $f  (WARNING: <system-dir> placeholder still present — sed may have failed)"
+    else
+      echo "          copied  $f  (rewrote <system-dir> -> $KIT_ROOT)"
+    fi
     cmd_ok=$((cmd_ok + 1))
   else
     echo "          MISSING $f  (not found in kit root — skipped)"
@@ -124,16 +131,16 @@ if [ -f "$KIT_ROOT/CLAUDE.md" ]; then
     case "$REPLY" in
       y|Y|yes|YES)
         cp "$TARGET_CLAUDE" "$TARGET_CLAUDE.backup.$( date +%Y%m%d-%H%M%S )"
-        cp "$KIT_ROOT/CLAUDE.md" "$TARGET_CLAUDE"
-        echo "          overwrote (a timestamped .backup was kept alongside it)"
+        sed "s|<system-dir>|$KIT_ROOT|g" "$KIT_ROOT/CLAUDE.md" > "$TARGET_CLAUDE"
+        echo "          overwrote (a timestamped .backup was kept alongside it; <system-dir> -> $KIT_ROOT)"
         ;;
       *)
         echo "          kept your existing CLAUDE.md (no change)"
         ;;
     esac
   else
-    cp "$KIT_ROOT/CLAUDE.md" "$TARGET_CLAUDE"
-    echo "          installed CLAUDE.md template -> $TARGET_CLAUDE"
+    sed "s|<system-dir>|$KIT_ROOT|g" "$KIT_ROOT/CLAUDE.md" > "$TARGET_CLAUDE"
+    echo "          installed CLAUDE.md template -> $TARGET_CLAUDE  (<system-dir> -> $KIT_ROOT)"
   fi
   echo ""
 fi
@@ -221,5 +228,9 @@ echo "Step 6/6  So be it."
 echo ""
 echo "          Verify:  bash $KIT_ROOT/bin/doctor.sh"
 echo "          Begin:   open Claude Code and say  svaha   (or run /session)"
+echo "=========================================================="
+echo ""
+echo "          स्वाहा"
+echo ""
 echo "=========================================================="
 echo ""
