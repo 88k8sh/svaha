@@ -12,8 +12,8 @@ settings.generated.json
 .claude/
 
 # runtime machine logs — created by the PreToolUse guards, per-machine
-30_LEDGER/security-guard-log.jsonl
-30_LEDGER/version-guard-log.jsonl
+ledger/security-guard-log.jsonl
+ledger/version-guard-log.jsonl
 
 # Consumed-handoff sidecars are runtime state, not source
 next/*.consumed

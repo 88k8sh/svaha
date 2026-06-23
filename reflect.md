@@ -40,7 +40,7 @@ Be specific — "user corrected X because Y" is useful; "user likes clarity" is 
 
 After the memory pass, scan the session for **system bugs caught and fixed** — things Claude or the user identified as broken/wrong and corrected during the session (script logic errors, command referencing a stale path, wrong threshold, bad rule, etc.). For each bug:
 
-Append to `<system-dir>/30_LEDGER/session-fixes.md`:
+Append to `<system-dir>/ledger/session-fixes.md`:
 
 ```
 ## YYYY-MM-DD — [one-line description]

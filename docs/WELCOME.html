@@ -243,17 +243,20 @@
   <table>
     <tr><th>Folder / file</th><th>What's in it</th></tr>
     <tr><td><code>next/</code></td><td>Your frozen handoffs — one numbered <code>_NEXT_NNN.md</code> per session. Immutable, like commits.</td></tr>
-    <tr><td><code>30_LEDGER/</code></td><td>The system log: <code>CHANGELOG</code>, <code>DECISIONS</code>, <code>LESSONS</code>, fixes, and the <code>_ARCHIVE/</code>.</td></tr>
+    <tr><td><code>ledger/</code></td><td>The system log: <code>CHANGELOG</code>, <code>DECISIONS</code>, <code>LESSONS</code>, and fixes.</td></tr>
     <tr><td><code>memory/</code></td><td>Durable context about you and your project — the surprises, not the derivable facts.</td></tr>
     <tr><td><code>bin/</code></td><td>The guards (<code>security-guard</code>, <code>version-guard</code>, <code>drift-guard</code>, <code>coherence-check</code>) + the handoff writer.</td></tr>
+    <tr><td><code>SYSTEM_MAP.md</code></td><td>The data-flow map — what every file does and how a session moves through them.</td></tr>
+    <tr><td><code>SYNC_MAP.md</code></td><td>The coupling map — "change X → also update Y." Your guide for remapping commands or paths.</td></tr>
     <tr><td><code>CLAUDE.md</code></td><td>The behavior contract — the actual rules. Read it once; it's the whole system in one file.</td></tr>
   </table>
 
   <h2>Make it yours</h2>
   <div class="box tip">
-    <p><span class="lbl">Two things to know</span></p>
+    <p><span class="lbl">Three things to know</span></p>
     <p><b>1. It's modular.</b> <code>CLAUDE.md</code> is split along the risk gate. The <b>core</b> is the safety skeleton + handoff loop. The clearly-fenced <b>operator layer</b> is the opinionated judgment half (conviction calibration, premortem, weigh-before-you-ask). Keep it for the full self-tuning experience, or delete that one block for a lean core that still stops on everything dangerous.</p>
     <p><b>2. Editing is your call.</b> The permission posture ships frictionless-but-fenced: reads run silently, <code>push</code>/<code>rm</code>/network/secrets always confirm or block, and file edits are granted once at install (or set to ask once per session — your pick, see the snippet header).</p>
+    <p><b>3. Remapping is mapped.</b> Renaming a command or moving the whole system dir? <code>SYNC_MAP.md</code> §3 (commands) and §4 (paths) list every place to update — so a rename never silently half-lands.</p>
   </div>
 
   <footer class="sitefoot">

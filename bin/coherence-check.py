@@ -37,8 +37,8 @@ SYSTEM_DIR = Path("<system-dir>")           # ← CHANGE THIS to an absolute pat
 DOT_CLAUDE = HOME / ".claude"
 COMMANDS_DIR = DOT_CLAUDE / "commands"
 
-CHANGELOG = SYSTEM_DIR / "30_LEDGER" / "CHANGELOG.md"
-AUDIT_STATE = SYSTEM_DIR / "30_LEDGER" / "audit-state.md"
+CHANGELOG = SYSTEM_DIR / "ledger" / "CHANGELOG.md"
+AUDIT_STATE = SYSTEM_DIR / "ledger" / "audit-state.md"
 NEXT_DIR = SYSTEM_DIR / "next"
 
 # Slash commands _LOADUP §2 declares as registered (stems only, no .md).

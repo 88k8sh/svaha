@@ -49,12 +49,12 @@ Boot reads the specific `_NEXT_NNN.md` named in the opener block (or auto-picked
 |---|---|---|
 | `<system-dir>/_NEXT.md` | Permanent handoff spec + pointer | always (boot) |
 | `<system-dir>/next/` | All session handoffs (parallel slots) | always (boot — named file only) |
-| `<system-dir>/30_LEDGER/CHANGELOG.md` | Master system log — every structural change | reference |
-| `<system-dir>/30_LEDGER/USER_TASKS.md` | Persistent to-do list — things only a human can do (physical actions, decisions, find-and-retrieve) | reference |
-| `<system-dir>/30_LEDGER/session-fixes.md` | Bugs caught + patched per session — failure modes for future reference | reference |
-| `<system-dir>/30_LEDGER/DECISIONS.md` | Design decisions + alternatives considered (the road not taken) | reference |
-| `<system-dir>/30_LEDGER/LESSONS.md` | Named lessons distilled from incidents — consolidated, human-readable | reference |
-| `<system-dir>/30_LEDGER/drift-guard-evidence.md` | Running log of instances where the drift-guard hook caught real drift | reference |
+| `<system-dir>/ledger/CHANGELOG.md` | Master system log — every structural change | reference |
+| `<system-dir>/ledger/USER_TASKS.md` | Persistent to-do list — things only a human can do (physical actions, decisions, find-and-retrieve) | reference |
+| `<system-dir>/ledger/session-fixes.md` | Bugs caught + patched per session — failure modes for future reference | reference |
+| `<system-dir>/ledger/DECISIONS.md` | Design decisions + alternatives considered (the road not taken) | reference |
+| `<system-dir>/ledger/LESSONS.md` | Named lessons distilled from incidents — consolidated, human-readable | reference |
+| `<system-dir>/ledger/drift-guard-evidence.md` | Running log of instances where the drift-guard hook caught real drift | reference |
 | `<system-dir>/_ARCHIVE/` | Graveyard for superseded files — move here, never hard-delete | reference |
 | *(add your own content subtrees here — e.g. `<system-dir>/<domain>/` → what it holds → read tier)* | | |
 

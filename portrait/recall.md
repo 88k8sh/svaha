@@ -82,7 +82,7 @@ before indexing anything.**
 - **A long Svaha history** — dozens of `_NEXT_NNN.md` handoffs across a year,
   where a behavioral pattern recurs in varied phrasing across many files. recall
   surfaces the semantically-near handoffs grep would only find with a lucky keyword.
-  (recall indexes the loop corpus — `next/` and `30_LEDGER/` — automatically, so the
+  (recall indexes the loop corpus — `next/` and `ledger/` — automatically, so the
   operator-pattern evidence is searchable by meaning too.)
 
 **Grep is the right tool — don't bother with recall — when:**
@@ -107,7 +107,7 @@ differently evidence and the say/do gaps both matter for an anti-Barnum portrait
    ```
 2. **Point it at your corpus.** recall reads Portrait's existing manifest —
    `portrait/identity/sources.md` — for the `- path:` entries, and **always** also
-   indexes the Svaha loop (`next/`, `30_LEDGER/`). Placeholder paths (`<...>`)
+   indexes the Svaha loop (`next/`, `ledger/`). Placeholder paths (`<...>`)
    are skipped. (Run `/portrait` first if `sources.md` doesn't exist yet — Step 0
    creates it from the template; the template's placeholder paths simply don't resolve,
    which is fine.)

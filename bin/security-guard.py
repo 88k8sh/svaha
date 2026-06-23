@@ -91,7 +91,7 @@ def _log(decision, reason):
     if os.environ.get("SECURITY_GUARD_NO_LOG"):
         return
     try:
-        log = Path(__file__).resolve().parent.parent / "30_LEDGER" / "security-guard-log.jsonl"
+        log = Path(__file__).resolve().parent.parent / "ledger" / "security-guard-log.jsonl"
         with open(log, "a") as f:
             f.write(json.dumps({
                 "ts": datetime.now().isoformat(timespec="seconds"),

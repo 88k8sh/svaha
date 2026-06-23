@@ -61,7 +61,7 @@ SOURCES_TEMPLATE = IDENTITY_DIR / "sources.template.md"
 
 # Svaha-loop corpus (always-on, structurally-unique source class).
 NEXT_DIR = THROUGHLINE_DIR / "next"
-LEDGER_DIR = THROUGHLINE_DIR / "30_LEDGER"
+LEDGER_DIR = THROUGHLINE_DIR / "ledger"
 
 MODEL_NAME = "BAAI/bge-small-en-v1.5"
 EMBED_DIM = 384                                        # bge-small-en-v1.5 dim

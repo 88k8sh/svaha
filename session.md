@@ -40,7 +40,7 @@ If `recently consumed` is non-empty, say so in one line — don't let a just-ret
 **Step 3 — read files:**
 - The resolved `_NEXT_NNN.md`
 - `<system-dir>/_LOADUP.md`
-- `<system-dir>/30_LEDGER/USER_TASKS.md` (for task count only)
+- `<system-dir>/ledger/USER_TASKS.md` (for task count only)
 
 **Step 4 — on-demand pre-load:** scan `## Next moves` for any `(requires: X)` annotations. If present, load those files now before emitting the status block — not mid-task.
 

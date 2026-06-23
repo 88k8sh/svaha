@@ -68,7 +68,7 @@ cp CLAUDE.md ./CLAUDE.md              # scoped to one repo
 The verified handoff and `/session` expect a small scaffold beside the file: the slash commands, the `bin/` scripts, and the hooks.
 
 ```bash
-# 1. copy the scaffold into your project root (the folder with bin/, next/, 30_LEDGER/)
+# 1. copy the scaffold into your project root (the folder with bin/, next/, ledger/)
 # 2. install the six slash commands
 cp boot.md session.md handoff.md reflect.md audit.md foldin.md ~/.claude/commands/
 # 3. install the hook scripts
@@ -89,7 +89,7 @@ A complete package is five layers — missing any one produces a system that run
 | **2 · Guardrail shell** | `bin/drift-guard.py`, `bin/security-guard.py`, `bin/version-guard.py`, `bin/coherence-check.py`, `audit.md`, `SYNC_MAP.md`, `SYSTEM_MAP.md` |
 | **3 · Canary hooks** | `hooks/context-canary.sh`, `hooks/launchpad-nudge.sh`, `hooks/memory-reflect.sh`, `hooks/resume-line-guard.sh`, `hooks/session-end-backstop.sh`, `hooks/session-start-marker.sh`, `settings.json.snippet` |
 | **4 · Memory** | `memory/MEMORY.md` index + per-entry files |
-| **5 · Ledger** | `30_LEDGER/` — `CHANGELOG.md`, `DECISIONS.md`, `LESSONS.md`, `session-fixes.md`, `USER_TASKS.md`, `audit-state.md`, `_ARCHIVE/` |
+| **5 · Ledger** | `ledger/` — `CHANGELOG.md`, `DECISIONS.md`, `LESSONS.md`, `session-fixes.md`, `USER_TASKS.md`, `audit-state.md`, `_ARCHIVE/` |
 
 See [`docs/essay.md`](docs/essay.md) for the *why* — the reasoning behind treating project context as a database problem.
 

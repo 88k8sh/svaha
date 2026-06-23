@@ -41,7 +41,7 @@ This is the spine of the kit — how state survives across sessions that otherwi
       │   1. bin/next-write.sh  → mints a NEW frozen next/_NEXT_NNN+1.md (collision-safe auto-increment)
       │   2. memory/*.md        → behavioral rules for future sessions
       │   3. touch next/_NEXT_NNN.consumed   → marks the booted session done
-      │   4. logs to 30_LEDGER/CHANGELOG.md  → structural digest
+      │   4. logs to ledger/CHANGELOG.md  → structural digest
       ▼
   next session boots → reads the _NEXT just minted → loop closes
 ```
@@ -72,8 +72,8 @@ Key invariants this loop enforces:
 |---|---|
 | Stable facts, system architecture, retrieval index | `_LOADUP.md` (`§2` facts, `§4` index) |
 | This data-flow map | `SYSTEM_MAP.md` |
-| Design decisions + alternatives considered | `30_LEDGER/DECISIONS.md` *(optional — add if needed)* |
-| Named lessons from incidents | `30_LEDGER/LESSONS.md` *(optional — add if needed)* |
+| Design decisions + alternatives considered | `ledger/DECISIONS.md` *(optional — add if needed)* |
+| Named lessons from incidents | `ledger/LESSONS.md` *(optional — add if needed)* |
 
 ### Behavioral layer (rules that govern how sessions act)
 | What | Where |
@@ -84,11 +84,11 @@ Key invariants this loop enforces:
 ### Ledger layer (audit trail — append-mostly)
 | File | Written by | What it records |
 |---|---|---|
-| `30_LEDGER/CHANGELOG.md` | `/handoff` (or manually) | Structural changes — NEW, EDIT, MOVED |
-| `30_LEDGER/session-fixes.md` | `/reflect` (via `/handoff`) | Bugs caught and fixed |
-| `30_LEDGER/USER_TASKS.md` | `/handoff` | Actions only the human can take (hands, credentials, decisions) |
-| `30_LEDGER/audit-state.md` | `/audit` | Counter: last audit, date, tier |
-| `30_LEDGER/drift-guard-evidence.md` | Manual | Guard fires: real catches + false positives |
+| `ledger/CHANGELOG.md` | `/handoff` (or manually) | Structural changes — NEW, EDIT, MOVED |
+| `ledger/session-fixes.md` | `/reflect` (via `/handoff`) | Bugs caught and fixed |
+| `ledger/USER_TASKS.md` | `/handoff` | Actions only the human can take (hands, credentials, decisions) |
+| `ledger/audit-state.md` | `/audit` | Counter: last audit, date, tier |
+| `ledger/drift-guard-evidence.md` | Manual | Guard fires: real catches + false positives |
 | `_ARCHIVE/` | Manual | Retired files — no hard deletes; supersede then archive |
 
 ### Command layer (the slash-command specs)

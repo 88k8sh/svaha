@@ -72,7 +72,7 @@ A handoff is not a trusted note; it is a **checked contract**. The header block 
 **What not to include:**
   - Architecture or system design → that's `_LOADUP.md` and `README.md`
   - Facts already in stable reference docs
-  - Completed tasks → log in `30_LEDGER/CHANGELOG.md`
+  - Completed tasks → log in `ledger/CHANGELOG.md`
   - Keep the whole file under 30 lines
 
 ---

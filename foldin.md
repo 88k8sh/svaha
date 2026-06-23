@@ -30,11 +30,11 @@ Read `<system-dir>/_LOADUP.md` (and any `_NEXT_NNN.md` already in context for th
 
 ## STEP 3 — Extract decisions → DECISIONS.md
 
-From this chat, identify every significant decision that weighed alternatives and chose. Append each to `<system-dir>/30_LEDGER/DECISIONS.md` in that file's format (`Chose / Over / Why`). If a decision's reasoning can't be reconstructed from context, record the decision and write `reasoning not recoverable from context`. Do not filter — record all; the user decides what matters.
+From this chat, identify every significant decision that weighed alternatives and chose. Append each to `<system-dir>/ledger/DECISIONS.md` in that file's format (`Chose / Over / Why`). If a decision's reasoning can't be reconstructed from context, record the decision and write `reasoning not recoverable from context`. Do not filter — record all; the user decides what matters.
 
 ## STEP 4 — Route user-action items → USER_TASKS.md
 
-Apply the USER_TASKS test (per `handoff.md` step 3 — can the assistant execute it by reading/writing? if yes it's a `_NEXT` move, not USER_TASKS). Append genuine user-action items under `## Open` in `<system-dir>/30_LEDGER/USER_TASKS.md`.
+Apply the USER_TASKS test (per `handoff.md` step 3 — can the assistant execute it by reading/writing? if yes it's a `_NEXT` move, not USER_TASKS). Append genuine user-action items under `## Open` in `<system-dir>/ledger/USER_TASKS.md`.
 
 ## STEP 5 — Mint the first `_NEXT` for this thread
 

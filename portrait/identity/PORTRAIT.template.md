@@ -66,7 +66,7 @@ meta:
 - <pattern: where conviction and outcome diverge>  [?INFERRED] (confidence: medium)
   ev: <N handoffs where high-conviction calls held vs failed — locator>
 - <pattern: which corrections recur>  [✓VERIFIED] (confidence: high)
-  ev: 30_LEDGER/<ledger file> → "<the correction, promoted at 2nd occurrence>"
+  ev: ledger/<ledger file> → "<the correction, promoted at 2nd occurrence>"
 
 ---
 

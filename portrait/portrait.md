@@ -150,10 +150,10 @@ only Svaha has been recording how you actually *operate over time*. Read all thr
    layer) against the **verified outcomes** the next boot recorded. A `high`-conviction call that
    later verified `FAILED` is a **calibration miss**; a pattern of them is a real, evidenced trait
    ("over-confident on X-shaped decisions"). A well-calibrated track record is equally a finding.
-   Sources: the `_NEXT` header `outcome:` fields, `30_LEDGER/session-fixes.md`,
-   `30_LEDGER/LESSONS.md`, and `30_LEDGER/CHANGELOG.md`.
+   Sources: the `_NEXT` header `outcome:` fields, `ledger/session-fixes.md`,
+   `ledger/LESSONS.md`, and `ledger/CHANGELOG.md`.
 3. **The promoted corrections** — the rules that got written into `CLAUDE.md` (and the lessons in
-   `30_LEDGER/LESSONS.md`) because a behavior recurred. Each promoted rule is **evidence of a
+   `ledger/LESSONS.md`) because a behavior recurred. Each promoted rule is **evidence of a
    mistake the user makes often enough that the system had to harden against it.** The 2-strike
    promotion path means a promoted rule is, by construction, a *repeated* pattern — high-signal.
 

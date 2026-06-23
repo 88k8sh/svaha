@@ -30,7 +30,7 @@ Output follows the current Claude Code PreToolUse spec
 that field it ignores the JSON and the call proceeds (fail-open) — verify against
 your installed version's hook docs and adjust if needed.
 
-Every block is appended to 30_LEDGER/version-guard-log.jsonl (best-effort, never
+Every block is appended to ledger/version-guard-log.jsonl (best-effort, never
 raises). Set VERSION_GUARD_NO_LOG=1 when testing by hand so test blocks don't
 pollute the log.
 """
@@ -68,7 +68,7 @@ def _log(reason):
     if os.environ.get("VERSION_GUARD_NO_LOG"):
         return
     try:
-        log = Path(__file__).resolve().parent.parent / "30_LEDGER" / "version-guard-log.jsonl"
+        log = Path(__file__).resolve().parent.parent / "ledger" / "version-guard-log.jsonl"
         with open(log, "a") as f:
             f.write(json.dumps({
                 "ts": datetime.now().isoformat(timespec="seconds"),

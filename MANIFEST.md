@@ -56,15 +56,15 @@ See `DISTILLATION-LOG.md` for the per-component keep/slim/cut rationale, and
 ### 5 · Ledger
 | File | Role |
 |---|---|
-| `30_LEDGER/CHANGELOG.md` | Master system log (seeded with the Core distillation entry) |
-| `30_LEDGER/DECISIONS.md` | Design decisions + alternatives |
-| `30_LEDGER/LESSONS.md` | Named lessons from incidents |
-| `30_LEDGER/session-fixes.md` | Bugs caught + fixed |
-| `30_LEDGER/USER_TASKS.md` | Human-only tasks |
-| `30_LEDGER/audit-state.md` | Audit counter |
-| `30_LEDGER/drift-guard-evidence.md` | Guard catches log |
-| `30_LEDGER/drift-guard-overfires.md` | Over-fire log (audit reads for tighten signal) |
-| `30_LEDGER/version-guard-log.jsonl` | Proof the version-guard fires |
+| `ledger/CHANGELOG.md` | Master system log (seeded with the Core distillation entry) |
+| `ledger/DECISIONS.md` | Design decisions + alternatives |
+| `ledger/LESSONS.md` | Named lessons from incidents |
+| `ledger/session-fixes.md` | Bugs caught + fixed |
+| `ledger/USER_TASKS.md` | Human-only tasks |
+| `ledger/audit-state.md` | Audit counter |
+| `ledger/drift-guard-evidence.md` | Guard catches log |
+| `ledger/drift-guard-overfires.md` | Over-fire log (audit reads for tighten signal) |
+| `ledger/version-guard-log.jsonl` | Proof the version-guard fires |
 | `_ARCHIVE/README.md` | Graveyard for retired files |
 
 ---

@@ -55,7 +55,7 @@ chat/journaling tools structurally lack — it's why §4 Operator-patterns exist
 - feeds: §4 operator-patterns (conviction-vs-outcome calibration)
 
 ### LOOP-02 — calibration / ledger
-- path: <ABSOLUTE path to 30_LEDGER/ — placeholder>
+- path: <ABSOLUTE path to ledger/ — placeholder>
 - content: conviction misses, corrections promoted to rules at 2nd occurrence
 - feeds: §4 operator-patterns (which corrections recur)
 

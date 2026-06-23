@@ -261,7 +261,7 @@ This check must be visible (say it, don't silently skip it). It is the write gua
 
 ## Logging (all sessions)
 
-`<system-dir>/30_LEDGER/CHANGELOG.md` is the **master system log**. Significant structural changes anywhere in `<system-dir>/` go here. Small script edits or one-off fixes don't need an entry — only changes that affect how a future session understands the system.
+`<system-dir>/ledger/CHANGELOG.md` is the **master system log**. Significant structural changes anywhere in `<system-dir>/` go here. Small script edits or one-off fixes don't need an entry — only changes that affect how a future session understands the system.
 
 ## Content placement — single source of truth
 
@@ -271,11 +271,11 @@ Each content type lives in exactly one place. Duplicating across files guarantee
 |---|---|---|
 | Behavior rules / guardrails | `CLAUDE.md` | `_LOADUP.md` |
 | Stable reference facts | `_LOADUP.md §2` | `CLAUDE.md` |
-| Design decisions + alternatives considered | `30_LEDGER/DECISIONS.md` | `_LOADUP.md §3` (pointer only) |
-| System bugs caught + fixed | `30_LEDGER/session-fixes.md` | `CHANGELOG.md` (summary only) |
-| Named lessons derived from incidents | `30_LEDGER/LESSONS.md` | scattered in CHANGELOG |
+| Design decisions + alternatives considered | `ledger/DECISIONS.md` | `_LOADUP.md §3` (pointer only) |
+| System bugs caught + fixed | `ledger/session-fixes.md` | `CHANGELOG.md` (summary only) |
+| Named lessons derived from incidents | `ledger/LESSONS.md` | scattered in CHANGELOG |
 | Behavioral corrections from feedback | `CLAUDE.md` (under relevant section) | `memory/` (memory is ignored; CLAUDE.md is the enforcement layer) |
-| Structural changes + completions | `30_LEDGER/CHANGELOG.md` | `_NEXT` files |
+| Structural changes + completions | `ledger/CHANGELOG.md` | `_NEXT` files |
 
 **Canonical source chains.** When updating system docs, identify the canonical upstream and update it first, then propagate downstream — never patch a downstream copy in isolation (drift). Example: architecture intent doc → pitch → READMEs. A patch to a downstream sibling creates a fork.
 
@@ -291,7 +291,7 @@ When building or rebuilding any context-management package (starter, reference, 
 | **2. Guardrail shell** | `bin/drift-guard.py`, `bin/security-guard.py`, `bin/version-guard.py`, `bin/coherence-check.py`, `audit.md`, `SYNC_MAP.md`, `SYSTEM_MAP.md` |
 | **3. Canary hooks** | `hooks/context-canary.sh`, `hooks/launchpad-nudge.sh`, `hooks/memory-reflect.sh`, `hooks/resume-line-guard.sh`, `hooks/session-end-backstop.sh`, `hooks/session-start-marker.sh`, `settings.json.snippet` |
 | **4. Memory system** | `memory/MEMORY.md` index + per-entry `.md` files; content-placement rule: universal behavioral rules/corrections → `CLAUDE.md` (the enforcement layer), per-session supplementary context (user background, preferences) → `memory/` |
-| **5. Ledger** | `30_LEDGER/CHANGELOG.md`, `session-fixes.md`, `USER_TASKS.md`, `audit-state.md`, `drift-guard-evidence.md`, `_ARCHIVE/` |
+| **5. Ledger** | `ledger/CHANGELOG.md`, `session-fixes.md`, `USER_TASKS.md`, `audit-state.md`, `drift-guard-evidence.md`, `_ARCHIVE/` |
 
 This spec is the checklist — verify all five layers before calling a package complete.
 

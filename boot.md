@@ -50,7 +50,7 @@ next: [system] move N — <move text> (<model> / <effort>)
 ```
 
 - `loaded:` — list every file you actually read this boot (the 2 always-load files + any on-demand pulls this session), each with ✓. This is the **proof-of-boot** line: a fresh session shows exactly what landed in context, so drift between "what boot should load" and "what got read" is visible at a glance.
-- `tasks:` — read `<system-dir>/30_LEDGER/USER_TASKS.md` and count open items. Show count only; don't list them unless asked.
+- `tasks:` — read `<system-dir>/ledger/USER_TASKS.md` and count open items. Show count only; don't list them unless asked.
 - `verified:` — the RESUME-WITH-VERIFICATION result (see the section above). Lead with the checkpoint SHA being diffed against (or `n/a`), then one `claimed: … / verified: …` line per open move. This is the **proof-of-contract** line: it shows the handoff's claims were checked against reality, not trusted blind. Omit only on a cold boot with no `_NEXT` loaded.
 - Source `next:` from open moves in `_NEXT_NNN.md` (takes priority over _LOADUP §7). **Pick the first move that verified `still-true`** — skip any `already-done`, and surface any `stale` move rather than running it.
 - If nothing pending: `next: nothing pending — what's the task?`
