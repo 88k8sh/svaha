@@ -81,11 +81,6 @@ See `DISTILLATION-LOG.md` for the per-component keep/slim/cut rationale, and
 | `.claude-plugin/plugin.json` | Plugin-system manifest |
 | `docs/essay.md` | The "why" narrative |
 
-## Optional bolt-on (fenced — off by default, ships zero personal data)
-| File | Role |
-|---|---|
-| `portrait/` | Opt-in identity layer: `README.md`, `portrait.md`, `mirror.md`, `recall.md`, `recall/recall.py` + `requirements.txt`, `identity/*.template.md`, `.gitignore` privacy fence |
-
 ---
 
 ## Cut from Core (relocated to bolt-on / published-site tier)

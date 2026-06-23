@@ -89,17 +89,13 @@ A complete package is five layers — missing any one produces a system that run
 | **2 · Guardrail shell** | `bin/drift-guard.py`, `bin/security-guard.py`, `bin/version-guard.py`, `bin/coherence-check.py`, `audit.md`, `SYNC_MAP.md`, `SYSTEM_MAP.md` |
 | **3 · Canary hooks** | `hooks/context-canary.sh`, `hooks/launchpad-nudge.sh`, `hooks/memory-reflect.sh`, `hooks/resume-line-guard.sh`, `hooks/session-end-backstop.sh`, `hooks/session-start-marker.sh`, `settings.json.snippet` |
 | **4 · Memory** | `memory/MEMORY.md` index + per-entry files |
-| **5 · Ledger** | `ledger/` — `CHANGELOG.md`, `DECISIONS.md`, `LESSONS.md`, `session-fixes.md`, `USER_TASKS.md`, `audit-state.md`, `_ARCHIVE/` |
+| **5 · Ledger** | `ledger/` — `CHANGELOG.md`, `DECISIONS.md`, `LESSONS.md`, `session-fixes.md`, `USER_TASKS.md`, `audit-state.md` · plus `_ARCHIVE/` at the system root |
 
 See [`docs/essay.md`](docs/essay.md) for the *why* — the reasoning behind treating project context as a database problem.
 
 ## Composes with your stack
 
 Svaha is the cross-session **spine** — it doesn't reimplement the ecosystem, it composes with it: pair it with **Superpowers** (engineering-skill methodology), **Context7** (live library docs via MCP), or **TLDR-code** (semantic code comprehension over a big repo). Community *patterns* (frozen-artifact enforcement, resume-with-verification, premortem framing, 2-strike correction promotion) are already folded in — nothing to install. Full acknowledgments in [CREDITS.md](CREDITS.md).
-
-## Optional bolt-on: the Portrait identity layer
-
-**[Portrait](portrait/README.md)** is an optional, opt-in layer that turns the loop's decision-history into a longitudinal, evidence-anchored self-portrait. It's off by default, ships zero personal data (the method is tracked; your filled-in portrait is gitignored and local-only), and nothing in the core loop depends on it. It also carries an optional local semantic-recall index (one dependency, no Docker/daemon). See [`portrait/README.md`](portrait/README.md).
 
 ## Privacy & provenance
 

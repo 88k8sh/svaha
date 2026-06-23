@@ -17,13 +17,14 @@ If no ambiguity: proceed directly, no preamble.
 ## Warrant gate (decide handoff vs. reflect-only)
 
 Before running the steps below, check whether a full handoff is warranted. It is warranted only if **at least one** of these is true:
-- There is genuinely in-flight work (started but not done)
+- There is genuinely in-flight work (started but not done) — **including shippable edits made this session that are still uncommitted/unpushed in a repo: an edit isn't *done* until it's committed and pushed, so do NOT downgrade to a reflection while the session's own changes sit uncommitted. A user-gated push doesn't make the work landed — it makes the push a `USER_TASKS` item *and* leaves the work live in-flight, which warrants the handoff and its seal.**
 - There are queued next moves worth carrying forward
-- Context is medium or heavy
+
+**Context size is NOT a warrant condition.** Heavy context is a *reboot* signal ("start fresh"), never a handoff trigger on its own — a session can fill context by *reading* (a big file, a long or unarchived/old conversation) while producing nothing to carry forward. If the only thing that's "high" is the context and there is no live in-flight work or queued move, do **not** mint a `_NEXT` — downgrade to reflection and reboot.
 
 **The "would be lost" test for queued next moves (apply this before counting one).** A next move warrants a handoff *only if it is actionable work that would be lost without the `_NEXT`.* A **dormant state or watch-item already durably captured in a source file** (a rule in `CLAUDE.md`, an entry in a log, a conditional that `/audit` fires on its own) does **not** count — it isn't lost, it's already written down, so re-stating it in a `_NEXT` manufactures a phantom queue. Tests that fail this bar: "activate X when the user says so" (a state in `CLAUDE.md`), "watch for the next over-fire" (already in the over-fires log + `/audit`), "remember that we decided Y" (belongs in `_LOADUP`/CHANGELOG). If every "move" you can name is something a future session would *re-discover by reading a source file*, there is no real queue — downgrade to reflection.
 
-**If none apply** (light session, nothing pending, no queue) a handoff would be pointless — **downgrade to a reflection.** Run only `reflect.md`'s `## Steps` (memory pass) and `## Bug log step`, emit the context-gauge line, then append `handoff not needed — ran reflection instead [light/clean: nothing in-flight, no queue]` and stop. Do **not** write a `_NEXT` file, do **not** emit a session closer, and do **not** run reflect's `## Handoff check` section — you are already inside a handoff, so re-running it would loop. (This is the mirror image of reflect's reflect→handoff escalation; the two commands share this one gate.)
+**If none apply** (light session, nothing pending, no queue) a handoff would be pointless — **downgrade to a reflection.** Run only `reflect.md`'s `## Steps` (memory pass) and `## Bug log step`, emit the context-gauge line, append `handoff not needed — ran reflection instead [light/clean: nothing in-flight, no queue]`, give the bottom line, then close with the **reflection-banner** — `# ◇ ◇ ◇` framed by a full-width horizontal rule above and below, the grand *hollow* sibling of the `# स्वाहा` seal-banner (step 6): hollow = nothing carried forward; it marks a *reflection* close, never a checkpoint. Then stop. Do **not** write a `_NEXT` file, do **not** emit the `Next session:` closer (there is no live slot to name), and do **not** run reflect's `## Handoff check` section — you are already inside a handoff, so re-running it would loop. (This is the mirror image of reflect's reflect→handoff escalation; the two commands share this one gate.)
 
 **If warranted**, proceed through the steps below. The gate has already confirmed a `_NEXT` is needed, so step 2 writes one unconditionally.
 
@@ -86,10 +87,20 @@ Before running the steps below, check whether a full handoff is warranted. It is
 
    **File invariant (hard gate):** the `/session NNN` number MUST name an existing `<system-dir>/next/_NEXT_NNN.md` whose `## Next moves` are **live** (not already done) — never a spec, living doc, or README. Normally that's the file you **wrote this session in step 2** and confirmed in the read-back. **Hard ban: never point the closer at a *consumed* `_NEXT`** (one whose moves are finished, or that carries a `_NEXT_NNN.consumed` sidecar) — recycling a consumed number boots the next session into completed work. **Ride-forward exception:** if this session made *zero progress* on the `_NEXT` it booted from, generated no new moves, and settled nothing, do **not** mint a duplicate snapshot of an identical queue — skip the step-2 write and its consumed stamp, and re-point the closer at that *same still-live* file (the boot-side mismatch guard + the `resume-line-guard.sh` consumed-check backstop this). If step 2 wrote no `_NEXT` and there is no live file to ride, do not emit a closer.
 
-   Append the focus label (from the file's line-1 header) after the number so the next chat's title is legible:
+   Append the focus label (from the file's line-1 header) after the number so the next chat's title is legible. The handoff turn then ends with the standard end-of-turn bottom line, and the session seal — स्वाहा — sits in the **seal-banner** at the very foot of the turn, framed by a full-width horizontal rule (`---`) above and below (the handoff is the sealing act; *svāhā* = "it is accomplished"; the rules are block elements the renderer pads around, so the seal stands alone in its own band — a grand, unmissable ending). So the close runs: closer → bottom line → seal-banner. The banner sits well clear of the `Next session:` line `resume-line-guard.sh` reads — never prefix that line, or the hook misses the match.
+
+   **First-seal teaching note (one-time, newcomers).** The *first* time you ever emit the seal for a system — detectable when `<system-dir>/next/` holds only the seed `_NEXT_001.md` plus the `_NEXT` you wrote this session — insert one italic line **between the bottom line and the seal-banner** (so the seal still lands as the foot of the turn), explaining the user's first sight of the word: *(First handoff — so the seal makes sense: the स्वाहा just below is your receipt that this session's work is now written to file. You'll see it at every sealed handoff, and only then.)* Emit it **once** — omit it on every later handoff; the seal stands alone thereafter. (This is the *earned* version of the first-session magic — the word answers back where it actually means something, not on a cold open where nothing's been recorded yet.)
 
    ```
    Next session: /session NNN — <focus label>
+
+   Bottom line: <session-end status>
+
+   ---
+
+   # स्वाहा
+
+   ---
    ```
 
 ## What _NEXT files are

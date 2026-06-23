@@ -54,14 +54,11 @@ If nothing was caught and fixed, skip this step entirely — do not create a bla
 
 **This section is NOT part of the logic `/handoff` delegates to** — `/handoff` borrows only `## Steps` and `## Bug log step` above. Skip this section entirely when reflect is being run *from inside* a handoff; run it only when `/reflect` was invoked directly. (This is what prevents a reflect → handoff → reflect loop.)
 
-After the memory + bug passes, decide whether this session actually warranted a full handoff, using the **same trigger as `/handoff`'s Warrant gate** — handoff is warranted if **any** of these is true:
-- There is genuinely in-flight work (started but not done)
-- There are queued next moves worth carrying forward
-- Context is medium or heavy
+After the memory + bug passes, decide whether this session actually warranted a full handoff, using the **same Warrant gate as `/handoff`** (canonical: `handoff.md`'s `## Warrant gate` — do not restate its conditions here, so the two can't drift). In brief: a handoff is warranted only by **live carry-forward work** — genuine in-flight work or queued moves *from this session* that would be lost. **Context size is not a trigger** (a big conversation is a reboot signal, not a handoff one).
 
 **If warranted:** emit `handoff suggested — running it`, then invoke `/handoff` directly. The memory + bug passes you just ran are idempotent, so handoff's delegated steps 4–5 will correctly find nothing new — no double-writing. Let handoff produce the gauge, `_NEXT` file, and session closer (`Next session: /session NNN`); do **not** also emit the reflect `## Output` line — handoff's output supersedes it.
 
-**If not warranted:** emit the reflect `## Output` line, then append `handoff not needed — [light/clean: nothing in-flight, no queue]`, and stop. Do not run handoff.
+**If not warranted:** emit the reflect `## Output` line, append `handoff not needed — [light/clean: nothing in-flight, no queue]`, then close with the **reflection-banner** (`# ◇ ◇ ◇` framed by a `---` rule above and below — the grand hollow sibling of the `# स्वाहा` seal; a reflection ran, so it still earns a banner, but hollow because nothing is carried forward). Do not run handoff.
 
 ## Output
 

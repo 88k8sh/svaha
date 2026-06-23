@@ -17,3 +17,8 @@ ledger/version-guard-log.jsonl
 
 # Consumed-handoff sidecars are runtime state, not source
 next/*.consumed
+
+# _ARCHIVE/ is local insurance (superseded files kept before mutating) — not shipped.
+# Keep only the README explainer; the archived files themselves stay on-machine.
+_ARCHIVE/*
+!_ARCHIVE/README.md

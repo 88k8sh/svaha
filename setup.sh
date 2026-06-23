@@ -215,10 +215,11 @@ echo "            /plugin install superpowers@claude-plugins-official"
 echo ""
 
 # ----------------------------------------------------------------------------
-# Step 6 — How to start.
+# Step 6 — The send-off.
 # ----------------------------------------------------------------------------
-echo "Step 6/6  All set."
-echo "          Verify the wiring:  bash $KIT_ROOT/bin/doctor.sh"
-echo "          To start: open Claude Code and run  /session"
+echo "Step 6/6  So be it."
+echo ""
+echo "          Verify:  bash $KIT_ROOT/bin/doctor.sh"
+echo "          Begin:   open Claude Code and say  svaha   (or run /session)"
 echo "=========================================================="
 echo ""

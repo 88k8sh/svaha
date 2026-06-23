@@ -178,7 +178,7 @@
   /* ---- Article ---- */
   article { padding: clamp(20px, 4vw, 36px) 0 0; }
   article p { margin: 0 0 24px; }
-  .lead { font-size: 23px; line-height: 1.5; }
+  .lead { line-height: 1.62; }
   .lead::first-letter {
     float: left; font-family: "Fraunces", serif; font-weight: 600;
     font-size: 4.4em; line-height: .82; padding: 6px 12px 0 0; color: var(--accent-ink);
@@ -259,12 +259,22 @@
 
   /* ---- Footer ---- */
   footer {
-    margin-top: clamp(60px, 9vw, 100px); padding: 40px 0 64px;
+    margin-top: clamp(60px, 9vw, 100px); padding: 40px 0 36px;
     border-top: 1px solid var(--rule);
     color: var(--faint); font-size: 15px;
-    display: flex; flex-wrap: wrap; gap: 8px 18px; align-items: center; justify-content: space-between;
+    display: flex; flex-wrap: wrap; gap: 8px 18px; align-items: center; justify-content: center; text-align: center;
   }
-  footer .sig { font-family: "Fraunces", serif; color: var(--muted); font-size: 16px; }
+
+  /* ---- svaha seal — the page's close, like the handoff ---- */
+  .seal {
+    border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule);
+    padding: clamp(40px, 7vw, 66px) 0; text-align: center;
+  }
+  .seal .seal-mark {
+    font-family: "Noto Serif Devanagari", serif; font-weight: 600;
+    font-size: clamp(50px, 10vw, 88px); line-height: 1; color: var(--accent-ink);
+    display: inline-block;
+  }
 
   /* ---- Side TOC ---- */
   .toc {
@@ -294,7 +304,6 @@
   @media (max-width: 560px) {
     body { font-size: 18px; }
     .pillars { grid-template-columns: 1fr; }
-    .lead { font-size: 20px; }
     .card { padding: 20px; }
     .guides { grid-template-columns: 1fr; }
     .lockup .mark { font-size: 48px; }
@@ -379,12 +388,13 @@
       </div>
       <h1 class="title reveal">Pick up exactly where you left off.</h1>
       <p class="dek reveal">Stop any time, drop a checkpoint, and resume right where you were — no pasting context back in, no re-explaining. Lean checkpoints keep each session small and cheap, and it all lives in plain files you own.</p>
-      <p class="reveal" style="margin:2px 0 28px;font-size:17px;line-height:1.55;color:var(--ink)"><b>And one word runs the whole loop</b> — <span class="mono">svaha</span> to begin · <span class="mono">svaha</span> to confirm · <span class="mono">svaha</span> to wrap. No commands to memorize; a finished wrap seals back, once, as <span style="font-family:'Noto Serif Devanagari',serif;color:var(--accent-ink);font-weight:600">स्वाहा</span>.</p>
+      <p class="reveal" style="margin:2px 0 28px;font-size:17px;line-height:1.55;color:var(--ink)"><b>One word runs the whole loop</b> — <span class="mono">svaha</span> to begin · <span class="mono">svaha</span> to confirm · <span class="mono">svaha</span> to wrap. No commands to memorize; a finished wrap seals back, once, as <span style="font-family:'Noto Serif Devanagari',serif;color:var(--accent-ink);font-weight:600">स्वाहा</span>.</p>
       <div class="cta reveal">
         <a class="btn btn-primary" href="INSTALL.html">Install</a>
-        <a class="btn" href="INSTALL-CLAUDE-CODE.html">Set up with Claude Code</a>
+        <a class="btn" href="WELCOME.html">How it works</a>
         <a class="btn" href="https://github.com/88k8sh/svaha">GitHub</a>
       </div>
+      <p class="prenote reveal" style="margin-top:12px">New to Claude Code? <a href="INSTALL-CLAUDE-CODE.html">Set up the basics first →</a></p>
       <div class="byline reveal">
         <span class="name">Aakash Raj</span>
         <span class="dot"></span>
@@ -394,43 +404,41 @@
       </div>
 
       <figure class="hero-fig reveal" id="heroFig" aria-label="Diagram: one session bookended by the same word — svaha opens it (/session), svaha confirms each step (continue), and svaha closes it (/handoff), which writes the checkpoint the next session resumes from.">
-        <svg viewBox="0 0 720 128" role="img">
+        <svg viewBox="0 0 720 150" role="img">
           <!-- one session as a thread: heavy while it fills, lean once handed off -->
-          <line class="hf-anim d1" x1="40" y1="64" x2="496" y2="64" stroke="var(--accent)" stroke-width="2.4" stroke-linecap="round" opacity="0.85"/>
-          <line class="hf-anim d4" x1="524" y1="64" x2="690" y2="64" stroke="var(--faint)" stroke-width="1.3" stroke-linecap="round"/>
+          <line class="hf-anim d1" x1="40" y1="72" x2="496" y2="72" stroke="var(--accent)" stroke-width="1.6" stroke-linecap="round" opacity="0.55"/>
+          <line class="hf-anim d4" x1="524" y1="72" x2="690" y2="72" stroke="var(--faint)" stroke-width="1.2" stroke-linecap="round"/>
           <!-- the session boundary the thread crosses unbroken -->
-          <line class="hf-boundary hf-anim d2" x1="510" y1="38" x2="510" y2="90"/>
+          <line class="hf-boundary hf-anim d2" x1="510" y1="60" x2="510" y2="84"/>
 
           <!-- beat 1: open -->
-          <circle class="hf-anim d1" cx="98" cy="64" r="4.5" fill="var(--accent)"/>
-          <text class="hf-label hf-anim d1" x="98" y="44" text-anchor="middle">/session</text>
-          <text class="hf-label-accent hf-anim d1" x="98" y="89" text-anchor="middle" style="font-size:12.5px">svaha</text>
+          <circle class="hf-anim d1" cx="98" cy="72" r="4.5" fill="var(--accent)"/>
+          <text class="hf-label hf-anim d1" x="98" y="34" text-anchor="middle">/session</text>
+          <text class="hf-label-accent hf-anim d1" x="98" y="116" text-anchor="middle" style="font-size:12.5px">svaha</text>
 
           <!-- beat 2: confirm, keep going -->
-          <circle class="hf-anim d3" cx="304" cy="64" r="4.5" fill="var(--accent)"/>
-          <text class="hf-label hf-anim d3" x="304" y="44" text-anchor="middle">continue</text>
-          <text class="hf-label-accent hf-anim d3" x="304" y="89" text-anchor="middle" style="font-size:12.5px">svaha</text>
+          <circle class="hf-anim d3" cx="304" cy="72" r="4.5" fill="var(--accent)"/>
+          <text class="hf-label hf-anim d3" x="304" y="34" text-anchor="middle">continue</text>
+          <text class="hf-label-accent hf-anim d3" x="304" y="116" text-anchor="middle" style="font-size:12.5px">svaha</text>
 
           <!-- beat 3: close — the checkpoint ember, writes the next handoff -->
-          <circle class="hf-anim d3" cx="510" cy="64" r="11" fill="none" stroke="var(--accent)" stroke-width="1.2" opacity="0.35"/>
-          <circle class="hf-anim d3" cx="510" cy="64" r="5.5" fill="var(--accent)"/>
-          <text class="hf-label hf-anim d3" x="510" y="44" text-anchor="middle">/handoff</text>
-          <text class="hf-label-accent hf-anim d3" x="510" y="89" text-anchor="middle" style="font-size:12.5px">svaha</text>
-          <text class="hf-label hf-anim d5" x="510" y="107" text-anchor="middle" style="font-size:10px">writes _NEXT_007</text>
+          <circle class="hf-anim d3" cx="510" cy="72" r="11" fill="none" stroke="var(--accent)" stroke-width="1.2" opacity="0.35"/>
+          <circle class="hf-anim d3" cx="510" cy="72" r="5.5" fill="var(--accent)"/>
+          <text class="hf-label hf-anim d3" x="510" y="34" text-anchor="middle">/handoff</text>
+          <text class="hf-label-accent hf-anim d3" x="510" y="116" text-anchor="middle" style="font-size:12.5px">svaha</text>
+          <text class="hf-label hf-anim d5" x="510" y="136" text-anchor="middle" style="font-size:10px">writes _NEXT_007</text>
 
           <!-- the next session, lean, resumes from the checkpoint -->
-          <text class="hf-boundary-label hf-anim d4" x="628" y="60" text-anchor="middle">next session</text>
+          <text class="hf-boundary-label hf-anim d4" x="628" y="68" text-anchor="middle">next session</text>
         </svg>
       </figure>
     </section>
 
     <article>
 
-      <p class="lead reveal">This was never about an assistant that can't remember. Models remember plenty. The friction is everything around that: to actually resume, you paste the project back in, re-explain the decisions you already made and the ones you threw out, and hunt for the exact line where you stopped. And the longer a session runs to hold all of it, the slower and more expensive it gets. The cost isn't forgetting — it's re-establishing, every single time.</p>
+      <p class="lead reveal">This was never about an assistant that can't remember — models remember plenty. The friction is everything around it: every resume, you paste the project back in, re-explain what you decided and what you cut, and hunt for where you stopped.</p>
 
-      <p class="reveal">So the fix is a checkpoint. When the window fills up — or you're just done for the day — you stop and save a small, frozen snapshot: where things stand and the exact next moves. The next session reads it and picks up precisely there, fresh and lean, with nothing to paste. The window never has to carry the whole history, so each session stays fast and cheap, and the thread never drops between them.</p>
-
-      <p class="reveal">This is the part a memory feature doesn't give you. Provider-side memory accumulates somewhere you can't see — you can't read it, can't correct it when it's wrong, and can't carry it to a better model the day one ships. A checkpoint is the opposite: plain files in your own repo, exact and yours, that you can open, edit, and take anywhere.</p>
+      <p class="reveal">The fix is a checkpoint — a small frozen file with where things stand and the exact next move. The next session reads it and picks up lean, nothing to paste. It's plain text in your own repo, not a memory locked somewhere you can't see.</p>
 
       <blockquote class="pull reveal" aria-hidden="true">The cost was never forgetting.<br>It's <span style="white-space:nowrap">re-establishing</span> — every single time.</blockquote>
 
@@ -481,7 +489,7 @@
         <div class="card reveal">
           <svg class="ci" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h13"/><path d="M13 6l6 6-6 6"/><path d="M20 4v16"/></svg>
           <h3>It's portable</h3>
-          <div class="cbody"><p>Context lives in my system, not a provider's. Move to a better model the day it ships — the handoff is my checkpoint file, nothing else. The question "which model is best this month" stops costing me my project's history.</p></div>
+          <div class="cbody"><p>Context lives in my system, not a provider's — plain files in my own repo. It comes with me when I switch tools or models, instead of being locked in a memory I can't see or carry out.</p></div>
         </div>
         <div class="card reveal">
           <svg class="ci" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 19h14"/><path d="M12 4 5 14h14z"/></svg>
@@ -500,7 +508,7 @@
         </div>
       </div>
 
-      <h2 class="section reveal" id="start"><span class="num">get it</span>Get svaha</h2>
+      <h2 class="section reveal" id="start"><span class="num">so be it</span>svaha</h2>
       <p class="reveal">It's a small kit of plain files — the slash commands, a few guard hooks, the handoff scripts. Clone it, run <span class="mono">./setup.sh</span>, and start a session.</p>
       <p class="prenote reveal">New to Claude Code itself? <a href="INSTALL-CLAUDE-CODE.html">Set up the basics first →</a></p>
 
@@ -511,15 +519,18 @@
 
       <div class="coda reveal">
         <p>I built it to stop paying that tax. What I didn't expect was how much steadier the work itself became once the thread stopped living in my own head between sessions and the system was responsible for holding it.</p>
-        <p class="bookend"><b>One word turns the loop.</b> You open a session with <b>svaha</b> — <i>so be it</i> — confirm a step with it, and close the day on it too. When a handoff lands, the system says the word back, once, as a receipt: <span class="bmk">स्वाहा</span> — the offering let go into the fire. Seeing it is your all-clear: the work is written to file, the old session safe to close. Open a new window, say <b>svaha</b>, and you're already there. Begun and carried on, on a single breath.</p>
+        <p class="bookend"><b>One word turns the loop — three beats of the same word, a small ritual.</b> You <i>open</i> a session with <b>svaha</b> — <i>so be it</i> — <i>confirm</i> a step with it, and <i>close</i> the day on it too. When a handoff lands, the system says the word back, once, as a receipt: <span class="bmk">स्वाहा</span> — the offering let go into the fire. Seeing it is your all-clear: the work is written to file, the old session safe to close. Open a new window, say <b>svaha</b>, and you're already there. Begun and carried on, on a single breath.</p>
       </div>
 
     </article>
 
     <footer>
-      <span class="sig">svaha</span>
       <span>built by Aakash Raj · open source (MIT) · <a href="https://github.com/88k8sh/svaha">GitHub</a> · 2026</span>
     </footer>
+
+    <div class="seal reveal" aria-label="svaha — the seal">
+      <span class="seal-mark">स्वाहा</span>
+    </div>
 
   </div>
 </main>

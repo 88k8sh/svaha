@@ -7,6 +7,34 @@ Written by `/handoff` (or manually after structural edits). Do not edit existing
 
 ---
 
+## 2026-06-23 — First-handoff teaching note for the स्वाहा seal (one-time)
+
+`handoff.md` now emits a single one-time gloss the *first* time a system seals — detected when `next/` holds only the seed `_NEXT_001` plus the just-written `_NEXT`. An italic line sits between the bottom line and the seal-banner, explaining स्वाहा = the receipt that this session's work is recorded; omitted on every later handoff (the seal stands alone thereafter). This is the *earned* placement of the "say svaha, the system answers in the sacred tongue" moment — at the first real close, never on a cold open (which would be a false seal, against the seal discipline).
+
+## 2026-06-23 — `amen` accepted as an assent word (single seal kept)
+
+`amen` — the cross-tradition twin of *svaha* (both mean "so be it") — joins the accepted affirmatives in `CLAUDE.md`'s assent-word section, alongside the existing yes / go / so be it / make it so. It is an **input only**: however you say yes, the reply stays the one seal, **स्वाहा** — never an echo of your word. A subtle hint was added to `WELCOME.html`'s "One word runs it" box. No custom-anchor *mechanism* was built — the existing "any clear affirmative proceeds" rule already lets your own word work, with no config surface to maintain.
+
+## 2026-06-23 — Agni identity layer pulled from the release (→ separate product)
+
+The optional identity layer (the `portrait/` module, renamed `agni/` earlier the same session) is **extracted from the kit** and set aside as the seed of a separate product — it needs more development than a bolt-on slot in the core release can carry. The released kit ships **without** it: handoff loop, guard shell, hooks, memory, ledger only.
+
+- **Removed from the release, not deleted.** The `agni/` folder (15 files — `agni.md`, `fire.md`, `mirror.md`, `recall.md`, `recall/`, `identity/*.template.md`, the `.gitignore` privacy fence) moved out intact to `~/Claude/agni/` as the product seed. The earlier-staged `portrait/`→`agni/` rename never ships; vs. the published repo this is a clean removal of `portrait/`.
+- **References stripped.** README §Agni section, the website identity-layer card + its TOC entry (`docs/index.html`), the SYNC_MAP §3 agni-module row, and the MANIFEST bolt-on row removed.
+- **Kept.** Frozen committed CHANGELOG / DISTILLATION-LOG entries that mention `portrait/` stay (history is frozen). (`docs/essay.md`, the old founding-essay, was separately removed as stale this session — author's call.)
+- **Net.** The public kit is the pure context-OS again; agni becomes its own product when it's ready.
+
+## 2026-06-23 — Reflection-banner added to the downgrade close
+
+A handoff that downgrades to a reflection now ends with `# ◇ ◇ ◇` (grand hollow), framed by `---` — the distinct sibling of the `# स्वाहा` seal, marking a reflection close (no `_NEXT`, no seal) as opposed to a full sealed handoff. Hollow = nothing carried forward; the pair reads at a glance which close happened. Edited `handoff.md` (downgrade path) + `reflect.md` (standalone not-warranted close). Mirrors the upstream live contract.
+
+## 2026-06-23 — Seal-banner in handoff.md + hero lockup + "ritual" named on the landing site
+
+Three brand/voice fixes to the shippable package:
+- **`handoff.md` step 6 — seal-banner.** The close template carried only the bare `Next session:` closer with no seal. Brought it up to the upstream reference (`~/.claude/commands/handoff.md`): the close now ends with the **seal-banner** — `# स्वाहा` framed by a `---` rule above and below — preceded by the bottom line, in the kit's plain `Bottom line:` format. Added the matching prose (seal sits at the foot of the turn, clear of the `Next session:` line `resume-line-guard.sh` reads). Prior version archived → `_ARCHIVE/handoff.md.2026-06-23`. (Direction: upstream `~/.claude` → downstream kit.)
+- **Hero lockup — "· so be it" restored.** `WELCOME.html` (`स्वाहा svaha`) and `INSTALL.html` (`स्वाहा svaha — Install`) were missing the third part of the brand lockup that `index.html` carries. Both heroes now read `स्वाहा svaha · so be it` (tagline as a small italic faint span, matching index's `.tag`); INSTALL's redundant `— Install` dropped (the kicker + topbar already say "install"). `INSTALL-CLAUDE-CODE.html` untouched — its hero is the task title "Get Claude Code", not the brand lockup. Verified in-browser (dark mode). Public push to github.com/88k8sh/svaha stays the user's go.
+- **"Ritual" named in the `index.html` bookend.** The closing bookend already evoked a ritual (the offering into the fire, a single breath) without naming it; named it once, precisely where the structure lives — `One word turns the loop — three beats of the same word, a small ritual.` with *open* / *confirm* / *close* set in italic so the three beats read as the rite. Deliberately a single use (not echoed in the hero or the "It's one word" card) — the word keeps its weight by being precise, same discipline as the स्वाहा seal. Register-checked: kept out of the essay + data sections, which run on a technical voice. Verified in-browser.
+
 ## 2026-06-23 — svaha as the FULL bookend: wired as the close trigger + guides reframed keyword-first
 
 Completed the keyword-replaces-command north star (the prior entry wired only the *opening* half). **svaha** now drives the whole loop:
