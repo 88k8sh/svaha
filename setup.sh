@@ -171,14 +171,34 @@ gen_settings() {
 if [ ! -f "$SNIPPET" ]; then
   echo "          (settings.json.snippet not found in kit — skipping)"
 elif [ -f "$TARGET_SETTINGS" ]; then
-  # Existing settings — never touch them. Hand over a ready-to-merge copy.
+  # Existing settings — MERGE Svaha in safely instead of dumping you into a
+  # hand-edit. merge-settings.py unions the permission arrays + appends missing
+  # hook entries; your other keys (theme, model, your own hooks) stay untouched,
+  # a timestamped backup is kept, and the result is JSON-validated before it
+  # ever replaces the file. Consent-gated (default yes) — never silent.
   GEN="$KIT_ROOT/settings.generated.json"
-  if gen_settings "$GEN"; then
-    echo "          You already have $TARGET_SETTINGS — leaving it untouched."
-    echo "          Wrote a ready-to-merge copy (path filled in, JSON-validated):"
-    echo "            $GEN"
-    echo "          Merge its \"permissions\" + \"hooks\" blocks into your settings.json"
-    echo "          (per-array / per-event if you already have those keys)."
+  if ! command -v python3 >/dev/null 2>&1; then
+    echo "          You have $TARGET_SETTINGS but python3 isn't available for a safe"
+    echo "          merge — merge $SNIPPET by hand (replace <system-dir> with $KIT_ROOT)."
+  elif gen_settings "$GEN"; then
+    printf "          Merge Svaha's hooks + permissions into %s now?\n" "$TARGET_SETTINGS"
+    printf "          (a timestamped .svaha-backup is kept; your other keys stay untouched) [Y/n] "
+    read REPLY
+    case "$REPLY" in
+      n|N|no|NO)
+        echo "          skipped — a ready-to-merge copy is at $GEN (merge its permissions + hooks)."
+        ;;
+      *)
+        if python3 "$KIT_ROOT/bin/merge-settings.py" "$GEN" "$TARGET_SETTINGS"; then
+          rm -f "$GEN"
+          echo "          merged — hooks + permissions are in $TARGET_SETTINGS (backup kept alongside)."
+          echo "          Edit mode A (silent edits) ships by default; see the snippet header to switch."
+        else
+          echo "          auto-merge aborted — your $TARGET_SETTINGS is UNCHANGED."
+          echo "          A ready-to-merge copy is at $GEN; merge its permissions + hooks by hand."
+        fi
+        ;;
+    esac
   else
     echo "          Couldn't build the merge file — merge $SNIPPET by hand"
     echo "          (replace <system-dir> with $KIT_ROOT)."

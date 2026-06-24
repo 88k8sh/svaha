@@ -31,7 +31,12 @@
 //     B) ASK PER SESSION — delete those three lines from "allow". The first edit each session asks once
 //        (press "2" = allow for the session). Either way, push/delete/secrets stay gated.
 //
-//   allow → SILENT: file reads, inspection bash, read-only git, the kit's bin plumbing (+ file edits in Mode A).
+//   allow → SILENT: file reads, inspection bash, read-only git + the loop's OWN git (add/commit/pull — the
+//           handoff commit + boot pull, NOT push), the kit's bin plumbing (+ file edits in Mode A).
+//   additionalDirectories → registers your system-dir as an allowed directory, so reading next/, ledger/,
+//           _LOADUP.md never trips "Path is outside allowed working directories" — the #1 newcomer permission
+//           flood, hit whenever Claude is launched from a different folder than the kit. Absolute path (no ~);
+//           setup.sh fills it in. Without it, even a perfect merge still prompts on every kit-file read.
 //   ask   → confirm EVERY time: git push, gh, rm, curl/wget, reset --hard  (publish · destructive · network egress).
 //   deny  → hard-blocked: secret reads (.env/.pem/.ssh/keys), rm -rf, sudo, pipe-to-shell.
 //   Precedence deny > ask > allow — even a risky "allow always" is still caught by the ask/deny floor.
@@ -66,10 +71,15 @@
       "Bash(git log:*)",
       "Bash(git show:*)",
       "Bash(git branch:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git pull:*)",
       "Bash(bin/next-write.sh:*)",
       "Bash(bin/next-live.sh:*)",
+      "Bash(bin/next-consume.sh:*)",
       "Bash(./bin/next-write.sh:*)",
-      "Bash(./bin/next-live.sh:*)"
+      "Bash(./bin/next-live.sh:*)",
+      "Bash(./bin/next-consume.sh:*)"
     ],
     "ask": [
       "Bash(git push:*)",
@@ -95,6 +105,9 @@
       "Bash(curl:* | bash)",
       "Bash(wget:* | sh)",
       "Bash(wget:* | bash)"
+    ],
+    "additionalDirectories": [
+      "<system-dir>"
     ]
   },
   "hooks": {
