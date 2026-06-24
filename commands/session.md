@@ -26,16 +26,24 @@ It prints the deterministic live set **and** any sessions consumed in the last 1
 → svaha to boot lowest, or /session N for a specific one
 ```
 
-If `recently consumed` is non-empty, say so in one line — don't let a just-retired session disappear unmentioned. Stop here — do not boot. (A follow-up **svaha** is position-2 assent — it boots the lowest live session without needing `/session`.)
+If `recently consumed` is non-empty, say so in one line — don't let a just-retired session disappear unmentioned. A live slot may also carry an occupancy hint — `⚠ in use (booted HH:MM …)` (booted in the last few minutes, likely a concurrent session right now) or `· booted HH:MM (may be in use)` — relay these verbatim; they help the pick avoid a slot another session is on (advisory only, never a lock). Stop here — do not boot. (A follow-up **svaha** is position-2 assent — it boots the lowest live session without needing `/session`.)
 
 ---
 
 ## `/session` (no arg) and `/session N`
 
 **Step 1 — resolve the target file:**
-- No arg: run `<kit-dir>/bin/next-live.sh <system-dir>` (the canonical live-set script — do not eyeball the folder) and pick the **lowest-numbered** entry in its `live sessions` list. If that list is empty, say so and stop.
+- No arg: run `<kit-dir>/bin/next-live.sh <system-dir>` (the canonical live-set script — do not eyeball the folder) and pick the **lowest-numbered** entry in its `live sessions` list **that is NOT marked `⚠ in use`** (the occupancy tiebreak — that slot was booted in the last few minutes, most likely by a concurrent session, so skip it to avoid double-booking). If *every* live entry is `⚠ in use`, pick the lowest anyway and say so in one line (occupancy is advisory, not a lock). If the live list is empty, say so and stop.
 - Arg is `list`: run `/session list` mode above.
 - Arg is a number N: zero-pad to 3 digits → `<system-dir>/next/_NEXT_NNN.md`. If missing, flag and stop.
+
+**Step 1b — stamp occupancy (boot only, not `list`):** once the target slot is resolved (no-arg or N), mark it in-use so a concurrent session's `/session list` and no-arg pick can see you're on it:
+
+```
+<kit-dir>/bin/next-boot.sh <system-dir> NNN
+```
+
+This writes/refreshes the advisory `_NEXT_NNN.booted` sidecar (cleared automatically when the slot is consumed at handoff). It is a soft hint, never a lock — it blocks nothing, so just run it and proceed.
 
 **Step 2 — git pull (if repo):** `git -C <system-dir> rev-parse --git-dir 2>/dev/null`. If repo, run `git -C <system-dir> pull` before reading files.
 

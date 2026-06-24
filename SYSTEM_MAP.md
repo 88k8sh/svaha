@@ -59,9 +59,10 @@ Key invariants this loop enforces:
 |---|---|
 | `_NEXT_NNN.md` | Frozen handoff — a parallel session slot, never edited after creation |
 | `_NEXT_NNN.consumed` | Empty sidecar — marks a session as spent; `/session` skips it |
+| `_NEXT_NNN.booted` | Advisory occupancy sidecar — written when a session boots a slot; signals it may be in use. A soft hint only (no hard lock); cleared when the slot is retired |
 | `_NEXT.md` | The pool's permanent spec/pointer (not a handoff itself) |
 
-`/session` (no arg) auto-picks the lowest-numbered open (unconsumed) session. `/session list` runs `bin/next-live.sh` — the **single source of truth** for the live set — never eyeball the folder, because concurrent handoffs mutate it underneath any hand-built list.
+`/session` (no arg) auto-picks the lowest-numbered open (unconsumed) session, skipping any slot annotated `⚠ in use` — an advisory tiebreak from the `.booted` occupancy hint, never a hard lock. `/session list` runs `bin/next-live.sh` — the **single source of truth** for the live set — never eyeball the folder, because concurrent handoffs mutate it underneath any hand-built list.
 
 ---
 

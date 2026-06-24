@@ -59,7 +59,7 @@ if [ -z "$hmiss" ]; then ok "6 hook scripts installed"; else bad "missing hooks:
 
 # 4 — the kit's guard + handoff scripts (referenced by absolute path, so the folder must stay put)
 bmiss=""
-for f in security-guard.py version-guard.py drift-guard.py coherence-check.py next-write.sh next-live.sh; do
+for f in security-guard.py version-guard.py drift-guard.py coherence-check.py next-write.sh next-live.sh next-boot.sh; do
   [ -f "$KIT_ROOT/bin/$f" ] || bmiss="$bmiss $f"
 done
 if [ -z "$bmiss" ]; then ok "guard + handoff scripts present in bin/"; else bad "missing bin scripts:$bmiss" "this kit folder is incomplete — re-download"; fi
