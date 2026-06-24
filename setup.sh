@@ -10,8 +10,10 @@
 # SAFETY CONTRACT:
 #   - bash 3.2 compatible (macOS /bin/bash) — no mapfile, no associative arrays,
 #     no `set -e` foot-guns.
-#   - Non-destructive: creates dirs + copies files; writes settings.json ONLY with
-#     a y/N prompt and ONLY if absent — never clobbers an existing settings.json.
+#   - Non-destructive: creates dirs + copies files; writes settings.json ONLY
+#     behind a y/n prompt (default yes on a fresh write, since there's nothing to
+#     clobber) and ONLY if absent — an existing settings.json is merged, never
+#     overwritten.
 #   - Never overwrites an existing ~/.claude/CLAUDE.md without a y/N prompt.
 #   - Idempotent: safe to re-run; re-running just refreshes the copied files.
 #
@@ -207,12 +209,19 @@ elif [ -f "$TARGET_SETTINGS" ]; then
     echo "          (replace <kit-dir> with $KIT_ROOT)."
   fi
 else
-  # No settings.json yet — offer to generate it.
+  # No settings.json yet — offer to generate it. Default YES: this is the
+  # frictionless path (nothing to clobber when absent), and pressing return
+  # should wire the system rather than leave it half-installed. Mirrors the
+  # merge branch's [Y/n] default above.
   echo "          No $TARGET_SETTINGS yet."
-  printf "          Generate it now (fills in the path, validates the JSON)? [y/N] "
+  printf "          Generate it now (fills in the path, validates the JSON)? [Y/n] "
   read REPLY
   case "$REPLY" in
-    y|Y|yes|YES)
+    n|N|no|NO)
+      echo "          skipped — merge $SNIPPET into $TARGET_SETTINGS yourself"
+      echo "          (replace <kit-dir> with $KIT_ROOT)."
+      ;;
+    *)
       mkdir -p "$CLAUDE_DIR"
       if gen_settings "$TARGET_SETTINGS"; then
         echo "          wrote $TARGET_SETTINGS  (<kit-dir> -> $KIT_ROOT, JSON valid)"
@@ -222,10 +231,6 @@ else
         echo "          generation failed (python3 missing, or unexpected) — merge"
         echo "          $SNIPPET by hand instead (replace <kit-dir> with $KIT_ROOT)."
       fi
-      ;;
-    *)
-      echo "          skipped — merge $SNIPPET into $TARGET_SETTINGS yourself"
-      echo "          (replace <kit-dir> with $KIT_ROOT)."
       ;;
   esac
 fi

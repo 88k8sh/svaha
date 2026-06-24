@@ -89,7 +89,7 @@ Emit a short confirmation, then name the two things only the user can do — don
 next:
   1. Fill in _LOADUP.md — replace every <fill-in>/<date> placeholder with this project's
      specifics (§0 architecture, §1 fast-path, §2 settled facts).
-  2. Say svaha (or run /session) to boot the loop.
+  2. svaha (or run /session) to boot the loop.
 ```
 
 ## What /init does NOT do

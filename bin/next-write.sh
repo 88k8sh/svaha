@@ -62,8 +62,14 @@ shopt -u nullglob
 
 next=$(( latest + 1 ))
 out="$(slot "${next}")"
-# Collision guard: if a concurrent session already grabbed this slot, bump on.
-while [[ -e "${out}" ]]; do
+# Atomic reserve (closes the simultaneous-mint TOCTOU). Reserve the slot with an
+# O_EXCL create via `noclobber` rather than a check-then-write: if a concurrent
+# session already grabbed this number — OR wins the race for it in the same instant —
+# the create fails and we bump on. The old `while [[ -e ]]` guard only caught the
+# SEQUENTIAL case; two mints interleaving between the test and the write both passed
+# it and both wrote the same slot, silently clobbering one session's handoff. We now
+# exclusively own "${out}" (an empty file) before any content is written into it.
+until ( set -o noclobber; : > "${out}" ) 2>/dev/null; do
   next=$(( next + 1 ))
   out="$(slot "${next}")"
 done

@@ -12,7 +12,7 @@ One `CLAUDE.md` + a small scaffold turn the loose pieces of a good Claude Code s
 
 ---
 
-> **New here?** Open **[`WELCOME.html`](docs/WELCOME.html)** for a visual tour of how it works + your first ten minutes. Installing? **[`INSTALL.html`](docs/INSTALL.html)** is click-to-copy from scratch. **Never used Claude Code before?** Start one step earlier with **[`INSTALL-CLAUDE-CODE.html`](docs/INSTALL-CLAUDE-CODE.html)** — it installs Claude Code itself, then hands off to `INSTALL.html`.
+> **New here?** Open **[`start.html`](docs/start.html)** — the click-to-copy install walkthrough plus your first ten minutes with the loop. **Never used Claude Code before?** Start one step earlier with **[`INSTALL-CLAUDE-CODE.html`](docs/INSTALL-CLAUDE-CODE.html)** — it installs Claude Code itself, then hands off to `start.html`.
 
 ## The problem
 
@@ -44,7 +44,7 @@ It travels, too: `CLAUDE.md` is canonical; [`AGENTS.md`](AGENTS.md) is the vendo
 
 ## Install
 
-> **Prefer click-to-copy?** Open **[`INSTALL.html`](docs/INSTALL.html)** in a browser — the full from-scratch walkthrough with a Copy button on every command, and the `<kit-dir>` substitution + JSON validation done for you in one paste.
+> **Prefer click-to-copy?** Open **[`start.html`](docs/start.html)** in a browser — the full from-scratch walkthrough with a Copy button on every command; `setup.sh` does the `<kit-dir>` substitution + JSON validation for you.
 
 ### Quickest — run the installer
 
@@ -53,7 +53,7 @@ git clone https://github.com/88k8sh/svaha && cd svaha
 ./setup.sh
 ```
 
-`setup.sh` copies the slash commands + hooks into `~/.claude/`, **offers to generate your `settings.json`** (only if you don't already have one, and only with consent — it never clobbers an existing `settings.json` or `CLAUDE.md`), and points you at the optional MCP companions. After it runs, **verify the wiring with `bash bin/doctor.sh`** and start with `/session` (or just say **svaha**). The snippet ships a **safe-by-default permission posture** — reads & inspection run silently, `git push` / `gh` / `rm` / network / secret-reads always confirm or hard-deny, and **editing is your pick:** Mode A grants edit permission once at install (silent edits, ships as default), Mode B asks once per session (delete three lines). The header comment spells out both.
+`setup.sh` copies the slash commands + hooks into `~/.claude/`, **offers to generate your `settings.json`** (only if you don't already have one, and only with consent — it never clobbers an existing `settings.json` or `CLAUDE.md`), and points you at the optional MCP companions. After it runs, **verify the wiring with `bash bin/doctor.sh`** and start with `/session` (or just **svaha**). The snippet ships a **safe-by-default permission posture** — reads & inspection run silently, `git push` / `gh` / `rm` / network / secret-reads always confirm or hard-deny, and **editing is your pick:** Mode A grants edit permission once at install (silent edits, ships as default), Mode B asks once per session (delete three lines). The header comment spells out both.
 
 ### Track A — just the behavior (~1 minute)
 
@@ -65,20 +65,20 @@ cp CLAUDE.md ./CLAUDE.md              # scoped to one repo
 
 ### Track B — the full self-calibrating loop
 
-The verified handoff and `/session` expect a small scaffold beside the file: the slash commands, the `bin/` scripts, and the hooks.
+The verified handoff and `/session` need two halves: the **machinery** (slash commands, hooks, `bin/` scripts) installed once into `~/.claude/`, and a **per-project data layer** (`next/`, `ledger/`, `memory/`, `_LOADUP.md`, `_ARCHIVE/`) in each project the loop should carry.
 
 ```bash
-# 1. copy the scaffold into your project root (the folder with bin/, next/, ledger/)
-# 2. install the seven slash commands
-cp boot.md session.md handoff.md reflect.md audit.md foldin.md init.md ~/.claude/commands/
-# 3. install the hook scripts
-cp hooks/*.sh ~/.claude/hooks/
-# 4. wire the hooks: merge settings.json.snippet into ~/.claude/settings.json
-#    (replace <kit-dir> with the kit's absolute path everywhere first; <system-dir> is
-#     resolved at runtime — leave it as-is)
+# 1. install the machinery + wire settings.json (once)
+./setup.sh
+
+# 2. in each project you want the loop, scaffold its data layer
+cd ~/your-project
+claude            # then run:  /init
 ```
 
-The completeness spec in `CLAUDE.md` lists all five layers — wire them once and sessions start carrying themselves. A `.claude-plugin/plugin.json` also ships, so Svaha can be installed through the Claude Code plugin system.
+`setup.sh` installs the seven slash commands and six hooks and wires `settings.json` (filling in the kit's absolute `<kit-dir>` path, validating the JSON, or safe-merging into an existing config). `/init` then turns the current directory into a bootable `<system-dir>` — it creates the data folders and seeds a fresh `CHANGELOG`, but never copies the machinery (that stays in the kit). Fill in the `_LOADUP.md` placeholders it leaves, then `/session` boots the loop.
+
+The completeness spec in `CLAUDE.md` lists all five layers. A `.claude-plugin/plugin.json` also ships, so Svaha can be installed through the Claude Code plugin system.
 
 ## What's in the box
 

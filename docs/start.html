@@ -134,6 +134,13 @@
            border-left:3px solid var(--accent); padding:8px 12px; margin:3px 0 7px; border-radius:0 6px 6px 0; white-space:pre-wrap; }
   .expect b{ color:var(--accent-ink); font-weight:600; }
 
+  /* collapsed manual fallback */
+  details.manual{ margin-top:9px; }
+  details.manual summary{ cursor:pointer; font-size:13px; color:var(--accent-ink); font-weight:600; list-style:none; }
+  details.manual summary::-webkit-details-marker{ display:none; }
+  details.manual summary::before{ content:"\25B8\00a0"; }
+  details.manual[open] summary::before{ content:"\25BE\00a0"; }
+
   /* table */
   table{ border-collapse:collapse; width:100%; margin:12px 0; font-size:14px; background:var(--card);
          border:1px solid var(--card-rule); border-radius:10px; overflow:hidden; box-shadow:var(--shadow); }
@@ -181,12 +188,11 @@
   </div>
 
   <h2 id="install">Install</h2>
-  <p class="secnote">Five steps, ~3 minutes. It needs <code>claude</code>, <code>python3</code>, and <code>git</code> on your machine.</p>
+  <p class="secnote">Four steps, ~2 minutes. It needs <code>claude</code>, <code>python3</code>, and <code>git</code> on your machine.</p>
 
   <div class="step">
     <div class="h"><span class="n">1</span><span class="where term">Terminal</span> &nbsp;Check the three prerequisites — each should print a version, not "command not found":</div>
     <div class="cmd"><pre>claude --version && python3 --version && git --version</pre><button onclick="cp(this)">Copy</button></div>
-    <div class="expect">Missing <b>claude</b> → install Claude Code first (<b>INSTALL-CLAUDE-CODE.html</b>). Missing <b>python3</b> → install Python 3 (the guard hooks are Python). <b>git</b> is only for the clone below — you can download the ZIP instead.</div>
   </div>
 
   <div class="step">
@@ -196,28 +202,26 @@
   </div>
 
   <div class="step">
-    <div class="h"><span class="n">3</span><span class="where term">Terminal</span> &nbsp;Run the installer. Copies the 7 slash commands + hook scripts into <code>~/.claude/</code>. Non-destructive — it asks before touching an existing <code>CLAUDE.md</code>:</div>
+    <div class="h"><span class="n">3</span><span class="where term">Terminal</span> &nbsp;Run the installer. It copies the 7 slash commands + 6 hooks into <code>~/.claude/</code> <b>and wires your <code>settings.json</code> for you</b> — filling in the paths, validating the JSON, and (if you already have a <code>settings.json</code>) <b>safely merging</b> into it with a backup instead of overwriting. Just answer its prompts — <code>return</code> takes the safe default. Non-destructive; it asks before touching an existing <code>CLAUDE.md</code>:</div>
     <div class="cmd"><pre>./setup.sh</pre><button onclick="cp(this)">Copy</button></div>
-  </div>
-
-  <div class="step">
-    <div class="h"><span class="n">4</span><span class="where term">Terminal</span> &nbsp;Wire the hooks + permissions <span style="color:var(--warn);font-style:italic">(the one fiddly step)</span>. This fills in your folder's path and writes <code>settings.json</code>. <b>If you don't already have <code>~/.claude/settings.json</code></b> (most new installs), run this from inside the svaha folder — one paste:</div>
-    <div class="cmd"><pre>mkdir -p ~/.claude && sed '/^[[:space:]]*\/\//d' settings.json.snippet | sed "s|<system-dir>|$(pwd)|g" > ~/.claude/settings.json && python3 -m json.tool ~/.claude/settings.json >/dev/null && echo "OK — settings.json written and valid"</pre><button onclick="cp(this)">Copy</button></div>
-    <div class="expect">prints <b>OK — settings.json written and valid</b>. A JSON error means nothing broke — just re-run from the right folder.</div>
-    <div class="h" style="margin-top:10px"><span class="where edit">Edit file</span> &nbsp;<b>Already have a <code>settings.json</code>?</b> Don't overwrite it. Open <code>settings.json.snippet</code>, replace every <code>&lt;system-dir&gt;</code> with this folder's path (<code>pwd</code>), and merge its <code>"permissions"</code> and <code>"hooks"</code> blocks into yours — per-array, not whole-object. Then validate:</div>
-    <div class="cmd"><pre>python3 -m json.tool ~/.claude/settings.json >/dev/null && echo "valid JSON"</pre><button onclick="cp(this)">Copy</button></div>
+    <div class="expect">At <b>"Generate it now…? [Y/n]"</b> (that's the hooks + permissions) press <b>return</b> for yes. If you already have a <code>settings.json</code>, it offers a <b>safe merge</b> instead — your other keys stay untouched and a timestamped backup is kept.</div>
   </div>
 
   <div class="box note">
     <p><span class="lbl">Choose your edit mode (optional)</span></p>
     <p>The snippet ships <b>frictionless-but-fenced</b>: editing is granted once at install, reads run silent, and <code>git push</code> / <code>rm</code> / network / secret-reads always confirm or block. Prefer to be asked once per session before edits? Delete the three lines <code>"Edit(**)"</code>, <code>"Write(**)"</code>, <code>"MultiEdit(**)"</code> from the <code>"allow"</code> array.</p>
+    <details class="manual">
+      <summary>Wire <code>settings.json</code> by hand (only if you skipped it, or have no Python)</summary>
+      <p style="margin-top:9px"><code>setup.sh</code> already did this. If you answered <b>no</b>, re-run <code>./setup.sh</code> and press <b>return</b> at the settings prompt. To do it yourself from inside the svaha folder — fresh write (no existing <code>settings.json</code>):</p>
+      <div class="cmd"><pre>mkdir -p ~/.claude && sed '/^[[:space:]]*\/\//d' settings.json.snippet | sed "s|<kit-dir>|$(pwd)|g" > ~/.claude/settings.json && python3 -m json.tool ~/.claude/settings.json >/dev/null && echo "OK — settings.json written and valid"</pre><button onclick="cp(this)">Copy</button></div>
+      <p><b>Already have a <code>settings.json</code>?</b> Don't overwrite it. Open <code>settings.json.snippet</code>, replace every <code>&lt;kit-dir&gt;</code> with this folder's path (<code>pwd</code>), and merge its <code>"permissions"</code> and <code>"hooks"</code> blocks into yours — per-array, not whole-object. Then validate with <code>python3 -m json.tool ~/.claude/settings.json</code>.</p>
+    </details>
   </div>
 
   <div class="step">
-    <div class="h"><span class="n">5</span><span class="where term">Terminal</span> &nbsp;Confirm it landed — the 7 commands and 6 hooks should be in place:</div>
-    <div class="cmd"><pre>ls ~/.claude/commands && echo "---" && ls ~/.claude/hooks</pre><button onclick="cp(this)">Copy</button></div>
-    <div class="expect">commands: <b>boot session handoff reflect audit foldin init</b> (.md)
-hooks: the six <b>*.sh</b> files (context-canary, launchpad-nudge, memory-reflect, resume-line-guard, session-end-backstop, session-start-marker)</div>
+    <div class="h"><span class="n">4</span><span class="where term">Terminal</span> &nbsp;Confirm it landed. The doctor checks the commands, hooks, and <code>settings.json</code> (valid JSON, paths wired, no leftover placeholder) and names the exact fix for anything off:</div>
+    <div class="cmd"><pre>bash bin/doctor.sh</pre><button onclick="cp(this)">Copy</button></div>
+    <div class="expect">ends with <b>✓ All good — Svaha is wired up.</b> Any <b>✗</b> line above it tells you the one thing to fix, then just re-run the doctor.</div>
   </div>
 
   <div class="box tip">
@@ -227,18 +231,18 @@ hooks: the six <b>*.sh</b> files (context-canary, launchpad-nudge, memory-reflec
   </div>
 
   <h2 id="first-run">Your first ten minutes</h2>
-  <p class="secnote">The fastest way to feel the loop is to run it once, end to end. One word drives the whole thing — <b>svaha</b> ("so be it / offered into the fire"); <i>where</i> you say it decides what it does.</p>
+  <p class="secnote">The fastest way to feel the loop is to run it once, end to end. One word drives the whole thing — <b>svaha</b> ("so be it / offered into the fire"); <i>where</i> you svaha decides what it does.</p>
   <ol class="walk">
-    <li><b>Boot it.</b> In a project, start Claude Code and <b>just say svaha</b> — it opens the launchpad and resumes where you left off. A brand-new project has nothing to resume yet; that's expected. <small>(Explicit: <code>/session</code>.)</small></li>
+    <li><b>Boot it.</b> In a project, start Claude Code and just type <b>svaha</b> — it opens the launchpad and resumes where you left off. A brand-new project has nothing to resume yet; that's expected. <small>(Explicit: <code>/session</code>.)</small></li>
     <li><b>Do a small task</b> — fix a bug, add a function. Notice it states <i>decisions with conviction</i> and acts on the safe stuff without nagging, but stops to confirm anything risky.</li>
-    <li><b>Wrap up.</b> When you're done (or context is filling), <b>say svaha</b> again — or <b>"that's it."</b> It freezes a numbered <code>_NEXT</code> capturing where you stopped and what you decided, then seals with <b>स्वाहा</b> — the receipt that it's recorded. (Light session, nothing to carry? It closes with the soft <b>◇ ◇ ◇</b> instead — no reboot needed; see just below.) <small>(Explicit: <code>/handoff</code>.)</small></li>
-    <li><b>Start fresh.</b> Open a <i>new</i> session and <b>say svaha</b>. This time it recovers where you left off — and reconciles its claims against the actual files before doing anything.</li>
+    <li><b>Wrap up.</b> When you're done (or context is filling), type <b>svaha</b> again — or <b>"that's it."</b> It freezes a numbered <code>_NEXT</code> capturing where you stopped and what you decided, then seals with <b>स्वाहा</b> — the receipt that it's recorded. (Light session, nothing to carry? It closes with the soft <b>◇ ◇ ◇</b> instead — no reboot needed; see just below.) <small>(Explicit: <code>/handoff</code>.)</small></li>
+    <li><b>Start fresh.</b> Open a <i>new</i> session and <b>svaha</b>. This time it recovers where you left off — and reconciles its claims against the actual files before doing anything.</li>
     <li><b>That's the loop.</b> Each pass is a little better calibrated than the last. The longer you run it, the more it knows.</li>
   </ol>
 
   <div class="box note">
     <p><span class="lbl">The seal — स्वाहा — is the reply, not your input</span></p>
-    <p>You type the plain word <code>svaha</code> — or any clear yes in its place (<b>amen</b> works too). When a wrap actually completes, it echoes <b>स्वाहा</b> back so you know it landed and is recorded. You say a word to act; it says the one seal back to confirm.</p>
+    <p>You type the plain word <code>svaha</code> — or any clear yes in its place (<b>amen</b> works too). When a wrap actually completes, it echoes <b>स्वाहा</b> back so you know it landed and is recorded. You svaha to act; it says the one seal back to confirm.</p>
   </div>
 
   <div class="box note">
@@ -282,9 +286,9 @@ hooks: the six <b>*.sh</b> files (context-canary, launchpad-nudge, memory-reflec
   <h2 id="troubleshoot">If something snags</h2>
   <table>
     <tr><th>Symptom</th><th>Fix</th></tr>
-    <tr><td>Hooks never fire / commands behave oddly</td><td>Your <code>settings.json</code> is probably invalid JSON or still has a literal <code>&lt;system-dir&gt;</code>. Re-run <code>python3 -m json.tool ~/.claude/settings.json</code> and fix what it flags.</td></tr>
+    <tr><td>Hooks never fire / commands behave oddly</td><td>Your <code>settings.json</code> is probably invalid JSON or still has a literal <code>&lt;kit-dir&gt;</code>. Run <code>bash bin/doctor.sh</code> (or <code>python3 -m json.tool ~/.claude/settings.json</code>) and fix what it flags.</td></tr>
     <tr><td><code>python3: command not found</code></td><td>Install Python 3 — the guard hooks are Python.</td></tr>
-    <tr><td>A guard can't find a <code>bin/</code> script</td><td>The svaha folder moved. Move it back, or re-do Step 4 so <code>&lt;system-dir&gt;</code> points at its new path.</td></tr>
+    <tr><td>A guard can't find a <code>bin/</code> script</td><td>The svaha folder moved. Move it back, or re-run <code>./setup.sh</code> (or the manual fallback under Step 3) so <code>&lt;kit-dir&gt;</code> points at its new path.</td></tr>
     <tr><td><code>/session</code> says "nothing to resume"</td><td>Expected on a fresh project — no prior handoff yet. Do some work, <code>/handoff</code>, and the next <code>/session</code> recovers it.</td></tr>
     <tr><td>Command pasted weirdly / "command not found"</td><td>Use the <b>Copy</b> button — hand-selecting can grab stray characters.</td></tr>
   </table>
