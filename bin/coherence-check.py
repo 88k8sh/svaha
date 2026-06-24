@@ -117,6 +117,24 @@ def all_plumbing():
     return [p for p in paths if p.exists()]
 
 
+def stop_plumbing():
+    """Plumbing files a session might actually edit — excludes installed-machinery
+    files (settings.json, ~/.claude/commands/*.md) that setup.sh writes at install
+    time and that are never hand-edited per-session. Without this filter, a fresh
+    install triggers false-positive 'edited but CHANGELOG not updated' noise on
+    every first session because the installer's mtimes are newer than CHANGELOG."""
+    installed = {(DOT_CLAUDE / "settings.json").resolve()}
+    paths = [p for p in PLUMBING_FILES
+             if p.resolve() not in installed
+             and COMMANDS_DIR.resolve() not in p.resolve().parents]
+    for d, pat in PLUMBING_DIRS:
+        if d.resolve() == COMMANDS_DIR.resolve():
+            continue  # installed by setup.sh, not hand-edited per-session
+        if d.is_dir():
+            paths.extend(d.glob(pat))
+    return [p for p in paths if p.exists()]
+
+
 def highest_next_number():
     if not NEXT_DIR.is_dir():
         return None
@@ -210,7 +228,7 @@ def stop():
     # 1. Plumbing files newer than CHANGELOG.
     if CHANGELOG.exists():
         changelog_mtime = CHANGELOG.stat().st_mtime
-        for p in all_plumbing():
+        for p in stop_plumbing():
             if p.resolve() == CHANGELOG.resolve():
                 continue
             if p.stat().st_mtime > changelog_mtime:
