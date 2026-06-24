@@ -152,6 +152,16 @@
   /* legend */
   .legend{ background:var(--card); border:1px solid var(--card-rule); border-radius:12px; padding:14px 16px; margin:18px 0; font-size:14.5px; box-shadow:var(--shadow); }
 
+  /* close banners — the chat-style seal / reflection close, shown inline */
+  .close-banner{ border-top:1px solid var(--rule); border-bottom:1px solid var(--rule); text-align:center; padding:24px 16px; margin:14px 0; }
+  .close-banner .seal-mark{ display:block; font-family:"Noto Serif Devanagari",serif; font-weight:600; font-size:clamp(34px,7vw,46px); line-height:1; color:var(--accent-ink); }
+  .close-banner .seal-hollow{ display:block; font-family:"Fraunces",serif; font-weight:600; font-size:clamp(24px,5vw,32px); letter-spacing:.22em; line-height:1; color:var(--faint); }
+  .close-banner .cap{ display:block; margin:11px auto 0; max-width:54ch; font-family:"Newsreader",serif; font-style:italic; font-size:13.5px; color:var(--muted); }
+
+  /* page-foot seal */
+  .pageseal{ border-top:1px solid var(--rule); text-align:center; padding:clamp(34px,7vw,58px) 0 6px; margin-top:46px; }
+  .pageseal span{ font-family:"Noto Serif Devanagari",serif; font-weight:600; font-size:clamp(44px,9vw,72px); line-height:1; color:var(--accent-ink); }
+
   /* footer */
   .sitefoot{ margin-top:56px; padding-top:22px; border-top:1px solid var(--rule); color:var(--faint); font-size:13.5px;
              display:flex; flex-wrap:wrap; gap:6px 16px; align-items:center; justify-content:space-between; }
@@ -235,19 +245,21 @@
   <ol class="walk">
     <li><b>Boot it.</b> In a project, start Claude Code and just type <b>svaha</b> — it opens the launchpad and resumes where you left off. A brand-new project has nothing to resume yet; that's expected. <small>(Explicit: <code>/session</code>.)</small></li>
     <li><b>Do a small task</b> — fix a bug, add a function. Notice it states <i>decisions with conviction</i> and acts on the safe stuff without nagging, but stops to confirm anything risky.</li>
-    <li><b>Wrap up.</b> When you're done (or context is filling), type <b>svaha</b> again — or <b>"that's it."</b> It freezes a numbered <code>_NEXT</code> capturing where you stopped and what you decided, then seals with <b>स्वाहा</b> — the receipt that it's recorded. (Light session, nothing to carry? It closes with the soft <b>◇ ◇ ◇</b> instead — no reboot needed; see just below.) <small>(Explicit: <code>/handoff</code>.)</small></li>
+    <li><b>Wrap up.</b> When you're done (or context is filling), type <b>svaha</b> again — or <b>"that's it."</b> It freezes a numbered <code>_NEXT</code> capturing where you stopped and what you decided, then seals the session. <small>(Explicit: <code>/handoff</code>.)</small></li>
     <li><b>Start fresh.</b> Open a <i>new</i> session and <b>svaha</b>. This time it recovers where you left off — and reconciles its claims against the actual files before doing anything.</li>
     <li><b>That's the loop.</b> Each pass is a little better calibrated than the last. The longer you run it, the more it knows.</li>
   </ol>
 
-  <div class="box note">
-    <p><span class="lbl">The seal — स्वाहा — is the reply, not your input</span></p>
-    <p>You type the plain word <code>svaha</code> — or any clear yes in its place (<b>amen</b> works too). When a wrap actually completes, it echoes <b>स्वाहा</b> back so you know it landed and is recorded. You svaha to act; it says the one seal back to confirm.</p>
+  <p class="secnote">You type <b>svaha</b> (or any clear yes — <b>amen</b> works too); when a wrap completes it says the one seal back, so you know it landed. Every session ends one of two ways — you'll see the matching banner at the very foot of the chat, the same as here:</p>
+
+  <div class="close-banner" aria-label="the firm close — svaha">
+    <span class="seal-mark">स्वाहा</span>
+    <span class="cap">The firm close — your work is sealed into a numbered handoff and recorded. The thread is saved; the natural next move is a fresh session.</span>
   </div>
 
-  <div class="box note">
-    <p><span class="lbl">Two closes, two weights — स्वाहा and ◇ ◇ ◇</span></p>
-    <p><b>स्वाहा</b> is the firm close — work was sealed into a numbered handoff, so the next session resumes the thread; the natural move is to start fresh. <b>◇ ◇ ◇</b> is the soft one — a <i>reflection</i>: nothing live to carry, nothing offered to the fire, so nothing forces a stop. Keep going if you want, or set it down with a clean slate. The banner tells you which kind of stop you've reached.</p>
+  <div class="close-banner" aria-label="the soft close — reflection">
+    <span class="seal-hollow">◇ ◇ ◇</span>
+    <span class="cap">The soft close — a light session with nothing to carry. Nothing forces a stop: keep going, or set it down with a clean slate.</span>
   </div>
 
   <div class="box note">
@@ -297,6 +309,8 @@
     <span class="sig">svaha</span>
     <span>the contract: <code>CLAUDE.md</code> · full reference: <code>README.md</code> · new to Claude Code? <a href="INSTALL-CLAUDE-CODE.html">start one step back</a></span>
   </footer>
+
+  <div class="pageseal" aria-hidden="true"><span>स्वाहा</span></div>
 </div>
 
 <script>

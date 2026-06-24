@@ -7,6 +7,10 @@ Written by `/handoff` (or manually after structural edits). Do not edit existing
 
 ---
 
+## 2026-06-24 — Site close-banners adopted (078): box-notes → visual स्वाहा / ◇ ◇ ◇ banners
+
+Adopted the preserved 078 site-polish onto the post-consolidation `start.html` (the user's call: adopt). The two grey text box-notes in "Your first ten minutes" become chat-style **close banners** — a स्वाहा firm-close banner and a ◇ ◇ ◇ soft-close banner, each captioned with the same meaning, rendering what the user actually sees at a session close. Added a page-foot **स्वाहा seal** below the footer; trimmed the wrap-step's now-redundant inline स्वाहा/◇◇◇ explanation (the banners carry it). `docs/index.html`: dropped the hero "How it works" nav button (the `#data` section stays, reachable by scroll). Source preserved in `_ARCHIVE/start.html.MINE-banners-* / index.html.MINE-*`. Verified: 2 close-banners + page-seal render (Devanagari font loads); the consolidation's `<kit-dir>` troubleshoot fix is kept on top of the adopted version. Push to `88k8sh/svaha` remains user-gated.
+
 ## 2026-06-24 — Consolidate sessions 073–077: re-apply lost start.html edits, finish docs, mirror next-write fix
 
 A meta-session reconciling six concurrent handoff slots (073–078) against the actual tree (HEAD `13ec192`). The 076 install-fix + 077 wording entries below described `docs/start.html` edits that had since been **reverted out of the working tree** by the 078 site-revert (which preserved its own banner polish to `_ARCHIVE/start.html.MINE-banners-*`); the ledger entries survived but the file did not. Re-applied them so `start.html` matches its own ledger, then finished the queued doc work.
