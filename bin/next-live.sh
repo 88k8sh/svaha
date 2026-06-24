@@ -120,8 +120,15 @@ for f in "${NEXT_DIR}"/_NEXT_*.md; do
   if [[ -e "${NEXT_DIR}/_NEXT_${nnn}.consumed" ]]; then
     # consumed — surface only if stamped within the recent window
     if [[ -n "$(find "${NEXT_DIR}/_NEXT_${nnn}.consumed" -mmin "-${RECENT_MIN}" 2>/dev/null)" ]]; then
-      ts=$(stat -f '%Sm' -t '%H:%M' "${NEXT_DIR}/_NEXT_${nnn}.consumed" 2>/dev/null \
-           || date -r "${NEXT_DIR}/_NEXT_${nnn}.consumed" '+%H:%M' 2>/dev/null)
+      # consumed-time HH:MM — platform-aware: GNU `date -r FILE` vs BSD `stat -f %Sm`.
+      # An OR-chain fails the same way next-write.sh did: `stat -f '%Sm' …FILE` is
+      # valid --file-system mode on GNU (exits 0 with a filesystem blob), so a
+      # `|| date -r` fallback never fires. Detect explicitly. (Real-Linux run 2026-06-25.)
+      if stat --version >/dev/null 2>&1; then
+        ts=$(date -r "${NEXT_DIR}/_NEXT_${nnn}.consumed" '+%H:%M' 2>/dev/null)         # GNU/Linux
+      else
+        ts=$(stat -f '%Sm' -t '%H:%M' "${NEXT_DIR}/_NEXT_${nnn}.consumed" 2>/dev/null) # BSD/macOS
+      fi
       recent_consumed+=("${nnn}|${ts}|$(label_for "$f" "$nnn")")
     fi
     continue

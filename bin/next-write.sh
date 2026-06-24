@@ -30,8 +30,8 @@ CONTENT_FILE="${2:?Usage: next-write.sh <system-dir> <content-file> [--consume N
 # name (/tmp/handoff_next.md) collided with a 2-day-old file owned by another user
 # → its content was minted as _NEXT_070 and consumed the real _NEXT_068. Always
 # write the content to a UNIQUE mktemp path; this guard is the backstop that makes
-# the stale-content class impossible. (`stat -f` is macOS/BSD; on Linux it no-ops
-# the owner check — owner='' — while the mtime check still applies.)
+# the stale-content class impossible. (The owner check below is platform-aware —
+# BSD `stat -f %Su` vs GNU `stat -c %U`; the mtime check via find -mmin is portable.)
 if [[ ! -f "${CONTENT_FILE}" ]]; then
   echo "next-write.sh: content file '${CONTENT_FILE}' not found." >&2
   exit 1
@@ -42,7 +42,15 @@ if [[ -n "$(find "${CONTENT_FILE}" -mmin +60 2>/dev/null)" ]]; then
   echo "  it to a unique path (mktemp), then re-run." >&2
   exit 1
 fi
-owner="$(stat -f '%Su' "${CONTENT_FILE}" 2>/dev/null || echo '')"
+# Owner: BSD stat uses `-f %Su`, GNU coreutils uses `-c %U`. Detect explicitly —
+# `stat -f '%Su' FILE` does NOT fail-soft on GNU (`-f` there means --file-system,
+# so it exits 0 printing a filesystem blob that an OR-chain would mistake for the
+# owner, falsely rejecting every mint). A real-Linux container run caught this 2026-06-25.
+if stat --version >/dev/null 2>&1; then
+  owner="$(stat -c '%U' "${CONTENT_FILE}" 2>/dev/null || echo '')"   # GNU/Linux
+else
+  owner="$(stat -f '%Su' "${CONTENT_FILE}" 2>/dev/null || echo '')"  # BSD/macOS
+fi
 if [[ -n "${owner}" && "${owner}" != "$(id -un)" ]]; then
   echo "next-write.sh: content file '${CONTENT_FILE}' is owned by '${owner}', not you — refusing" >&2
   echo "  (the cross-user /tmp-collision signature). Write your handoff to a unique mktemp path." >&2
