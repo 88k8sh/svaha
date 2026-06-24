@@ -57,6 +57,30 @@ echo "          $KIT_ROOT"
 echo ""
 
 # ----------------------------------------------------------------------------
+# Step 1b — Dependency + path preflight (warn loudly, never block).
+# ----------------------------------------------------------------------------
+# python3 powers the four guard hooks; jq powers the six shell hooks. Neither is
+# guaranteed on a fresh machine, and the shell hooks fail-soft to NOTHING (silent
+# no-op) without jq — so warn now rather than let the safety net quietly not exist.
+command -v python3 >/dev/null 2>&1 || \
+  echo "          ⚠ python3 not found — the guard hooks (security/version/drift/coherence) need it. Install Python 3."
+command -v jq >/dev/null 2>&1 || \
+  echo "          ⚠ jq not found — the six shell hooks parse stdin with jq and SILENTLY disable themselves without it. Install: brew install jq  /  apt-get install jq"
+# A space in the kit path is fatal-but-silent: settings.json wires the guard
+# commands UNQUOTED, so a space makes the runtime word-split the path and quietly
+# disable all four Python guards (doctor.sh would still pass the -f file test).
+case "$KIT_ROOT" in
+  *\ *)
+    echo "          ⚠ WARNING: this kit path contains a space:"
+    echo "              $KIT_ROOT"
+    echo "            The guards are wired UNQUOTED, so a space here will silently DISABLE"
+    echo "            all four Python guards at runtime. Strongly recommended: move the kit"
+    echo "            to a path with no spaces, then re-run ./setup.sh."
+    ;;
+esac
+echo ""
+
+# ----------------------------------------------------------------------------
 # Step 2 — Copy the seven slash commands to ~/.claude/commands/
 # ----------------------------------------------------------------------------
 echo "Step 2/6  Installing slash commands -> $CMD_DIR"

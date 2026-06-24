@@ -101,6 +101,15 @@ until ( set -o noclobber; : > "${out}" ) 2>/dev/null; do
   out="$(slot "${next}")"
 done
 
+# Crash/empty-mint cleanup: the reserve above creates an EMPTY "${out}" before any
+# content is written. A mid-mint crash — or the empty-slot guard in the --consume
+# branch below — would otherwise leave a 0-byte _NEXT_NNN.md that BURNS the slot
+# number and makes `next-live.sh --check` report a permanent false desync until it's
+# removed by hand. This EXIT trap drops "${out}" on ANY exit while it is still
+# zero-bytes; once real content lands it is non-empty, so the trap is a no-op on the
+# success path. Preserves the real exit code so callers still see mint failures.
+trap 'rc=$?; if [[ -n "${out:-}" && -f "${out}" && ! -s "${out}" ]]; then rm -f "${out}"; fi; exit $rc' EXIT
+
 # Focus-label stamp: if line 1 is the sentinel "# __FOCUS__ <label>", rewrite it
 # to "# _NEXT_NNN — <label>" (NNN = resolved slot, padded to the filename's width).
 # No sentinel → copy verbatim (backward-compatible with title-less handoffs).

@@ -43,6 +43,15 @@ else
   bad "python3 not found" "install Python 3 — the guard hooks need it"
 fi
 
+# 1b — jq (the six shell hooks parse their stdin JSON with jq; without it they
+# silently no-op — the whole context-canary / launchpad / reflect / closer-guard /
+# durability-backstop layer goes dark with NO signal. Not optional.)
+if command -v jq >/dev/null 2>&1; then
+  ok "jq present"
+else
+  bad "jq not found" "install jq (brew install jq  /  apt-get install jq) — the six shell hooks parse stdin with jq and SILENTLY disable themselves without it"
+fi
+
 # 2 — the seven slash commands
 miss=""
 for f in boot session handoff reflect audit foldin init; do
@@ -59,7 +68,7 @@ if [ -z "$hmiss" ]; then ok "6 hook scripts installed"; else bad "missing hooks:
 
 # 4 — the kit's guard + handoff scripts (referenced by absolute path, so the folder must stay put)
 bmiss=""
-for f in security-guard.py version-guard.py drift-guard.py coherence-check.py next-write.sh next-live.sh; do
+for f in security-guard.py version-guard.py drift-guard.py coherence-check.py next-write.sh next-live.sh next-consume.sh; do
   [ -f "$KIT_ROOT/bin/$f" ] || bmiss="$bmiss $f"
 done
 if [ -z "$bmiss" ]; then ok "guard + handoff scripts present in bin/"; else bad "missing bin scripts:$bmiss" "this kit folder is incomplete — re-download"; fi
@@ -96,6 +105,13 @@ else
     if [ -n "$wired" ] && [ ! -f "$wired" ]; then
       bad "settings.json points at a guard that isn't there: $wired" "the kit folder moved — re-run setup or repoint paths to $KIT_ROOT/bin"
     fi
+    # A space in the wired path is fatal-but-silent: the snippet bakes the guard
+    # commands UNQUOTED, so the runtime word-splits the path and every Python guard
+    # quietly fails to run — while the -f test above (correctly quoted) still passes.
+    # Catch it here so doctor doesn't hand a spaced-path user a false "All good".
+    case "$wired" in
+      *\ *) bad "guard path contains a space: $wired" "guards are wired UNQUOTED in settings.json, so a space silently disables all four Python guards at runtime — move the kit to a space-free path, then re-run ./setup.sh" ;;
+    esac
   fi
 fi
 

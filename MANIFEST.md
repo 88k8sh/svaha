@@ -4,9 +4,6 @@ The distilled, source-vetted Core of Svaha: afternoon-readable, fully functional
 charter-clean. Built from the full kit by keeping every safety/continuity primitive verbatim,
 slimming accretion, and cutting four enhancement/marketing components to the bolt-on tier.
 
-See `DISTILLATION-LOG.md` for the per-component keep/slim/cut rationale, and
-`THROUGHLINE-SAFETY-CHARTER.md` (outside this tree) for the invariants this Core upholds.
-
 ---
 
 ## The five layers (completeness spec)
@@ -65,7 +62,6 @@ See `DISTILLATION-LOG.md` for the per-component keep/slim/cut rationale, and
 | `ledger/audit-state.md` | Audit counter |
 | `ledger/drift-guard-evidence.md` | Guard catches log |
 | `ledger/drift-guard-overfires.md` | Over-fire log (audit reads for tighten signal) |
-| `ledger/version-guard-log.jsonl` | Proof the version-guard fires |
 | `_ARCHIVE/README.md` | Graveyard for retired files |
 
 ---
@@ -80,7 +76,6 @@ See `DISTILLATION-LOG.md` for the per-component keep/slim/cut rationale, and
 | `LICENSE` | MIT |
 | `setup.sh` | Non-destructive installer (companions are print-only) |
 | `.claude-plugin/plugin.json` | Plugin-system manifest |
-| `docs/essay.md` | The "why" narrative |
 
 ---
 

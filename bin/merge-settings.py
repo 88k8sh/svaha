@@ -55,11 +55,55 @@ def merge_permissions(dst, src):
     return dst
 
 
+# Basenames of the scripts THIS kit ships + bakes an absolute path into. Used to
+# recognize "our own" hook entries so a re-run after the kit MOVED (its baked path
+# changed) — or any kit upgrade that changes a baked field (path, timeout,
+# statusMessage) — REPLACES the stale entry instead of appending a duplicate that
+# fires twice (and errors on every gated call if the old clone was deleted).
+KIT_SCRIPT_BASENAMES = {
+    "security-guard.py", "version-guard.py", "drift-guard.py", "coherence-check.py",
+    "context-canary.sh", "launchpad-nudge.sh", "memory-reflect.sh",
+    "resume-line-guard.sh", "session-end-backstop.sh", "session-start-marker.sh",
+}
+
+
+def _entry_kit_scripts(entry):
+    """The set of kit script basenames an entry's hook commands reference. Empty →
+    not one of ours (a user's own hook), so it is never touched."""
+    found = set()
+    if isinstance(entry, dict):
+        for h in entry.get("hooks", []) or []:
+            cmd = h.get("command", "") if isinstance(h, dict) else ""
+            found |= {b for b in KIT_SCRIPT_BASENAMES if b in cmd}
+    return found
+
+
+def _entry_identity(entry):
+    """Path-independent identity for one of our entries: (matcher, frozenset of kit
+    scripts). A moved/upgraded kit entry matches its stale predecessor by this."""
+    return (entry.get("matcher") if isinstance(entry, dict) else None,
+            frozenset(_entry_kit_scripts(entry)))
+
+
 def merge_hooks(dst, src):
     # hooks: { EventName: [ {matcher?, hooks:[...]} , ... ] }
-    # append the kit's per-event entries that aren't already present.
+    # For each source entry: if it is one of OURS (references a kit script), drop any
+    # existing entry of the SAME identity (matcher + kit-script set) regardless of its
+    # baked path, then append the fresh one — i.e. REPLACE, so re-running setup after a
+    # move/upgrade never doubles a guard. Entries that aren't ours (a user's own hook,
+    # even under the same event) are unioned by value and never clobbered. (Caveat: a
+    # user hook hand-merged INTO one of our entry objects is replaced with it — keep
+    # your own hooks in a separate entry, which is the normal layout.)
     for event, entries in src.items():
-        union(dst.setdefault(event, []), entries)
+        dst_list = dst.setdefault(event, [])
+        for s_entry in entries:
+            if _entry_kit_scripts(s_entry):
+                sid = _entry_identity(s_entry)
+                dst_list[:] = [d for d in dst_list
+                               if not (_entry_kit_scripts(d) and _entry_identity(d) == sid)]
+                dst_list.append(s_entry)
+            else:
+                union(dst_list, [s_entry])
     return dst
 
 

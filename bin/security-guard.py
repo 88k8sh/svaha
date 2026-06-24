@@ -45,7 +45,13 @@ from pathlib import Path
 SECRET_PATH_PATTERNS = [
     r"/\.ssh/", r"/\.aws/", r"/\.gnupg/", r"/\.config/gh/", r"/\.docker/config",
     r"\.env(\.|$)", r"\.pem$", r"\bid_rsa\b", r"\bid_ed25519\b",
-    r"credentials", r"\bsecrets?\b", r"\.npmrc$", r"\.pypirc$",
+    # credentials / secrets anchored to a path boundary: still catch real secret
+    # files (~/.aws/credentials, secrets.json, /x/.secrets) but no longer false-deny
+    # ordinary docs/source like secrets-management.md or credentials-helper.go
+    # (the over-block fixed 2026-06-24). (^|/) requires a path-start; (?![\w-])
+    # forbids a following word-char or dash so a substring like "credentials-guide"
+    # never matches, while ".json" / end-of-path still do.
+    r"(^|/)credentials(?![\w-])", r"(^|/)\.?secrets?(?![\w-])", r"\.npmrc$", r"\.pypirc$",
     r"/Library/Keychains/", r"/\.kube/config", r"\.netrc$",
 ]
 # Catastrophic bash — hard DENY (never legitimate from an agent).         # ← customize
@@ -58,8 +64,20 @@ DENY_BASH = [
     (r"\bmkfs\.", "filesystem format (mkfs)"),
     (r">\s*/dev/(sd|disk|rdisk)", "redirect into a raw disk device"),
 ]
-# rm -rf aimed at / or $HOME specifically (the irreversible case).
-RM_ROOT_HOME = re.compile(r"\brm\s+(-[a-zA-Z]*\s+)*-?[a-zA-Z]*\s*(-rf|-fr|-r\s+-f|-f\s+-r)\b[^\n]*\s(/|~|\$HOME|/\*)(\s|/|$)")
+# rm -rf aimed at / or $HOME specifically (the irreversible case). Two zero-width
+# lookaheads — a recursive flag AND a force flag, in any order, short (-rf / -R) or
+# long (--recursive / --force) — then a root/home target that may be QUOTED ('/' "/")
+# or bare. So `rm -rf "/"`, `rm --recursive --force /`, `rm -R -f /` are all caught,
+# not just the bare short-flag form (the quoted-/long-flag-bypass fix 2026-06-24). A
+# specific path (rm -rf ./build, /tmp/x, node_modules) has no whitespace-led root
+# target token, so it is not matched.
+RM_ROOT_HOME = re.compile(
+    r"\brm\b"
+    r"(?=[^\n]*?(?:\s-[a-zA-Z]*r[a-zA-Z]*\b|\s--recursive\b))"
+    r"(?=[^\n]*?(?:\s-[a-zA-Z]*f[a-zA-Z]*\b|\s--force\b))"
+    r"""[^\n]*?\s['"]?(?:/|~|\$HOME|/\*)(?:['"/]|\s|$)""",
+    re.IGNORECASE,
+)
 # History-/data-losing git — surface a confirm (ASK).                     # ← customize
 ASK_BASH = [
     (r"\bgit\s+push\b[^\n]*\s(--force|-f|--force-with-lease)\b", "git force-push (rewrites remote history)"),

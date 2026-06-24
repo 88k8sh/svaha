@@ -6,7 +6,7 @@
 
 One `CLAUDE.md` + a small scaffold turn the loose pieces of a good Claude Code setup into **one self-calibrating loop**: a decision is made *with its conviction*, recorded in the handoff *with its outcome*, and verified against reality at the next boot — and a call that didn't pan out becomes a rule that retunes how the next one gets made. Continuity feeds coherence feeds better decisions feeds continuity.
 
-[The behavior contract](CLAUDE.md) · [Credits](CREDITS.md) · MIT
+[The behavior contract](CLAUDE.md) · [Credits](docs/CREDITS.md) · MIT
 
 </div>
 
@@ -92,11 +92,9 @@ A complete package is five layers — missing any one produces a system that run
 | **4 · Memory** | `memory/MEMORY.md` index + per-entry files |
 | **5 · Ledger** | `ledger/` — `CHANGELOG.md`, `DECISIONS.md`, `LESSONS.md`, `session-fixes.md`, `USER_TASKS.md`, `audit-state.md` · plus `_ARCHIVE/` at the system root |
 
-See [`docs/essay.md`](docs/essay.md) for the *why* — the reasoning behind treating project context as a database problem.
-
 ## Composes with your stack
 
-Svaha is the cross-session **spine** — it doesn't reimplement the ecosystem, it composes with it: pair it with **Superpowers** (engineering-skill methodology), **Context7** (live library docs via MCP), or **TLDR-code** (semantic code comprehension over a big repo). Community *patterns* (frozen-artifact enforcement, resume-with-verification, premortem framing, 2-strike correction promotion) are already folded in — nothing to install. Full acknowledgments in [CREDITS.md](CREDITS.md).
+Svaha is the cross-session **spine** — it doesn't reimplement the ecosystem, it composes with it: pair it with **Superpowers** (engineering-skill methodology), **Context7** (live library docs via MCP), or **TLDR-code** (semantic code comprehension over a big repo). Community *patterns* (frozen-artifact enforcement, resume-with-verification, premortem framing, 2-strike correction promotion) are already folded in — nothing to install. Full acknowledgments in [CREDITS.md](docs/CREDITS.md).
 
 ## Privacy & provenance
 
