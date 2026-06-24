@@ -21,6 +21,7 @@ See `DISTILLATION-LOG.md` for the per-component keep/slim/cut rationale, and
 | `handoff.md` | `/handoff` — session wrap; Warrant gate, Continuity check, read-back |
 | `reflect.md` | `/reflect` — memory + bug-log pass (handoff steps 4–5 delegate here) |
 | `foldin.md` | `/foldin` — adopt an ungoverned conversation into the system |
+| `init.md` | `/init` — scaffold a fresh project's data layer (per-project, runs once) |
 | `bin/next-write.sh` | Atomic, collision-safe `_NEXT_NNN` writer |
 | `bin/next-live.sh` | Single source of truth for the live-session set |
 | `next/_NEXT_001.md` | Seed handoff |

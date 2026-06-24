@@ -82,7 +82,7 @@ NEXT_DIR = SYSTEM_DIR / "next"
 
 # Slash commands _LOADUP §2 declares as registered (stems only, no .md).
 REGISTERED_COMMANDS = {
-    "boot", "session", "handoff", "foldin", "reflect", "audit",
+    "boot", "session", "handoff", "foldin", "reflect", "audit", "init",
     # add yours here
 }
 

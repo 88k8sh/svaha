@@ -69,8 +69,8 @@ The verified handoff and `/session` expect a small scaffold beside the file: the
 
 ```bash
 # 1. copy the scaffold into your project root (the folder with bin/, next/, ledger/)
-# 2. install the six slash commands
-cp boot.md session.md handoff.md reflect.md audit.md foldin.md ~/.claude/commands/
+# 2. install the seven slash commands
+cp boot.md session.md handoff.md reflect.md audit.md foldin.md init.md ~/.claude/commands/
 # 3. install the hook scripts
 cp hooks/*.sh ~/.claude/hooks/
 # 4. wire the hooks: merge settings.json.snippet into ~/.claude/settings.json

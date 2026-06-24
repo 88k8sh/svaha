@@ -55,12 +55,12 @@ echo "          $KIT_ROOT"
 echo ""
 
 # ----------------------------------------------------------------------------
-# Step 2 — Copy the six slash commands to ~/.claude/commands/
+# Step 2 — Copy the seven slash commands to ~/.claude/commands/
 # ----------------------------------------------------------------------------
 echo "Step 2/6  Installing slash commands -> $CMD_DIR"
 mkdir -p "$CMD_DIR"
 
-COMMANDS="boot.md session.md handoff.md reflect.md audit.md foldin.md"
+COMMANDS="boot.md session.md handoff.md reflect.md audit.md foldin.md init.md"
 cmd_ok=0
 cmd_miss=0
 for f in $COMMANDS; do

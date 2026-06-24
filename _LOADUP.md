@@ -40,7 +40,7 @@ Boot reads the specific `_NEXT_NNN.md` named in the opener block (or auto-picked
 - **`bin/coherence-check.py --boot`** runs a structural integrity check at boot; **`--stop`** runs an exit check wired as a Stop hook in `settings.json`.
 - **`_NEXT.md`** = permanent reference & pointer (spec + boot instructions); never overwritten.
 - **`_NEXT_NNN.md` files are frozen once written** — corrections go in a new numbered file, never a rewrite.
-- **Registered slash commands** at `~/.claude/commands/`: `<list your commands — e.g. /boot, /session, /handoff, /reflect, /audit, /foldin>`.
+- **Registered slash commands** at `~/.claude/commands/`: `<list your commands — e.g. /boot, /session, /handoff, /reflect, /audit, /foldin, /init>`.
 - *Example fill-in:* `<tool>` installed for `<purpose>`; `<alias>` added to `~/.zshrc`; `<known OS/sandbox quirk>` = expected, not a bug.
 
 ## 3. The map (what lives where)

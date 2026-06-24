@@ -43,12 +43,12 @@ else
   bad "python3 not found" "install Python 3 — the guard hooks need it"
 fi
 
-# 2 — the six slash commands
+# 2 — the seven slash commands
 miss=""
-for f in boot session handoff reflect audit foldin; do
+for f in boot session handoff reflect audit foldin init; do
   [ -f "$CLAUDE_DIR/commands/$f.md" ] || miss="$miss $f"
 done
-if [ -z "$miss" ]; then ok "6 slash commands installed"; else bad "missing commands:$miss" "re-run ./setup.sh"; fi
+if [ -z "$miss" ]; then ok "7 slash commands installed"; else bad "missing commands:$miss" "re-run ./setup.sh"; fi
 
 # 3 — the six hooks
 hmiss=""

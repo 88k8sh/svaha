@@ -7,6 +7,15 @@ Written by `/handoff` (or manually after structural edits). Do not edit existing
 
 ---
 
+## 2026-06-24 — /init: scaffold a fresh project's data layer (per-project, runs once)
+
+New slash command `/init` (`init.md`) closes the cold-install gap the kit-dir/system-dir split opened: it turns CWD into a `<system-dir>` by scaffolding the per-project **data** half of the five-layer completeness spec, while the machinery (commands, hooks, `bin/`) stays baked once in `<kit-dir>`.
+
+- **Scaffolds (data only):** `_LOADUP.md`, `_NEXT.md`, `next/_NEXT_001`, `SYNC_MAP.md`, `SYSTEM_MAP.md`, `memory/{MEMORY,README}.md`, `ledger/` (8 files), `_ARCHIVE/`. Copies the kit's clean templates from `<kit-dir>`; the one file carrying kit dev-history — `ledger/CHANGELOG.md` — is **fresh-seeded, never copied**.
+- **Guard:** refuses if CWD already holds `_LOADUP.md` (no clobber). Verified by temp-dir dry-run — scaffolds all 16 files, all 5 `coherence-check --boot` required files present, guard fires on re-run, seeded CHANGELOG 9 lines vs the kit's 145.
+- **NEW** `init.md`. **EDIT** `setup.sh` (COMMANDS + count), `bin/coherence-check.py` (`REGISTERED_COMMANDS`), `bin/doctor.sh` (command list + count), `_LOADUP §2`, `SYNC_MAP §3`, `README.md` (Track-B install), `MANIFEST.md`.
+- **DEFERRED — not dropped:** the user-facing HTML command list moved into `docs/start.html` during a concurrent doc-consolidation (INSTALL.html + WELCOME.html became redirect stubs). `/init` must be added to `start.html`'s command list + the "6 commands → 7" count — folded into the move-3 INSTALL-doc rewrite, *not* edited into another session's uncommitted WIP.
+
 ## 2026-06-24 — kit-dir / system-dir split: per-project data, runtime-resolved
 
 The single `<system-dir>` placeholder conflated two distinct things — the kit's **machinery** (the `bin/` scripts, hooks, command files) and a **project's data** (`next/`, `ledger/`, `_LOADUP.md`, `memory/`) — so `setup.sh` baked everything to one clone location. Root cause of the cold-install failures: a fresh install had "nothing to boot into" and was forced onto the kit's own disk, because per-project data could only live *inside* the kit clone. Split into two placeholders:
