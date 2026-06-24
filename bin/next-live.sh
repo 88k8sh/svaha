@@ -32,6 +32,16 @@
 # files are never edited). So "consumed but text still lists open moves" is NOT
 # a desync — it is the normal, expected state. We do not flag it.
 #
+# OCCUPANCY (double-booking soft-guard): a live slot may carry a _NEXT_NNN.booted
+# sidecar (written by next-boot.sh when a session boots the slot). It is an
+# ADVISORY occupancy hint, NOT a lock — list mode annotates a booted live slot:
+#   "⚠ in use (booted HH:MM …)"      if booted within $BOOT_SKIP_MIN (default 10m)
+#                                    — the no-arg picker skips these (the tiebreak)
+#   "· booted HH:MM (may be in use)" if within $BOOT_SHOW_MIN (default 720m)
+# Older than that → no marker (a dead/abandoned boot). A stale/leaked .booted is
+# harmless — nothing depends on it. Occupancy is a different axis from DONE-PROBABLE
+# (whose slot may co-occur). Never a desync — absent from --check.
+#
 # Modes:
 #   (default)  live list + recently-consumed + any desync warnings. A live slot
 #              carrying a parenthesized "(_NEXT_NNN)" CHANGELOG completion marker
@@ -51,6 +61,14 @@ SYSTEM_DIR="${1:?Usage: next-live.sh <system-dir> [--check]}"
 MODE="${2:-list}"
 NEXT_DIR="${SYSTEM_DIR}/next"
 RECENT_MIN="${NEXT_RECENT_MIN:-120}"
+# Occupancy windows for the _NEXT_NNN.booted sidecar (written by next-boot.sh at
+# boot; see OCCUPANCY in the header). Two tiers:
+#   BOOT_SKIP_MIN  (default 10m)  → "⚠ in use" — likely a live session right now;
+#                                   the no-arg picker skips these (the tiebreak).
+#   BOOT_SHOW_MIN  (default 720m) → "· booted HH:MM" — informational only.
+# Older than BOOT_SHOW_MIN → no marker (most likely a dead/abandoned boot).
+BOOT_SKIP_MIN="${NEXT_BOOT_SKIP_MIN:-10}"
+BOOT_SHOW_MIN="${NEXT_BOOT_SHOW_MIN:-720}"
 
 # Layer C (consume-leak fix): cross-reference live slots against logged
 # completions. Probe both ledger layouts so the same script serves any install.
@@ -177,7 +195,21 @@ else
     if done_probable "${n}"; then
       flag="   ⚠ DONE-PROBABLE (CHANGELOG has a (_NEXT_${n}) completion marker but no .consumed — verify, then: bin/next-consume.sh <system-dir> ${n} \"done: …\")"
     fi
-    echo "  ${n} — ${l}${flag}"
+    # Occupancy hint (advisory, never a lock) — see OCCUPANCY in the header.
+    occ=""; bfile="${NEXT_DIR}/_NEXT_${n}.booted"
+    if [[ -e "${bfile}" ]]; then
+      if stat --version >/dev/null 2>&1; then
+        bts=$(date -r "${bfile}" '+%H:%M' 2>/dev/null)         # GNU/Linux
+      else
+        bts=$(stat -f '%Sm' -t '%H:%M' "${bfile}" 2>/dev/null) # BSD/macOS
+      fi
+      if [[ -n "$(find "${bfile}" -mmin "-${BOOT_SKIP_MIN}" 2>/dev/null)" ]]; then
+        occ="   ⚠ in use (booted ${bts} — likely a live session; the no-arg picker skips it)"
+      elif [[ -n "$(find "${bfile}" -mmin "-${BOOT_SHOW_MIN}" 2>/dev/null)" ]]; then
+        occ="   · booted ${bts} (may be in use)"
+      fi
+    fi
+    echo "  ${n} — ${l}${occ}${flag}"
   done
 fi
 

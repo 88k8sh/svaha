@@ -21,6 +21,7 @@ slimming accretion, and cutting four enhancement/marketing components to the bol
 | `commands/init.md` | `/init` — scaffold a fresh project's data layer (per-project, runs once) |
 | `bin/next-write.sh` | Atomic, collision-safe `_NEXT_NNN` writer |
 | `bin/next-live.sh` | Single source of truth for the live-session set |
+| `bin/next-boot.sh` | Writes the advisory `_NEXT_NNN.booted` occupancy hint at boot (double-booking soft-guard) |
 | `next/_NEXT_001.md` | Seed handoff |
 
 ### 2 · Guardrail shell

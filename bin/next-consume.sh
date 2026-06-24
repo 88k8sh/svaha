@@ -77,4 +77,7 @@ if [[ -n "${REASON}" ]]; then
 else
   printf 'consumed %s\n' "${stamp}" > "${sidecar}"
 fi
+# A retired slot is no longer "in use" — drop any occupancy hint (next-boot.sh).
+# Harmless if absent; keeps next/ from accumulating dead .booted files over time.
+rm -f "${NEXT_DIR}/_NEXT_${nnn}.booted"
 echo "${sidecar}"

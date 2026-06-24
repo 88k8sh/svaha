@@ -6,6 +6,7 @@ This file is the canonical spec for all `_NEXT_NNN.md` handoffs and tells a fres
 
 - These are **parallel session slots**, not a linear version history. A higher-numbered file is another concurrent session's handoff, not a newer version of yours — never assume "highest = latest state."
 - If no file is named, `/session` auto-picks the **lowest-numbered un-consumed file with open moves** — never the highest. A `_NEXT_NNN.consumed` sidecar marks a done session; skip those.
+- A `_NEXT_NNN.booted` sidecar is an **advisory occupancy hint** (written by `bin/next-boot.sh` at boot, cleared on consume) — it marks a slot a session is likely working *right now*, so the no-arg picker skips a just-booted slot to avoid double-booking. It is **not a lock**: a stale one is harmless and never blocks a boot. `next-live.sh` surfaces it (`⚠ in use` / `· booted HH:MM`).
 - If the named file is missing, flag it.
 
 ---
