@@ -200,7 +200,9 @@ elif [ -f "$TARGET_SETTINGS" ]; then
           echo "          Edit mode A (silent edits) ships by default; see the snippet header to switch."
         else
           echo "          auto-merge aborted — your $TARGET_SETTINGS is UNCHANGED."
-          echo "          A ready-to-merge copy is at $GEN; merge its permissions + hooks by hand."
+          echo "          (If $TARGET_SETTINGS is already invalid JSON, delete or rename it,"
+          echo "           then re-run ./setup.sh — the fresh-write path will generate a valid one.)"
+          echo "          Otherwise: a ready-to-merge copy is at $GEN; merge by hand."
         fi
         ;;
     esac
