@@ -14,7 +14,7 @@ none — initial seed file
 1. [system] Run boot and confirm the status block + verified: lines output correctly — Sonnet / low
    reads: boot.md (RESUME-WITH-VERIFICATION section), _LOADUP.md §7 (boot status format)
    skip: nothing yet — this is the first boot
-2. [system] Run /handoff at end of first real session to write _NEXT_002.md (with outcome/checkpoint stamped) — Sonnet / low
+2. [system] say svaha to close this session — the loop mints _NEXT_002.md with outcome/checkpoint stamped — Sonnet / low
    reads: handoff.md (step 2 write template), bin/next-write.sh (checkpoint stamping)
 
 ## Push to _LOADUP

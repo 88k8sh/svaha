@@ -185,6 +185,32 @@ elif [ -f "$TARGET_SETTINGS" ]; then
   if ! command -v python3 >/dev/null 2>&1; then
     echo "          You have $TARGET_SETTINGS but python3 isn't available for a safe"
     echo "          merge — merge $SNIPPET by hand (replace <kit-dir> with $KIT_ROOT)."
+  elif ! python3 -m json.tool "$TARGET_SETTINGS" >/dev/null 2>&1; then
+    # Existing settings.json is not valid JSON — merging into it is impossible.
+    # Back it up and replace with a fresh generated one so the install isn't
+    # stuck (merge-settings.py would refuse it, leaving the user at 5/7 forever).
+    ts="$( date +%Y%m%d-%H%M%S )"
+    backup="${TARGET_SETTINGS}.broken-backup-${ts}"
+    echo "          WARNING: $TARGET_SETTINGS is not valid JSON — merging into it is impossible."
+    printf "          Back it up and replace with a fresh valid one? [Y/n] "
+    read REPLY
+    case "$REPLY" in
+      n|N|no|NO)
+        echo "          skipped — fix $TARGET_SETTINGS by hand, then re-run ./setup.sh."
+        ;;
+      *)
+        if gen_settings "$GEN"; then
+          cp "$TARGET_SETTINGS" "$backup"
+          cp "$GEN" "$TARGET_SETTINGS"
+          rm -f "$GEN"
+          echo "          backed up broken file -> $(basename "$backup")"
+          echo "          wrote fresh $TARGET_SETTINGS  (<kit-dir> -> $KIT_ROOT, JSON valid)"
+          echo "          Edit mode A (silent edits) ships by default; see the snippet header to switch."
+        else
+          echo "          generation failed — merge $SNIPPET by hand (replace <kit-dir> with $KIT_ROOT)."
+        fi
+        ;;
+    esac
   elif gen_settings "$GEN"; then
     printf "          Merge Svaha's hooks + permissions into %s now?\n" "$TARGET_SETTINGS"
     printf "          (a timestamped .svaha-backup is kept; your other keys stay untouched) [Y/n] "
@@ -200,9 +226,7 @@ elif [ -f "$TARGET_SETTINGS" ]; then
           echo "          Edit mode A (silent edits) ships by default; see the snippet header to switch."
         else
           echo "          auto-merge aborted — your $TARGET_SETTINGS is UNCHANGED."
-          echo "          (If $TARGET_SETTINGS is already invalid JSON, delete or rename it,"
-          echo "           then re-run ./setup.sh — the fresh-write path will generate a valid one.)"
-          echo "          Otherwise: a ready-to-merge copy is at $GEN; merge by hand."
+          echo "          A ready-to-merge copy is at $GEN; merge by hand."
         fi
         ;;
     esac
