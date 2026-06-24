@@ -2,8 +2,14 @@
 // If you already have a "hooks" key, merge per-event (PreToolUse / PostToolUse / Stop)
 // rather than replacing the whole object.
 //
-// Placeholders:
-//   <system-dir>  → absolute path to your system root (the folder holding bin/, next/, ledger/, etc.)
+// Placeholders (setup.sh fills these in for you at install):
+//   <kit-dir>     → absolute path to the Svaha kit clone (the folder holding bin/, hooks/, the
+//                   command templates). This is where the MACHINERY lives — fixed, baked ONCE at
+//                   install. Every path in this file resolves to <kit-dir> (the guard scripts and
+//                   the allowed-directory below all point at the kit, not at any one project).
+//   <system-dir>  → a PROJECT's data root (the folder holding next/, ledger/, _LOADUP.md). This is
+//                   PER-PROJECT and discovered at RUNTIME (the nearest ancestor of your CWD with a
+//                   _LOADUP.md) — so it is deliberately NOT baked here; it never appears in settings.
 //   ~/.claude/hooks/* paths are literal — they live in your global Claude config, leave them as-is.
 //
 // Wiring:
@@ -33,10 +39,12 @@
 //
 //   allow → SILENT: file reads, inspection bash, read-only git + the loop's OWN git (add/commit/pull — the
 //           handoff commit + boot pull, NOT push), the kit's bin plumbing (+ file edits in Mode A).
-//   additionalDirectories → registers your system-dir as an allowed directory, so reading next/, ledger/,
-//           _LOADUP.md never trips "Path is outside allowed working directories" — the #1 newcomer permission
-//           flood, hit whenever Claude is launched from a different folder than the kit. Absolute path (no ~);
-//           setup.sh fills it in. Without it, even a perfect merge still prompts on every kit-file read.
+//   additionalDirectories → registers the <kit-dir> (where bin/ + hooks/ live) as an allowed directory,
+//           so running the kit's guard scripts + reading its files never trips "Path is outside allowed
+//           working directories" — the #1 newcomer permission flood, hit because you launch Claude IN your
+//           project, leaving the kit outside CWD. Your project's own data (next/, ledger/, _LOADUP.md) is in
+//           CWD and already allowed. Absolute path (no ~); setup.sh fills it in. Without it, even a perfect
+//           merge still prompts on every kit-script run.
 //   ask   → confirm EVERY time: git push, gh, rm, curl/wget, reset --hard  (publish · destructive · network egress).
 //   deny  → hard-blocked: secret reads (.env/.pem/.ssh/keys), rm -rf, sudo, pipe-to-shell.
 //   Precedence deny > ask > allow — even a risky "allow always" is still caught by the ask/deny floor.
@@ -107,7 +115,7 @@
       "Bash(wget:* | bash)"
     ],
     "additionalDirectories": [
-      "<system-dir>"
+      "<kit-dir>"
     ]
   },
   "hooks": {
@@ -128,7 +136,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python3 <system-dir>/bin/security-guard.py",
+            "command": "python3 <kit-dir>/bin/security-guard.py",
             "timeout": 10,
             "statusMessage": "security-guard"
           }
@@ -139,13 +147,13 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python3 <system-dir>/bin/version-guard.py",
+            "command": "python3 <kit-dir>/bin/version-guard.py",
             "timeout": 10,
             "statusMessage": "version-guard"
           },
           {
             "type": "command",
-            "command": "python3 <system-dir>/bin/drift-guard.py",
+            "command": "python3 <kit-dir>/bin/drift-guard.py",
             "timeout": 10,
             "statusMessage": "drift-guard"
           }
@@ -187,7 +195,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python3 <system-dir>/bin/coherence-check.py --stop",
+            "command": "python3 <kit-dir>/bin/coherence-check.py --stop",
             "timeout": 10,
             "statusMessage": "coherence-check"
           }

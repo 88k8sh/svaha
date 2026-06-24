@@ -3,7 +3,7 @@
 # Svaha — doctor: verify the install is wired up correctly.
 #
 # Run after setup + the settings.json merge to catch the usual silent failures
-# (invalid JSON, an unreplaced <system-dir>, a missing hook, a moved kit folder).
+# (invalid JSON, an unreplaced <kit-dir>, a missing hook, a moved kit folder).
 #
 #   bash bin/doctor.sh        # from the kit root, or anywhere — it resolves itself
 #
@@ -76,10 +76,10 @@ else
     bad "settings.json is not valid JSON" "run: python3 -m json.tool $SETTINGS   — it shows the line"
   else
     ok "settings.json is valid JSON"
-    if grep -q '<system-dir>' "$SETTINGS" 2>/dev/null; then
-      bad "settings.json still has a literal <system-dir>" "replace it with: $KIT_ROOT"
+    if grep -q '<kit-dir>' "$SETTINGS" 2>/dev/null; then
+      bad "settings.json still has a literal <kit-dir>" "replace it with: $KIT_ROOT"
     else
-      ok "no leftover <system-dir> placeholder"
+      ok "no leftover <kit-dir> placeholder"
     fi
     if grep -q 'security-guard.py' "$SETTINGS" 2>/dev/null; then
       ok "guard hooks wired"

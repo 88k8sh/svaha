@@ -23,7 +23,7 @@ pattern (github.com/TheDecipherist/claude-code-mastery-project-starter-kit).
 Independent implementation — no code reused.
 
 Wire under PreToolUse (matcher "Edit|Write|MultiEdit") in ~/.claude/settings.json:
-  python3 <system-dir>/bin/version-guard.py
+  python3 <kit-dir>/bin/version-guard.py
 
 Output follows the current Claude Code PreToolUse spec
 (hookSpecificOutput.permissionDecision = "deny"). If your Claude Code predates

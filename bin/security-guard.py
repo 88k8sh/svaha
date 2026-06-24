@@ -24,7 +24,7 @@ The IDEA of a runtime guard hook is credited to mp-web3/claude-starter-kit
 (github.com/mp-web3/claude-starter-kit). Independent implementation — no code reused.
 
 Wire under PreToolUse (matcher "Bash|Edit|Write|MultiEdit|Read") in
-~/.claude/settings.json:  python3 <system-dir>/bin/security-guard.py
+~/.claude/settings.json:  python3 <kit-dir>/bin/security-guard.py
 
 Output follows the current Claude Code PreToolUse spec
 (hookSpecificOutput.permissionDecision ∈ {"deny","ask","allow"}). If your Claude

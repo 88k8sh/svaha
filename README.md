@@ -44,7 +44,7 @@ It travels, too: `CLAUDE.md` is canonical; [`AGENTS.md`](AGENTS.md) is the vendo
 
 ## Install
 
-> **Prefer click-to-copy?** Open **[`INSTALL.html`](docs/INSTALL.html)** in a browser — the full from-scratch walkthrough with a Copy button on every command, and the `<system-dir>` substitution + JSON validation done for you in one paste.
+> **Prefer click-to-copy?** Open **[`INSTALL.html`](docs/INSTALL.html)** in a browser — the full from-scratch walkthrough with a Copy button on every command, and the `<kit-dir>` substitution + JSON validation done for you in one paste.
 
 ### Quickest — run the installer
 
@@ -74,7 +74,8 @@ cp boot.md session.md handoff.md reflect.md audit.md foldin.md ~/.claude/command
 # 3. install the hook scripts
 cp hooks/*.sh ~/.claude/hooks/
 # 4. wire the hooks: merge settings.json.snippet into ~/.claude/settings.json
-#    (replace <system-dir> with your project's absolute path everywhere first)
+#    (replace <kit-dir> with the kit's absolute path everywhere first; <system-dir> is
+#     resolved at runtime — leave it as-is)
 ```
 
 The completeness spec in `CLAUDE.md` lists all five layers — wire them once and sessions start carrying themselves. A `.claude-plugin/plugin.json` also ships, so Svaha can be installed through the Claude Code plugin system.
@@ -99,7 +100,7 @@ Svaha is the cross-session **spine** — it doesn't reimplement the ecosystem, i
 
 ## Privacy & provenance
 
-Svaha is a **de-identified extraction** of a real personal Claude Code system that's been running daily for months — which is why the rules read like they were earned (they were). It ships **zero personal data**: every example uses generic `<system-dir>` / `<Project Name>` placeholders. The dated incidents in `CLAUDE.md` (a lost file, a stranded handoff, a degraded dashboard) are real catches from the origin system, kept because the concrete failure is what gives each rule its teeth.
+Svaha is a **de-identified extraction** of a real personal Claude Code system that's been running daily for months — which is why the rules read like they were earned (they were). It ships **zero personal data**: every example uses generic `<kit-dir>` / `<system-dir>` / `<Project Name>` placeholders. The dated incidents in `CLAUDE.md` (a lost file, a stranded handoff, a degraded dashboard) are real catches from the origin system, kept because the concrete failure is what gives each rule its teeth.
 
 ## License
 

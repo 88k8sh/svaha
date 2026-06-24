@@ -36,7 +36,7 @@ Boot reads the specific `_NEXT_NNN.md` named in the opener block (or auto-picked
 
 *Add settled facts here as the system matures. Each fact saves a re-derivation per session: canonical paths, installed tools, known aliases, resolved bugs, environment quirks. Keep behavior rules OUT of this section — those live in `CLAUDE.md` (see the content-placement table there).*
 
-- **`<system-dir>/bin/next-write.sh`** writes new handoffs to `<system-dir>/next/`; collision-safe (bumps to the next free slot if a concurrent session grabbed it); unlimited numbering. `_NEXT_NNN.md` files are **parallel session slots** — boot reads the file specified by `/session N` (or auto-picks the lowest with open moves via `/session` no-arg), NOT the highest number.
+- **`<kit-dir>/bin/next-write.sh`** writes new handoffs to `<system-dir>/next/`; collision-safe (bumps to the next free slot if a concurrent session grabbed it); unlimited numbering. `_NEXT_NNN.md` files are **parallel session slots** — boot reads the file specified by `/session N` (or auto-picks the lowest with open moves via `/session` no-arg), NOT the highest number.
 - **`bin/coherence-check.py --boot`** runs a structural integrity check at boot; **`--stop`** runs an exit check wired as a Stop hook in `settings.json`.
 - **`_NEXT.md`** = permanent reference & pointer (spec + boot instructions); never overwritten.
 - **`_NEXT_NNN.md` files are frozen once written** — corrections go in a new numbered file, never a rewrite.
@@ -70,8 +70,8 @@ Boot reads the specific `_NEXT_NNN.md` named in the opener block (or auto-picked
 
 *List the scripts a session invokes by hand. Keep one line each: command → what it does.*
 
-- `python <system-dir>/bin/coherence-check.py --boot` → structural integrity check
-- `bash <system-dir>/bin/next-write.sh <system-dir> <content-file>` → write the next handoff
+- `python <kit-dir>/bin/coherence-check.py --boot` → structural integrity check
+- `bash <kit-dir>/bin/next-write.sh <system-dir> <content-file>` → write the next handoff
 - *(add your own: backfill/tagging scripts, bundle builders, re-rank passes, etc.)*
 
 ## 6. On-demand files (pull only when the task requires it)
@@ -117,6 +117,6 @@ Pull SYNC_MAP before any *structural* edit (paths, schemas, boot/handoff loop, c
 | Register a new slash command | add it to `_LOADUP §2` **and** `SYNC_MAP` |
 | *(add couplings as your system grows — each one earns its place after an incident, not before)* | |
 
-A `PreToolUse` drift-guard hook (`<system-dir>/bin/drift-guard.py`, registered in `~/.claude/settings.json`) auto-surfaces the relevant couplings whenever a plumbing file is edited — a backstop, not a replacement for the full map.
+A `PreToolUse` drift-guard hook (`<kit-dir>/bin/drift-guard.py`, registered in `~/.claude/settings.json`) auto-surfaces the relevant couplings whenever a plumbing file is edited — a backstop, not a replacement for the full map.
 
 **Rule of thumb:** after any structural edit, `grep -rn` the tree for the old name/path/field/count before closing the session.

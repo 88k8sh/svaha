@@ -24,28 +24,42 @@ event=$(printf '%s' "$input" | jq -r '.hook_event_name // empty' 2>/dev/null)
 reason=$(printf '%s' "$input" | jq -r '.reason // empty' 2>/dev/null)
 cwd=$(printf '%s' "$input" | jq -r '.cwd // empty' 2>/dev/null)
 
-# Resolve the system dir (the folder holding next/). Tried in order:
-#   1. The <system-dir> placeholder — setup.sh sed-rewrites it to the absolute
-#      path when it copies this hook into ~/.claude/hooks/ (the reliable path,
-#      because the installed copy no longer sits under the kit tree).
-#   2. The hook's own grandparent — works only for the in-kit copy (hooks/.. ).
-#   3. The stdin `cwd` — if Claude Code is running inside the system dir.
-# Fail-soft: if none yields a real next/ dir, we exit silent (see below).
-SYSTEM_DIR="<system-dir>"
-nextdir=""
-# Accept SYSTEM_DIR only if it actually resolves to a next/ dir. This test is
-# robust to setup.sh's sed rewrite (which replaces the placeholder everywhere in
-# the file): a still-literal placeholder simply won't have a real next/ under it,
-# so the test fails and we fall through — no literal-string comparison needed.
-if [ -d "${SYSTEM_DIR}/next" ]; then
-  nextdir="${SYSTEM_DIR}/next"
+# Resolve the project's system dir (per-project, self-discovered — no baked path),
+# then use its next/. Bounded search around the session CWD, anchor _LOADUP.md:
+#   1. up-scan: CWD + ancestors (covers launch inside the system or below it).
+#   2. down-scan: CWD's immediate children, unambiguous match only (covers launch in a
+#      workspace that *contains* the system — the nested layout).
+#   3. last-ditch: the hook's own grandparent (in-kit combined-repo run).
+# Never recursive. Fail-soft: if none yields a real next/ dir, we exit silent (see below).
+base="${cwd:-$PWD}"
+sysdir=""
+d="$base"
+while [ -n "$d" ] && [ "$d" != "/" ]; do
+  if [ -f "$d/_LOADUP.md" ]; then sysdir="$d"; break; fi
+  d=$(dirname "$d")
+done
+[ -z "$sysdir" ] && [ -f "/_LOADUP.md" ] && sysdir="/"
+if [ -z "$sysdir" ]; then
+  # explicit dotfile skip (don't rely on ambient dotglob); dedup by real path (cd+pwd -P)
+  # so a symlink twin counts once; newline-delimited so paths with spaces are safe.
+  rps=""
+  for c in "$base"/*/; do
+    name=${c%/}; name=${name##*/}
+    case "$name" in .*) continue;; esac
+    [ -f "${c}_LOADUP.md" ] || continue
+    rp=$(cd "${c%/}" 2>/dev/null && pwd -P) || continue
+    rps="${rps}${rp}
+"
+  done
+  if [ "$(printf '%s' "$rps" | sort -u | grep -c .)" -eq 1 ]; then
+    sysdir=$(printf '%s' "$rps" | sort -u | grep -m1 .)
+  fi
 fi
+nextdir=""
+[ -n "$sysdir" ] && [ -d "${sysdir}/next" ] && nextdir="${sysdir}/next"
 if [ -z "$nextdir" ]; then
   here=$(cd "$(dirname "$0")" 2>/dev/null && pwd)
   [ -d "${here}/../next" ] && nextdir=$(cd "${here}/../next" 2>/dev/null && pwd)
-fi
-if [ -z "$nextdir" ] && [ -n "$cwd" ] && [ -d "${cwd}/next" ]; then
-  nextdir="${cwd}/next"
 fi
 
 # If we can't find the next/ dir, we can't tell whether a handoff was written —

@@ -8,6 +8,8 @@ Three modes:
 
 **Alias:** saying **"svaha"** as the opening word of a session is an alias for `/session list` (show the live set, then pick) — see `CLAUDE.md` "## Boot". It's the opening counterpart to the स्वाहा handoff seal; a svaha-boot shows the list and leads the eventual boot with the status block, never echoing the seal back.
 
+**Resolve `<system-dir>` first** (per CLAUDE.md's "Two paths" rule): the dir holding a `_LOADUP.md`, found by a bounded search around CWD — the nearest dir at/above CWD, else the single immediate child of CWD that has one (the nested-workspace case). CWD + ancestors + one level of children, never recursive. `<kit-dir>` is already absolute wherever it appears. Nothing found → the project isn't initialized; run `/init`.
+
 ---
 
 ## `/session list`
@@ -15,7 +17,7 @@ Three modes:
 **Do NOT eyeball the folder.** `<system-dir>/next/` is shared mutable state — concurrent sessions consume `_NEXT` files in real time, so any hand-built list is a racy snapshot that silently drops a just-retired session (a parallel `/handoff` can consume a `_NEXT` mid-conversation; an eyeballed list drops it with no signal). Always run the canonical source-of-truth script:
 
 ```
-<system-dir>/bin/next-live.sh <system-dir>
+<kit-dir>/bin/next-live.sh <system-dir>
 ```
 
 It prints the deterministic live set **and** any sessions consumed in the last 120 min (so a session retired by a concurrent handoff is shown explicitly, never vanishes) **and** any desyncs (`DONE-UNCONSUMED` = move finished but never stamped; `ORPHAN` = stray `.consumed`). Relay its output verbatim, then append the boot pointer:
@@ -31,7 +33,7 @@ If `recently consumed` is non-empty, say so in one line — don't let a just-ret
 ## `/session` (no arg) and `/session N`
 
 **Step 1 — resolve the target file:**
-- No arg: run `<system-dir>/bin/next-live.sh <system-dir>` (the canonical live-set script — do not eyeball the folder) and pick the **lowest-numbered** entry in its `live sessions` list. If that list is empty, say so and stop.
+- No arg: run `<kit-dir>/bin/next-live.sh <system-dir>` (the canonical live-set script — do not eyeball the folder) and pick the **lowest-numbered** entry in its `live sessions` list. If that list is empty, say so and stop.
 - Arg is `list`: run `/session list` mode above.
 - Arg is a number N: zero-pad to 3 digits → `<system-dir>/next/_NEXT_NNN.md`. If missing, flag and stop.
 

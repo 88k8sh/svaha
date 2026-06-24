@@ -65,14 +65,16 @@ cmd_ok=0
 cmd_miss=0
 for f in $COMMANDS; do
   if [ -f "$KIT_ROOT/$f" ]; then
-    # Substitute <system-dir> so the commands know where the kit lives at runtime.
-    # Same pattern as the hooks step below — without this, the model sees the literal
-    # placeholder and starts exploring the filesystem to resolve it (permissions storm).
-    sed "s|<system-dir>|$KIT_ROOT|g" "$KIT_ROOT/$f" > "$CMD_DIR/$f"
-    if grep -q '<system-dir>' "$CMD_DIR/$f" 2>/dev/null; then
-      echo "          copied  $f  (WARNING: <system-dir> placeholder still present — sed may have failed)"
+    # Bake <kit-dir> into the installed command so its bin/ + hook references resolve by
+    # absolute path. <kit-dir> is the one fixed, known-at-install location, so baking it
+    # here kills the placeholder-exploration storm for every machinery path. <system-dir>
+    # is deliberately LEFT literal — it is per-project and resolved at runtime; CLAUDE.md
+    # tells the model how (nearest ancestor of CWD holding _LOADUP.md): a bounded walk, no storm.
+    sed "s|<kit-dir>|$KIT_ROOT|g" "$KIT_ROOT/$f" > "$CMD_DIR/$f"
+    if grep -q '<kit-dir>' "$CMD_DIR/$f" 2>/dev/null; then
+      echo "          copied  $f  (WARNING: <kit-dir> placeholder still present — sed may have failed)"
     else
-      echo "          copied  $f  (rewrote <system-dir> -> $KIT_ROOT)"
+      echo "          copied  $f  (rewrote <kit-dir> -> $KIT_ROOT)"
     fi
     cmd_ok=$((cmd_ok + 1))
   else
@@ -96,13 +98,14 @@ if [ -d "$KIT_ROOT/hooks" ]; then
     [ -f "$f" ] || continue
     base="$( basename "$f" )"
     cp "$f" "$HOOK_DIR/$base"
-    # Some hooks (e.g. session-end-backstop.sh) embed a <system-dir> placeholder
-    # they need to resolve the kit's next/ dir from ~/.claude/hooks/, where the
-    # in-kit ../next fallback no longer applies. Rewrite it to the real root.
-    if grep -q '<system-dir>' "$HOOK_DIR/$base" 2>/dev/null; then
-      sed "s|<system-dir>|$KIT_ROOT|g" "$HOOK_DIR/$base" > "$HOOK_DIR/$base.tmp" \
+    # Hooks are self-contained and self-discover the project's data dir at runtime
+    # (they walk up from the session CWD for _LOADUP.md), so they carry no <system-dir>
+    # to bake. This <kit-dir> rewrite stays only as a safety net for any future hook
+    # that references the kit by absolute path; it's a no-op when none does.
+    if grep -q '<kit-dir>' "$HOOK_DIR/$base" 2>/dev/null; then
+      sed "s|<kit-dir>|$KIT_ROOT|g" "$HOOK_DIR/$base" > "$HOOK_DIR/$base.tmp" \
         && mv "$HOOK_DIR/$base.tmp" "$HOOK_DIR/$base"
-      echo "          copied  $base  (rewrote <system-dir> -> $KIT_ROOT)"
+      echo "          copied  $base  (rewrote <kit-dir> -> $KIT_ROOT)"
     else
       echo "          copied  $base"
     fi
@@ -131,16 +134,16 @@ if [ -f "$KIT_ROOT/CLAUDE.md" ]; then
     case "$REPLY" in
       y|Y|yes|YES)
         cp "$TARGET_CLAUDE" "$TARGET_CLAUDE.backup.$( date +%Y%m%d-%H%M%S )"
-        sed "s|<system-dir>|$KIT_ROOT|g" "$KIT_ROOT/CLAUDE.md" > "$TARGET_CLAUDE"
-        echo "          overwrote (a timestamped .backup was kept alongside it; <system-dir> -> $KIT_ROOT)"
+        sed "s|<kit-dir>|$KIT_ROOT|g" "$KIT_ROOT/CLAUDE.md" > "$TARGET_CLAUDE"
+        echo "          overwrote (a timestamped .backup was kept alongside it; <kit-dir> -> $KIT_ROOT)"
         ;;
       *)
         echo "          kept your existing CLAUDE.md (no change)"
         ;;
     esac
   else
-    sed "s|<system-dir>|$KIT_ROOT|g" "$KIT_ROOT/CLAUDE.md" > "$TARGET_CLAUDE"
-    echo "          installed CLAUDE.md template -> $TARGET_CLAUDE  (<system-dir> -> $KIT_ROOT)"
+    sed "s|<kit-dir>|$KIT_ROOT|g" "$KIT_ROOT/CLAUDE.md" > "$TARGET_CLAUDE"
+    echo "          installed CLAUDE.md template -> $TARGET_CLAUDE  (<kit-dir> -> $KIT_ROOT)"
   fi
   echo ""
 fi
@@ -156,12 +159,12 @@ echo "Step 4/6  Wire up the hooks + permissions via settings.json"
 SNIPPET="$KIT_ROOT/settings.json.snippet"
 TARGET_SETTINGS="$CLAUDE_DIR/settings.json"
 
-# Strip the // comment header, substitute <system-dir>, validate JSON; write to $1.
+# Strip the // comment header, substitute <kit-dir>, validate JSON; write to $1.
 # Returns non-zero (and cleans up the temp) on any failure — never leaves a half file.
 gen_settings() {
   local out tmp
   out="$1"; tmp="$out.tmp.$$"
-  sed '/^[[:space:]]*\/\//d' "$SNIPPET" 2>/dev/null | sed "s|<system-dir>|$KIT_ROOT|g" > "$tmp" 2>/dev/null || { rm -f "$tmp"; return 1; }
+  sed '/^[[:space:]]*\/\//d' "$SNIPPET" 2>/dev/null | sed "s|<kit-dir>|$KIT_ROOT|g" > "$tmp" 2>/dev/null || { rm -f "$tmp"; return 1; }
   if command -v python3 >/dev/null 2>&1; then
     python3 -m json.tool "$tmp" >/dev/null 2>&1 || { rm -f "$tmp"; return 1; }
   fi
@@ -179,7 +182,7 @@ elif [ -f "$TARGET_SETTINGS" ]; then
   GEN="$KIT_ROOT/settings.generated.json"
   if ! command -v python3 >/dev/null 2>&1; then
     echo "          You have $TARGET_SETTINGS but python3 isn't available for a safe"
-    echo "          merge — merge $SNIPPET by hand (replace <system-dir> with $KIT_ROOT)."
+    echo "          merge — merge $SNIPPET by hand (replace <kit-dir> with $KIT_ROOT)."
   elif gen_settings "$GEN"; then
     printf "          Merge Svaha's hooks + permissions into %s now?\n" "$TARGET_SETTINGS"
     printf "          (a timestamped .svaha-backup is kept; your other keys stay untouched) [Y/n] "
@@ -201,7 +204,7 @@ elif [ -f "$TARGET_SETTINGS" ]; then
     esac
   else
     echo "          Couldn't build the merge file — merge $SNIPPET by hand"
-    echo "          (replace <system-dir> with $KIT_ROOT)."
+    echo "          (replace <kit-dir> with $KIT_ROOT)."
   fi
 else
   # No settings.json yet — offer to generate it.
@@ -212,17 +215,17 @@ else
     y|Y|yes|YES)
       mkdir -p "$CLAUDE_DIR"
       if gen_settings "$TARGET_SETTINGS"; then
-        echo "          wrote $TARGET_SETTINGS  (<system-dir> -> $KIT_ROOT, JSON valid)"
+        echo "          wrote $TARGET_SETTINGS  (<kit-dir> -> $KIT_ROOT, JSON valid)"
         echo "          Edit mode A (edits granted once) is the default — see the"
         echo "          snippet header to switch to per-session before first use."
       else
         echo "          generation failed (python3 missing, or unexpected) — merge"
-        echo "          $SNIPPET by hand instead (replace <system-dir> with $KIT_ROOT)."
+        echo "          $SNIPPET by hand instead (replace <kit-dir> with $KIT_ROOT)."
       fi
       ;;
     *)
       echo "          skipped — merge $SNIPPET into $TARGET_SETTINGS yourself"
-      echo "          (replace <system-dir> with $KIT_ROOT)."
+      echo "          (replace <kit-dir> with $KIT_ROOT)."
       ;;
   esac
 fi

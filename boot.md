@@ -4,6 +4,8 @@ Execute immediately, no preamble. Two files — always.
 
 ## Pre-read (before loading anything)
 
+**Resolve `<system-dir>` first** (per CLAUDE.md's "Two paths" rule): the dir holding a `_LOADUP.md`, found by a bounded search around CWD — the nearest dir at/above CWD, else the single immediate child of CWD that has one (the nested-workspace case). CWD + ancestors + one level of children, never recursive. `<kit-dir>` is already absolute wherever it appears. If nothing is found, the project isn't initialized — run `/init`.
+
 **Git pull (if repo):** check `git -C <system-dir> rev-parse --git-dir 2>/dev/null`. If <system-dir> is a git repo, run `git -C <system-dir> pull` before reading any files. Stale files silently misdirect sessions.
 
 ## Always load (every session)
@@ -27,7 +29,7 @@ claimed: <move text>  /  verified: still-true | already-done | stale | unverifie
 ```
 All still-true → execute move 1 normally. Any **already-done**/**stale** → FLAG it, do NOT execute, name the next live move (or that the queue is exhausted). `unverified` is not a stop, but say so before acting.
 
-**Step D — same-file-clobber check.** Derive the files move 1 will edit; read the `touched:` line of the other still-live slots (`<system-dir>/bin/next-live.sh <system-dir>` for the live set, `grep -h '^touched:' <system-dir>/next/_NEXT_*.md` for their edit-lists). On an overlap, warn (`⚠ same-file overlap — _NEXT_NNN also touched <file>; a concurrent session may be mid-edit`) then proceed — advisory, not a block. Skip silently if no other slot is live.
+**Step D — same-file-clobber check.** Derive the files move 1 will edit; read the `touched:` line of the other still-live slots (`<kit-dir>/bin/next-live.sh <system-dir>` for the live set, `grep -h '^touched:' <system-dir>/next/_NEXT_*.md` for their edit-lists). On an overlap, warn (`⚠ same-file overlap — _NEXT_NNN also touched <file>; a concurrent session may be mid-edit`) then proceed — advisory, not a block. Skip silently if no other slot is live.
 
 ## On demand only (pull when the task requires it)
 

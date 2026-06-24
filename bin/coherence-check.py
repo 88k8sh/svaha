@@ -30,10 +30,49 @@ from pathlib import Path
 
 HOME = Path.home()
 
-# Root of your project (the folder containing _NEXT.md, _LOADUP.md, etc.)
-SYSTEM_DIR = Path("<system-dir>")           # ← CHANGE THIS to an absolute path to your project root
+# Kit root — where this script and the rest of bin/ live. Resolved from __file__,
+# never baked, so the check works no matter where the kit was cloned.
+KIT_DIR = Path(__file__).resolve().parent.parent
 
-# Where your Claude slash commands live (real Claude Code location — leave as-is)
+
+def discover_system_dir():
+    """The per-project data root — the dir holding _LOADUP.md — found by a bounded
+    search around the launch CWD (this hook is global; it fires in every project, so
+    nothing is hand-edited):
+      1. up-scan: CWD then its ancestors (covers launch *inside* the system or below it);
+      2. down-scan: CWD's immediate children, if exactly one holds a _LOADUP.md (covers
+         launch in a *workspace that contains* the system — the nested layout — where the
+         system sits one level below CWD). Ambiguous (2+) or none → fall through.
+    Bounded both ways (ancestors + one level down) — never a recursive walk, so it can't
+    trigger the filesystem-exploration storm. Falls back to KIT_DIR, which doubles as its
+    own system dir in a combined repo, so a run from inside the kit still works."""
+    try:
+        start = Path.cwd().resolve()
+    except Exception:
+        return KIT_DIR
+    # 1. up-scan — CWD and ancestors. Anchor must be a regular FILE (.is_file(), not
+    #    .exists()) so a dir named _LOADUP.md is rejected — matches the shell hooks' `-f`.
+    for cand in [start, *start.parents]:
+        if (cand / "_LOADUP.md").is_file():
+            return cand
+    # 2. down-scan — immediate children only, unambiguous match only. Dedup by RESOLVED
+    #    real path so a symlink twin (myproj/ + current->myproj) counts once, not as a
+    #    false ambiguity; a genuine 2nd system still resolves to a distinct real path.
+    try:
+        kids = {c.resolve() for c in start.iterdir()
+                if c.is_dir() and not c.name.startswith(".") and (c / "_LOADUP.md").is_file()}
+    except Exception:
+        kids = set()
+    if len(kids) == 1:
+        return next(iter(kids))
+    # 3. not found — fall back to the kit (combined-repo / self-check default)
+    return KIT_DIR
+
+
+# Project data root (next/, ledger/, _LOADUP.md, …) — per-project, runtime-resolved.
+SYSTEM_DIR = discover_system_dir()
+
+# Where your Claude slash commands + installed config live (real Claude Code location).
 DOT_CLAUDE = HOME / ".claude"
 COMMANDS_DIR = DOT_CLAUDE / "commands"
 
@@ -47,21 +86,24 @@ REGISTERED_COMMANDS = {
     # add yours here
 }
 
-# Mirror drift-guard.py's structural-file scope.
+# Mirror drift-guard.py's structural-file scope. Each file is listed at every
+# location it can live — data files in SYSTEM_DIR, installed config in ~/.claude,
+# the combined-repo CLAUDE.md at the system root — and all_plumbing() existence-
+# filters, so a candidate that isn't present is simply skipped.
 PLUMBING_FILES = [
+    DOT_CLAUDE / "CLAUDE.md",
     SYSTEM_DIR / "CLAUDE.md",
     SYSTEM_DIR / "_LOADUP.md",
     SYSTEM_DIR / "_NEXT.md",
     SYSTEM_DIR / "SYNC_MAP.md",
     SYSTEM_DIR / "SYSTEM_MAP.md",
     DOT_CLAUDE / "settings.json",
-    # add your project's structural files here
 ]
-# Add all command files and bin scripts dynamically.
+# Command files (installed in ~/.claude) + bin scripts (in the kit).
 PLUMBING_DIRS = [
     (COMMANDS_DIR, "*.md"),
-    (SYSTEM_DIR / "bin", "*.py"),
-    (SYSTEM_DIR / "bin", "*.sh"),
+    (KIT_DIR / "bin", "*.py"),
+    (KIT_DIR / "bin", "*.sh"),
 ]
 
 # ── END CONFIGURATION ──────────────────────────────────────────────────────────
@@ -101,7 +143,6 @@ def boot():
 
     # 1. Required plumbing files exist.
     required = [
-        SYSTEM_DIR / "CLAUDE.md",
         SYSTEM_DIR / "_LOADUP.md",
         SYSTEM_DIR / "_NEXT.md",
         CHANGELOG,
@@ -112,6 +153,9 @@ def boot():
     for p in required:
         if not p.exists():
             issues.append(f"MISSING: {p}")
+    # CLAUDE.md lives at ~/.claude (installed) or the system root (combined repo) — either is fine.
+    if not (DOT_CLAUDE / "CLAUDE.md").exists() and not (SYSTEM_DIR / "CLAUDE.md").exists():
+        issues.append(f"MISSING: CLAUDE.md (looked in {DOT_CLAUDE} and {SYSTEM_DIR})")
 
     # 2. Slash commands: on-disk vs registered list.
     if COMMANDS_DIR.is_dir():

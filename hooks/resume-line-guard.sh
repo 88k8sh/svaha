@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Stop hook — enforce the session closer invariant (CLAUDE.md).
 # A handoff's "Next session: /session NNN" MUST resolve to an existing frozen
-# <system-dir>/next/_NEXT_NNN.md. This catches the failure mode where a closer is
+# next/_NEXT_NNN.md in the project's system dir. This catches the failure mode where a closer is
 # emitted with a placeholder number or a number that was never written.
 #
 # Non-blocking: emits a corrective systemMessage only. Never sets continue:false.
@@ -27,7 +27,39 @@ num=$((10#$num))
 
 fname=$(printf '_NEXT_%03d.md' "$num")
 cfile=$(printf '_NEXT_%03d.consumed' "$num")
-nextdir="<system-dir>/next"
+
+# Resolve the project's system dir (per-project, self-discovered — no baked path),
+# then use its next/. Bounded search around the session CWD: up-scan (CWD + ancestors,
+# anchor _LOADUP.md), then a one-level down-scan (CWD's immediate children, unambiguous
+# only) so a launch in a workspace that *contains* the system resolves too. Never
+# recursive. Fail-soft: if not found, stay silent below.
+cwd=$(printf '%s' "$input" | jq -r '.cwd // empty' 2>/dev/null)
+base="${cwd:-$PWD}"
+sysdir=""
+d="$base"
+while [ -n "$d" ] && [ "$d" != "/" ]; do
+  if [ -f "$d/_LOADUP.md" ]; then sysdir="$d"; break; fi
+  d=$(dirname "$d")
+done
+[ -z "$sysdir" ] && [ -f "/_LOADUP.md" ] && sysdir="/"
+if [ -z "$sysdir" ]; then
+  # explicit dotfile skip (don't rely on ambient dotglob); dedup by real path (cd+pwd -P)
+  # so a symlink twin counts once; newline-delimited so paths with spaces are safe.
+  rps=""
+  for c in "$base"/*/; do
+    name=${c%/}; name=${name##*/}
+    case "$name" in .*) continue;; esac
+    [ -f "${c}_LOADUP.md" ] || continue
+    rp=$(cd "${c%/}" 2>/dev/null && pwd -P) || continue
+    rps="${rps}${rp}
+"
+  done
+  if [ "$(printf '%s' "$rps" | sort -u | grep -c .)" -eq 1 ]; then
+    sysdir=$(printf '%s' "$rps" | sort -u | grep -m1 .)
+  fi
+fi
+if [ -z "$sysdir" ]; then exit 0; fi
+nextdir="${sysdir}/next"
 
 # Two failure modes for the closer: the named _NEXT doesn't exist, or it exists
 # but is already CONSUMED (its moves are done) — /session N would replay it.
@@ -50,5 +82,5 @@ if [ -f "$sentinel" ]; then
 fi
 echo "$now" > "$sentinel" 2>/dev/null
 
-printf '{"systemMessage":"⚠ SESSION CLOSER INVARIANT — the closer you just emitted has /session %s but <system-dir>/next/%s %s. Run /handoff to mint a live _NEXT (or re-point at a still-live file), then re-emit the closer."}\n' "$num" "$fname" "$problem"
+printf '{"systemMessage":"⚠ SESSION CLOSER INVARIANT — the closer you just emitted has /session %s but next/%s %s. Run /handoff to mint a live _NEXT (or re-point at a still-live file), then re-emit the closer."}\n' "$num" "$fname" "$problem"
 exit 0

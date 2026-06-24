@@ -21,6 +21,36 @@ to match your project's structural files.
 import json
 import re
 import sys
+from pathlib import Path
+
+
+# Kit root (where this guard + the rest of bin/ live — resolved from __file__,
+# never baked) and the per-project data root (discovered at runtime: the nearest
+# ancestor of CWD holding _LOADUP.md). Both count as in-scope workspaces; an edit
+# anywhere else is ignored, so the guard never fires on an unrelated repo.
+KIT_DIR = Path(__file__).resolve().parent.parent
+
+
+def _discover_system_dir():
+    # Bounded: up-scan (CWD + ancestors) then a one-level down-scan (CWD's immediate
+    # children, unambiguous match only) so a launch in a workspace that *contains* the
+    # system resolves too. Never recursive — no filesystem-exploration storm.
+    try:
+        start = Path.cwd().resolve()
+    except Exception:
+        return None
+    for cand in [start, *start.parents]:
+        if (cand / "_LOADUP.md").is_file():   # regular file only — matches the shell `-f`
+            return cand
+    try:
+        # dedup by resolved real path so a symlink twin counts once (no false ambiguity)
+        kids = {c.resolve() for c in start.iterdir()
+                if c.is_dir() and not c.name.startswith(".") and (c / "_LOADUP.md").is_file()}
+    except Exception:
+        kids = set()
+    if len(kids) == 1:
+        return next(iter(kids))
+    return None
 
 
 def emit(text):
@@ -45,20 +75,31 @@ def main():
     if not p:
         sys.exit(0)
 
-    # ── CONFIGURE: scope strictly to this workspace — never fire on unrelated repos ──
-    # Replace with your project root path(s). <system-dir> is your project root.
-    WORKSPACE_ROOTS = [
-        "<system-dir>/",    # ← CHANGE THIS to your project root (absolute path, e.g. "/Users/me/proj/")
-        "/.claude/",
-    ]
-    if not any(root in p for root in WORKSPACE_ROOTS):
+    # ── scope strictly to this workspace — never fire on unrelated repos ──
+    # In-scope = the kit clone (machinery) + the current project's data root
+    # (discovered) + ~/.claude. Both kit-dir and system-dir are auto-resolved — no
+    # baked path to hand-edit.
+    # Resolve the EDIT path too before the substring test: KIT_DIR and the discovered
+    # sysdir are both .resolve()d, so an edit addressed via a symlinked path (/tmp vs
+    # /private/tmp, a synced/aliased root, a symlinked kit) wouldn't substring-match the
+    # resolved root — and the guard would silently skip a real structural edit. resolve()
+    # canonicalizes the existing dir prefix even for a not-yet-created file. Fail-open.
+    try:
+        p_scope = str(Path(path).resolve()).replace("\\", "/")
+    except Exception:
+        p_scope = p
+    sysdir = _discover_system_dir()
+    WORKSPACE_ROOTS = [str(KIT_DIR) + "/", "/.claude/"]
+    if sysdir is not None:
+        WORKSPACE_ROOTS.append(str(sysdir) + "/")
+    if not any(root in p_scope for root in WORKSPACE_ROOTS):
         sys.exit(0)
 
     # Sub-projects: skip files inside known non-live directories.
     # These share filenames with live plumbing but are not part of the running system
-    # (e.g. starter packages, reference snapshots, archived copies).
+    # (e.g. starter packages, reference snapshots, archived copies). Absolute paths.
     EXCLUDED_PREFIXES = [
-        # "<system-dir>/context-mgmt-starter/",  # ← uncomment and add as needed
+        # "/path/to/a/reference-copy/",  # ← uncomment and add as needed
     ]
     if any(prefix in p for prefix in EXCLUDED_PREFIXES):
         sys.exit(0)

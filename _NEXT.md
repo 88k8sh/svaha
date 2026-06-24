@@ -79,6 +79,6 @@ A handoff is not a trusted note; it is a **checked contract**. The header block 
 
 ## How _NEXT files are created
 
-`<system-dir>/bin/next-write.sh <system-dir> <content-file>` — picks the next free number and writes `_NEXT_NNN.md` into `<system-dir>/next/`. Collision-safe: if a concurrent session grabbed the same slot, it bumps to the next free number. **Focus label:** if the content file's line 1 is `# __FOCUS__ <label>`, the script rewrites it to `# _NEXT_NNN — <label>` (stamping the resolved number); with no sentinel, the file is copied verbatim (backward-compatible).
+`<kit-dir>/bin/next-write.sh <system-dir> <content-file>` — picks the next free number and writes `_NEXT_NNN.md` into `<system-dir>/next/`. Collision-safe: if a concurrent session grabbed the same slot, it bumps to the next free number. **Focus label:** if the content file's line 1 is `# __FOCUS__ <label>`, the script rewrites it to `# _NEXT_NNN — <label>` (stamping the resolved number); with no sentinel, the file is copied verbatim (backward-compatible).
 
 Numbers are unlimited and auto-expand: 001–999 (3 digits), 1000–9999 (4), etc.
