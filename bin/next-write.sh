@@ -22,6 +22,33 @@ set -euo pipefail
 
 SYSTEM_DIR="${1:?Usage: next-write.sh <system-dir> <content-file> [--consume NNN]}"
 CONTENT_FILE="${2:?Usage: next-write.sh <system-dir> <content-file> [--consume NNN]}"
+
+# Freshness/ownership guard (the _NEXT_070 mis-mint backstop). A handoff content
+# file is ALWAYS written seconds before this runs, by the current user. Refuse a
+# stale or foreign-owned content file so a leftover at a FIXED /tmp path can never
+# be blindly minted + consumed against. Caught in the origin system: a fixed temp
+# name (/tmp/handoff_next.md) collided with a 2-day-old file owned by another user
+# → its content was minted as _NEXT_070 and consumed the real _NEXT_068. Always
+# write the content to a UNIQUE mktemp path; this guard is the backstop that makes
+# the stale-content class impossible. (`stat -f` is macOS/BSD; on Linux it no-ops
+# the owner check — owner='' — while the mtime check still applies.)
+if [[ ! -f "${CONTENT_FILE}" ]]; then
+  echo "next-write.sh: content file '${CONTENT_FILE}' not found." >&2
+  exit 1
+fi
+if [[ -n "$(find "${CONTENT_FILE}" -mmin +60 2>/dev/null)" ]]; then
+  echo "next-write.sh: content file '${CONTENT_FILE}' is >60 min old — refusing to mint" >&2
+  echo "  possibly-stale content. A handoff file is written seconds before minting; regenerate" >&2
+  echo "  it to a unique path (mktemp), then re-run." >&2
+  exit 1
+fi
+owner="$(stat -f '%Su' "${CONTENT_FILE}" 2>/dev/null || echo '')"
+if [[ -n "${owner}" && "${owner}" != "$(id -un)" ]]; then
+  echo "next-write.sh: content file '${CONTENT_FILE}' is owned by '${owner}', not you — refusing" >&2
+  echo "  (the cross-user /tmp-collision signature). Write your handoff to a unique mktemp path." >&2
+  exit 1
+fi
+
 NEXT_DIR="${SYSTEM_DIR}/next"
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 

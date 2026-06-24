@@ -7,6 +7,16 @@ Written by `/handoff` (or manually after structural edits). Do not edit existing
 
 ---
 
+## 2026-06-24 — next-write freshness/ownership guard mirrored into the kit (_NEXT_080 move 2)
+
+Parity follow-up flagged by the origin system's 2026-06-24 guard-add: the published kit's `bin/next-write.sh` lacked the freshness/ownership content-file guard. Mirrored it as a coupled pair (guard + its primary):
+
+- **EDIT `bin/next-write.sh`** — guard block after the `CONTENT_FILE` assignment: refuse a content file that is **missing, >60 min old, or owned by another user** before minting. The `_NEXT_070` mis-mint backstop (origin system: a fixed `/tmp/handoff_next.md` collided with a 2-day-old cross-user leftover → minted as `_NEXT_070`, consumed the real `_NEXT_068`). `find -mmin +60` + `stat -f '%Su'`; `stat -f` no-ops the owner check on Linux while the mtime check still applies. bash-3.2-safe.
+- **EDIT `handoff.md`** (SYNC_MAP row 52 — `handoff.md` calls `next-write.sh`) — step 2 now mandates a **unique `mktemp`** content file (`tmp=$(mktemp -t svaha_handoff)`), never a fixed shared name. This is the *primary* the guard backstops; the guard alone would be a backstop with no primary, and the kit's own handoff flow could still hit the fixed-path failure.
+- **Tested (pre-ship gate, not committed):** `bash -n` clean; behavior test (missing → reject, >60-min → reject, fresh → accept + mint `_NEXT_002`) 3/3. Per the kit's no-committed-tests convention (verification is a pre-ship gate + `doctor.sh`), the test was run, not added as a `tests/` surface.
+
+Push to `88k8sh/svaha` remains user-gated.
+
 ## 2026-06-24 — Site close-banners adopted (078): box-notes → visual स्वाहा / ◇ ◇ ◇ banners
 
 Adopted the preserved 078 site-polish onto the post-consolidation `start.html` (the user's call: adopt). The two grey text box-notes in "Your first ten minutes" become chat-style **close banners** — a स्वाहा firm-close banner and a ◇ ◇ ◇ soft-close banner, each captioned with the same meaning, rendering what the user actually sees at a session close. Added a page-foot **स्वाहा seal** below the footer; trimmed the wrap-step's now-redundant inline स्वाहा/◇◇◇ explanation (the banners carry it). `docs/index.html`: dropped the hero "How it works" nav button (the `#data` section stays, reachable by scroll). Source preserved in `_ARCHIVE/start.html.MINE-banners-* / index.html.MINE-*`. Verified: 2 close-banners + page-seal render (Devanagari font loads); the consolidation's `<kit-dir>` troubleshoot fix is kept on top of the adopted version. Push to `88k8sh/svaha` remains user-gated.
