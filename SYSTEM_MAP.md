@@ -100,6 +100,7 @@ Key invariants this loop enforces:
 | `reflect.md` | `/reflect` | Memory pass + bug log — the lightweight wrap |
 | `audit.md` | `/audit` | Periodic drift check across the whole tree |
 | `foldin.md` | `/foldin` | One-time adoption of an ungoverned thread — reconstruct state, mint its first `_NEXT` |
+| `init.md` | `/init` | One-time scaffold of a fresh project's data layer — turns CWD into a `<system-dir>` |
 
 ---
 

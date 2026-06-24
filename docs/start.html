@@ -196,7 +196,7 @@
   </div>
 
   <div class="step">
-    <div class="h"><span class="n">3</span><span class="where term">Terminal</span> &nbsp;Run the installer. Copies the 6 slash commands + hook scripts into <code>~/.claude/</code>. Non-destructive — it asks before touching an existing <code>CLAUDE.md</code>:</div>
+    <div class="h"><span class="n">3</span><span class="where term">Terminal</span> &nbsp;Run the installer. Copies the 7 slash commands + hook scripts into <code>~/.claude/</code>. Non-destructive — it asks before touching an existing <code>CLAUDE.md</code>:</div>
     <div class="cmd"><pre>./setup.sh</pre><button onclick="cp(this)">Copy</button></div>
   </div>
 
@@ -214,9 +214,9 @@
   </div>
 
   <div class="step">
-    <div class="h"><span class="n">5</span><span class="where term">Terminal</span> &nbsp;Confirm it landed — the 6 commands and 6 hooks should be in place:</div>
+    <div class="h"><span class="n">5</span><span class="where term">Terminal</span> &nbsp;Confirm it landed — the 7 commands and 6 hooks should be in place:</div>
     <div class="cmd"><pre>ls ~/.claude/commands && echo "---" && ls ~/.claude/hooks</pre><button onclick="cp(this)">Copy</button></div>
-    <div class="expect">commands: <b>boot session handoff reflect audit foldin</b> (.md)
+    <div class="expect">commands: <b>boot session handoff reflect audit foldin init</b> (.md)
 hooks: the six <b>*.sh</b> files (context-canary, launchpad-nudge, memory-reflect, resume-line-guard, session-end-backstop, session-start-marker)</div>
   </div>
 
@@ -231,7 +231,7 @@ hooks: the six <b>*.sh</b> files (context-canary, launchpad-nudge, memory-reflec
   <ol class="walk">
     <li><b>Boot it.</b> In a project, start Claude Code and <b>just say svaha</b> — it opens the launchpad and resumes where you left off. A brand-new project has nothing to resume yet; that's expected. <small>(Explicit: <code>/session</code>.)</small></li>
     <li><b>Do a small task</b> — fix a bug, add a function. Notice it states <i>decisions with conviction</i> and acts on the safe stuff without nagging, but stops to confirm anything risky.</li>
-    <li><b>Wrap up.</b> When you're done (or context is filling), <b>say svaha</b> again — or <b>"that's it."</b> It freezes a numbered <code>_NEXT</code> capturing where you stopped and what you decided, then seals with <b>स्वाहा</b> — the receipt that it's recorded. <small>(Explicit: <code>/handoff</code>.)</small></li>
+    <li><b>Wrap up.</b> When you're done (or context is filling), <b>say svaha</b> again — or <b>"that's it."</b> It freezes a numbered <code>_NEXT</code> capturing where you stopped and what you decided, then seals with <b>स्वाहा</b> — the receipt that it's recorded. (Light session, nothing to carry? It closes with the soft <b>◇ ◇ ◇</b> instead — no reboot needed; see just below.) <small>(Explicit: <code>/handoff</code>.)</small></li>
     <li><b>Start fresh.</b> Open a <i>new</i> session and <b>say svaha</b>. This time it recovers where you left off — and reconciles its claims against the actual files before doing anything.</li>
     <li><b>That's the loop.</b> Each pass is a little better calibrated than the last. The longer you run it, the more it knows.</li>
   </ol>
@@ -239,6 +239,11 @@ hooks: the six <b>*.sh</b> files (context-canary, launchpad-nudge, memory-reflec
   <div class="box note">
     <p><span class="lbl">The seal — स्वाहा — is the reply, not your input</span></p>
     <p>You type the plain word <code>svaha</code> — or any clear yes in its place (<b>amen</b> works too). When a wrap actually completes, it echoes <b>स्वाहा</b> back so you know it landed and is recorded. You say a word to act; it says the one seal back to confirm.</p>
+  </div>
+
+  <div class="box note">
+    <p><span class="lbl">Two closes, two weights — स्वाहा and ◇ ◇ ◇</span></p>
+    <p><b>स्वाहा</b> is the firm close — work was sealed into a numbered handoff, so the next session resumes the thread; the natural move is to start fresh. <b>◇ ◇ ◇</b> is the soft one — a <i>reflection</i>: nothing live to carry, nothing offered to the fire, so nothing forces a stop. Keep going if you want, or set it down with a clean slate. The banner tells you which kind of stop you've reached.</p>
   </div>
 
   <div class="box note">
@@ -257,6 +262,7 @@ hooks: the six <b>*.sh</b> files (context-canary, launchpad-nudge, memory-reflec
     <tr><td><code>/audit</code></td><td>Checks the system's own coherence — catches the slow rot a growing config accumulates.</td></tr>
     <tr><td><code>/foldin</code></td><td>Adopt an ungoverned conversation into the system (start mid-stream).</td></tr>
     <tr><td><code>/boot</code></td><td>The lower-level two-file boot that <code>/session</code> wraps.</td></tr>
+    <tr><td><code>/init</code></td><td>Scaffold a fresh project's data layer — <code>next/</code>, <code>ledger/</code>, <code>_LOADUP.md</code>, <code>memory/</code>. Runs once, in a new project.</td></tr>
   </table>
 
   <h3>Where things live</h3>

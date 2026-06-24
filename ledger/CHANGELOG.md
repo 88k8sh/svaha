@@ -7,6 +7,13 @@ Written by `/handoff` (or manually after structural edits). Do not edit existing
 
 ---
 
+## 2026-06-24 — ◇ ◇ ◇ is the *soft* close (keep going or stop); explained on the site
+
+The reflection-banner `◇ ◇ ◇` was defined only by what it *isn't* (hollow, no seal). Pinned its positive meaning: because a reflection freezes no `_NEXT`, the banner **forces no reboot** — the user may keep going or stop with a clean slate. The `स्वाहा` seal is the **firm** close (it captures a resume-thread → points to a fresh session); heavy context is the gauge's separate "start fresh" axis, not the banner's. The two banners now read as distinct *kinds of stop*, not the same close with different cargo.
+
+- **EDIT** `CLAUDE.md` (Reflection-banner section), `reflect.md` (not-warranted close), `handoff.md` (Warrant-gate downgrade) — same soft-close clarification, kept consistent across all three.
+- **EDIT** `docs/start.html` — new "Two closes, two weights" note explaining `स्वाहा` vs `◇ ◇ ◇` user-facing (the banner had **zero** site coverage). Also registered `/init` in the command list + bumped the 6→7 command counts (install + verify steps) — the deferred move-2 HTML surface, now unblocked since the concurrent docs consolidation settled.
+
 ## 2026-06-24 — /init: scaffold a fresh project's data layer (per-project, runs once)
 
 New slash command `/init` (`init.md`) closes the cold-install gap the kit-dir/system-dir split opened: it turns CWD into a `<system-dir>` by scaffolding the per-project **data** half of the five-layer completeness spec, while the machinery (commands, hooks, `bin/`) stays baked once in `<kit-dir>`.

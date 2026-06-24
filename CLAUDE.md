@@ -59,7 +59,7 @@ Next session: /session NNN — <focus label>
 ---
 ```
 
-**Reflection-banner — the lighter close.** When `/handoff` downgrades to a reflection (nothing live to carry → no seal), use `# ◇ ◇ ◇` instead — hollow because a reflection carries nothing forward; grand because it is still a real close. No `Next session:` line:
+**Reflection-banner — the lighter close.** When `/handoff` downgrades to a reflection (nothing live to carry → no seal), use `# ◇ ◇ ◇` instead — hollow because a reflection carries nothing forward; grand because it is still a real close. It is the **soft** close: no `_NEXT` was frozen, so nothing forces a reboot — keep going or stop, your call (vs. the स्वाहा seal, which freezes a resume-thread and so points to a fresh session; heavy context is the gauge's separate "start fresh" axis, not the banner's). No `Next session:` line:
 
 ```
 ▌
