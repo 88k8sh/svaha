@@ -72,19 +72,27 @@ for f in $COMMANDS; do
     # here kills the placeholder-exploration storm for every machinery path. <system-dir>
     # is deliberately LEFT literal — it is per-project and resolved at runtime; CLAUDE.md
     # tells the model how (nearest ancestor of CWD holding _LOADUP.md): a bounded walk, no storm.
-    sed "s|<kit-dir>|$KIT_ROOT|g" "$KIT_ROOT/commands/$f" > "$CMD_DIR/$f"
-    if grep -q '<kit-dir>' "$CMD_DIR/$f" 2>/dev/null; then
-      echo "          copied  $f  (WARNING: <kit-dir> placeholder still present — sed may have failed)"
+    NEW="$( sed "s|<kit-dir>|$KIT_ROOT|g" "$KIT_ROOT/commands/$f" )"
+    if [ -f "$CMD_DIR/$f" ] && [ "$NEW" = "$(cat "$CMD_DIR/$f")" ]; then
+      echo "          up to date  $f"
     else
-      echo "          copied  $f  (rewrote <kit-dir> -> $KIT_ROOT)"
+      if [ -f "$CMD_DIR/$f" ]; then
+        ts="$( date +%Y%m%d-%H%M%S )"
+        cp "$CMD_DIR/$f" "$CMD_DIR/$f.svaha-backup-${ts}"
+        printf '%s\n' "$NEW" > "$CMD_DIR/$f"
+        echo "          updated  $f  (your previous file backed up as $f.svaha-backup-${ts})"
+      else
+        printf '%s\n' "$NEW" > "$CMD_DIR/$f"
+        echo "          installed  $f  (<kit-dir> -> $KIT_ROOT)"
+      fi
     fi
     cmd_ok=$((cmd_ok + 1))
   else
-    echo "          MISSING $f  (not found in commands/ — skipped)"
+    echo "          MISSING $f  (not found in kit's commands/ — skipped)"
     cmd_miss=$((cmd_miss + 1))
   fi
 done
-echo "          done ($cmd_ok copied, $cmd_miss missing)"
+echo "          done ($cmd_ok ready, $cmd_miss missing)"
 echo ""
 
 # ----------------------------------------------------------------------------
@@ -99,17 +107,27 @@ if [ -d "$KIT_ROOT/hooks" ]; then
   for f in "$KIT_ROOT"/hooks/*.sh; do
     [ -f "$f" ] || continue
     base="$( basename "$f" )"
-    cp "$f" "$HOOK_DIR/$base"
     # Hooks are self-contained and self-discover the project's data dir at runtime
     # (they walk up from the session CWD for _LOADUP.md), so they carry no <system-dir>
     # to bake. This <kit-dir> rewrite stays only as a safety net for any future hook
     # that references the kit by absolute path; it's a no-op when none does.
-    if grep -q '<kit-dir>' "$HOOK_DIR/$base" 2>/dev/null; then
-      sed "s|<kit-dir>|$KIT_ROOT|g" "$HOOK_DIR/$base" > "$HOOK_DIR/$base.tmp" \
-        && mv "$HOOK_DIR/$base.tmp" "$HOOK_DIR/$base"
-      echo "          copied  $base  (rewrote <kit-dir> -> $KIT_ROOT)"
+    if grep -q '<kit-dir>' "$f" 2>/dev/null; then
+      NEW_HOOK="$( sed "s|<kit-dir>|$KIT_ROOT|g" "$f" )"
     else
-      echo "          copied  $base"
+      NEW_HOOK="$( cat "$f" )"
+    fi
+    if [ -f "$HOOK_DIR/$base" ] && [ "$NEW_HOOK" = "$(cat "$HOOK_DIR/$base")" ]; then
+      echo "          up to date  $base"
+    else
+      if [ -f "$HOOK_DIR/$base" ]; then
+        ts="$( date +%Y%m%d-%H%M%S )"
+        cp "$HOOK_DIR/$base" "$HOOK_DIR/$base.svaha-backup-${ts}"
+        printf '%s\n' "$NEW_HOOK" > "$HOOK_DIR/$base"
+        echo "          updated  $base  (your previous file backed up as $base.svaha-backup-${ts})"
+      else
+        printf '%s\n' "$NEW_HOOK" > "$HOOK_DIR/$base"
+        echo "          installed  $base"
+      fi
     fi
     chmod +x "$HOOK_DIR/$base" 2>/dev/null
     hook_ok=$((hook_ok + 1))
@@ -118,7 +136,7 @@ fi
 if [ "$hook_ok" -eq 0 ]; then
   echo "          no .sh hooks found in $KIT_ROOT/hooks (nothing copied)"
 else
-  echo "          done ($hook_ok hooks copied, +x set)"
+  echo "          done ($hook_ok hooks ready, +x set)"
 fi
 echo ""
 
