@@ -16,8 +16,7 @@
     document.documentElement.classList.add('js');
     try {
       var saved = localStorage.getItem('theme');
-      var sysDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-      document.documentElement.setAttribute('data-theme', saved || (sysDark ? 'dark' : 'light'));
+      document.documentElement.setAttribute('data-theme', saved || 'light');
     } catch (e) { document.documentElement.setAttribute('data-theme', 'light'); }
   })();
 </script>
@@ -179,7 +178,7 @@
 
   <div class="chain">
     You are here &mdash; this page gets <b>Claude Code itself</b> working on your Mac. Then:<br>
-    <span class="here">1 · this page</span> &nbsp;→&nbsp; <span class="next">2 · <code>INSTALL.html</code> &mdash; install <b>svaha</b> on top</span> &nbsp;→&nbsp; <span class="next">3 · <code>WELCOME.html</code> &mdash; learn the loop</span>
+    <span class="here">1 · this page</span> &nbsp;→&nbsp; <span class="next">2 · <code>start.html</code> &mdash; install <b>svaha</b> and run your first loop</span>
   </div>
 
   <div class="box warn">
@@ -250,20 +249,20 @@ That's the prompt. It's waiting for you. Leave this window open for the whole gu
 
   <!-- ============ STEP 5 ============ -->
   <h2>5 · One more thing, so svaha installs cleanly</h2>
-  <p>svaha's install (<code>INSTALL.html</code>, your next stop) uses two small tools that don't ship with a fresh Mac: <b>git</b> (to download svaha) and <b>python3</b> (its safety hooks are Python). One command from Apple installs both at once.</p>
+  <p>svaha's install (<code>start.html</code>, your next stop) uses two small tools that don't ship with a fresh Mac: <b>git</b> (to download svaha) and <b>python3</b> (its safety hooks are Python). One command from Apple installs both at once.</p>
   <div class="step">
     <div class="h"><span class="n">5</span><span class="where term">Terminal</span> &nbsp;Ask macOS to install the Command Line Tools:</div>
     <div class="cmd"><pre>xcode-select --install</pre><button onclick="cp(this)">Copy</button></div>
     <div class="h" style="margin-top:8px"><span class="where screen">On screen</span> &nbsp;A dialog pops up &mdash; click <b>Install</b> and let it finish (a few minutes). If it instead says <i>"already installed,"</i> you're already set &mdash; move on.</div>
     <div class="h" style="margin-top:10px"><span class="where term">Terminal</span> &nbsp;Confirm both tools are now there:</div>
     <div class="cmd"><pre>git --version && python3 --version</pre><button onclick="cp(this)">Copy</button></div>
-    <div class="expect">two version lines, one for <b>git</b> and one for <b>Python 3</b>. If both print, every check on <code>INSTALL.html</code>'s first step will pass.</div>
+    <div class="expect">two version lines, one for <b>git</b> and one for <b>Python 3</b>. If both print, every check on <code>start.html</code>'s first step will pass.</div>
   </div>
 
   <!-- ============ DONE ============ -->
   <div class="box tip">
     <p><span class="lbl">✓ You're ready</span></p>
-    <p>Claude Code is installed, logged in, and the two helper tools are in place. <b>Next: open <code>INSTALL.html</code></b> (in this same folder) and follow it to install svaha on top. Its very first step &mdash; the <code>claude --version &amp;&amp; python3 --version &amp;&amp; git --version</code> check &mdash; should now come up all green.</p>
+    <p>Claude Code is installed, logged in, and the two helper tools are in place. <b>Next: open <code>start.html</code></b> (in this same folder) and follow it to install svaha on top. Its very first step &mdash; the <code>claude --version &amp;&amp; python3 --version &amp;&amp; git --version</code> check &mdash; should now come up all green.</p>
   </div>
 
   <!-- ============ TROUBLESHOOTING ============ -->
@@ -289,7 +288,7 @@ That's the prompt. It's waiting for you. Leave this window open for the whole gu
 
   <footer class="sitefoot">
     <span class="sig">svaha</span>
-    <span>Commands verified against Anthropic's <a href="https://code.claude.com/docs/en/setup">setup</a> &amp; <a href="https://code.claude.com/docs/en/quickstart">quickstart</a> docs · next: <code>INSTALL.html</code></span>
+    <span>Commands verified against Anthropic's <a href="https://code.claude.com/docs/en/setup">setup</a> &amp; <a href="https://code.claude.com/docs/en/quickstart">quickstart</a> docs · next: <code>start.html</code></span>
   </footer>
 </div>
 
