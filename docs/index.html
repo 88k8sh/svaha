@@ -30,11 +30,10 @@
     document.documentElement.classList.add('js');
     try {
       var saved = localStorage.getItem('theme');
-      var sysDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-      var theme = saved || (sysDark ? 'dark' : 'light');
+      var theme = saved || 'light';
       document.documentElement.setAttribute('data-theme', theme);
     } catch (e) {
-      document.documentElement.setAttribute('data-theme', 'dark');
+      document.documentElement.setAttribute('data-theme', 'light');
     }
   })();
 </script>
@@ -181,7 +180,7 @@
   .lead { line-height: 1.62; }
   .lead::first-letter {
     float: left; font-family: "Fraunces", serif; font-weight: 600;
-    font-size: 4.4em; line-height: .82; padding: 6px 12px 0 0; color: var(--accent-ink);
+    font-size: 2.4em; line-height: .9; padding: 3px 8px 0 0; color: var(--accent-ink);
   }
   article strong { font-weight: 500; color: var(--ink); }
   [data-theme="dark"] article strong { font-weight: 500; }
@@ -387,8 +386,8 @@
         <span class="tag">· so be it</span>
       </div>
       <h1 class="title reveal">Pick up exactly where you left off.</h1>
-      <p class="dek reveal">Stop any time, drop a checkpoint, and resume right where you were — no pasting context back in, no re-explaining. Lean checkpoints keep each session small and cheap, and it all lives in plain files you own.</p>
-      <p class="reveal" style="margin:2px 0 28px;font-size:17px;line-height:1.55;color:var(--ink)"><b>One word fuels the loop</b> — <span class="mono">svaha</span> to begin · <span class="mono">svaha</span> to confirm · <span class="mono">svaha</span> to wrap. No commands to memorize; a finished wrap seals back, once, as <span style="font-family:'Noto Serif Devanagari',serif;color:var(--accent-ink);font-weight:600">स्वाहा</span>.</p>
+      <p class="dek reveal">Stop anytime, drop a checkpoint, resume right where you were — no pasting context back in, no re-explaining. It all lives in plain files you own.</p>
+      <p class="reveal" style="margin:2px 0 28px;font-size:17px;line-height:1.55;color:var(--ink)"><b>One word runs the loop</b> — <span class="mono">svaha</span> to begin, confirm, wrap. Nothing to memorize; a finished wrap seals back, once, as <span style="font-family:'Noto Serif Devanagari',serif;color:var(--accent-ink);font-weight:600">स्वाहा</span>.</p>
       <div class="cta reveal">
         <a class="btn btn-primary" href="INSTALL.html">Install</a>
         <a class="btn" href="WELCOME.html">How it works</a>
@@ -400,7 +399,7 @@
         <span class="dot"></span>
         <span>open source · MIT</span>
         <span class="dot"></span>
-        <span>5 min read</span>
+        <span>2 min read</span>
       </div>
 
       <figure class="hero-fig reveal" id="heroFig" aria-label="Diagram: one session bookended by the same word — svaha opens it (/session), svaha confirms each step (continue), and svaha closes it (/handoff), which writes the checkpoint the next session resumes from.">
@@ -439,90 +438,83 @@
 
     <article>
 
-      <p class="lead reveal">This was never about an assistant that can't remember — models remember plenty. The friction is everything around it: every resume, you paste the project back in, re-explain what you decided and what you cut, and hunt for where you stopped.</p>
-
-      <p class="reveal">The fix is a checkpoint — a small frozen file with where things stand and the exact next move. The next session reads it and picks up lean, nothing to paste. It's plain text in your own repo, not a memory locked somewhere you can't see.</p>
-
       <blockquote class="pull reveal" aria-hidden="true">The cost was never forgetting.<br>It's <span style="white-space:nowrap">re-establishing</span> — every single time.</blockquote>
 
-      <h2 class="section reveal" id="data"><span class="num">the problem</span>Data management</h2>
-      <p class="reveal">Three pieces make it work: a way to record exactly where things stand, something to keep those records honest as they pile up, and a fast path to load the right one when a session opens. A handoff trail, a guard layer, a boot path.</p>
+      <p class="lead reveal">Models remember fine — that was never the problem. The tax is everything around it: every resume, you paste the task back in and hunt for where you left off — and the moment you run more than one session, they clobber each other.</p>
+
+      <p class="reveal">I built it to stop paying that tax — what I didn't expect was how much steadier the work got once the thread lived in the system instead of my head. Seeing <span style="font-family:'Noto Serif Devanagari',serif;color:var(--accent-ink);font-weight:600">स्वाहा</span> come back is the all-clear: written to file, safe to close.</p>
+
+      <h2 class="section reveal" id="data"><span class="num">three pieces</span>How it works</h2>
+      <p class="reveal">A record of where things stand, a guard that keeps those records honest as they pile up, and a contract that holds the same across every session and model.</p>
 
       <div class="pillars reveal">
         <div class="pillar">
           <div class="pnum">01 / RECORD</div>
           <h3>The handoff</h3>
-          <p>A frozen, numbered snapshot of where the work stands and the exact next move.</p>
+          <p>A frozen, numbered snapshot: where the work stands, and the exact next move.</p>
         </div>
         <div class="pillar">
           <div class="pnum">02 / KEEP HONEST</div>
           <h3>The guard layer</h3>
-          <p>Cheap checks that fight the silent decay of the handoff trail as it grows.</p>
+          <p>Cheap checks that fight the silent decay of the trail as it grows.</p>
         </div>
         <div class="pillar">
           <div class="pnum">03 / BE CONSISTENT</div>
           <h3>The contract</h3>
-          <p>A written account of how the assistant works, the same on every session and every model.</p>
+          <p>How the assistant works — identical on every session, every model.</p>
         </div>
       </div>
 
-      <h2 class="section reveal" id="handoff"><span class="num">the handoff</span>The spine</h2>
-      <p class="reveal">When a session ends, it writes a single numbered file: a frozen snapshot of where the work stands, what's in flight, and the exact next move. It is never edited again — a correction becomes the next file, the way a commit is never rewritten, only followed by another. A fresh session reads the latest open snapshot and resumes mid-sentence.</p>
-      <p class="reveal">Run several sessions at once and each takes its own numbered slot, so parallel work never collides — a higher number is a different session's handoff, not a newer draft of mine. The whole point is that no session ever again opens with <span class="mono">so, what were we doing?</span></p>
+      <h2 class="section reveal" id="handoff"><span class="num">the spine</span>The handoff</h2>
+      <p class="reveal">Each session ends by writing one numbered file, never edited again — a correction becomes the next file, the way a commit is only ever followed by another. A fresh session reads the latest open one and resumes mid-sentence. Run several at once and each takes its own slot, so parallel work never collides — no session ever again opens with <span class="mono">so, what were we doing?</span></p>
 
-      <h2 class="section reveal" id="falls-out">Why it's different</h2>
-      <p class="reveal">A few things fall out that the checkpoints alone don't cover.</p>
+      <h2 class="section reveal" id="falls-out"><span class="num">it's different</span>Why</h2>
 
       <div class="cards">
         <div class="card reveal">
           <svg class="ci" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 7v4a2 2 0 0 1-2 2H5"/><path d="M9 9l-4 4 4 4"/></svg>
           <h3>It's one word</h3>
-          <div class="cbody"><p>One word fuels the whole loop — <span class="mono">svaha</span> to open, to confirm, to close. No command palette, no syntax to memorize. The simplest possible surface over everything running underneath.</p></div>
+          <div class="cbody"><p><span class="mono">svaha</span> opens, confirms, and closes — no command palette, no syntax. The simplest possible surface over everything running underneath.</p></div>
         </div>
         <div class="card reveal">
           <svg class="ci" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 4h11l5 5v11a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1z"/><path d="M14 4v5h5"/><path d="M8 14h7M8 17h5"/></svg>
           <h3>It's mine, and I can read it</h3>
-          <div class="cbody"><p>Plain files in my own repo. When the assistant has something wrong, I open the file and fix it. Nothing inferred silently and parked somewhere I'll never see.</p></div>
+          <div class="cbody"><p>Plain files in my own repo. When the assistant has something wrong, I open the file and fix it — nothing parked silently where I'll never see it.</p></div>
         </div>
         <div class="card reveal">
           <svg class="ci" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/></svg>
           <h3>It doesn't repeat mistakes</h3>
-          <div class="cbody"><p>When something breaks, the fix isn't the end of it — the cause gets traced, and a guard gets written (a rule, a check, a hook) so that whole class of mistake can't happen again. Every failure hardens the system instead of recurring.</p></div>
+          <div class="cbody"><p>When something breaks, the cause gets traced and a guard gets written — a rule, a check, a hook — so that whole class can't recur. Every failure hardens the system.</p></div>
         </div>
         <div class="card reveal">
           <svg class="ci" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h13"/><path d="M13 6l6 6-6 6"/><path d="M20 4v16"/></svg>
           <h3>It's portable</h3>
-          <div class="cbody"><p>Context lives in my system, not a provider's — plain files in my own repo. It comes with me when I switch tools or models, instead of being locked in a memory I can't see or carry out.</p></div>
+          <div class="cbody"><p>Context lives in my system, not a provider's. It comes with me when I switch tools or models — never locked in a memory I can't carry out.</p></div>
         </div>
         <div class="card reveal">
           <svg class="ci" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 19h14"/><path d="M12 4 5 14h14z"/></svg>
           <h3>It's future-proof</h3>
-          <div class="cbody"><p>Plain files and a few hooks — no database, nothing that locks you in. The day a model ships this natively, or you simply outgrow it, you delete a folder and walk away. Nothing to migrate, nothing to rip out.</p></div>
+          <div class="cbody"><p>Plain files and a few hooks — no database, no lock-in. The day a model ships this natively, or you outgrow it, you delete a folder and walk away.</p></div>
         </div>
         <div class="card reveal">
           <svg class="ci" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.24 12.24a6 6 0 0 0-8.49-8.49L5 10.5V19h8.5z"/><path d="M16 8 2 22"/><path d="M17.5 15H9"/></svg>
           <h3>It stays lean</h3>
-          <div class="cbody"><p>Each session opens from a small checkpoint, not the whole history — so the window never bloats and you don't pay to re-load everything you've ever done. Fast and cheap, every single time.</p></div>
+          <div class="cbody"><p>Each session opens from a small checkpoint, not the whole history — the window never bloats, and you don't pay to re-load everything. Fast and cheap, every time.</p></div>
         </div>
         <div class="card reveal">
           <svg class="ci" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 17l5-5 4 4 8-8"/><path d="M16 8h4v4"/></svg>
           <h3>It compounds</h3>
-          <div class="cbody"><p>Most working setups degrade as they accumulate — more drift, more stale instructions. The guard layer is why this one doesn't: worth more after six months, not quietly a liability.</p></div>
+          <div class="cbody"><p>Most setups degrade as they accumulate — more drift, more stale instructions. The guard layer is why this one doesn't: worth more after six months, not a liability.</p></div>
         </div>
       </div>
 
       <h2 class="section reveal" id="start"><span class="num">so be it</span>svaha</h2>
-      <p class="reveal">It's a small kit of plain files — the slash commands, a few guard hooks, the handoff scripts. Clone it, run <span class="mono">./setup.sh</span>, and start a session.</p>
+      <p class="reveal">A small kit of plain files — the slash commands, a few guard hooks, the handoff scripts. Clone it, run <span class="mono">./setup.sh</span>, start a session.</p>
       <p class="prenote reveal">New to Claude Code itself? <a href="INSTALL-CLAUDE-CODE.html">Set up the basics first →</a></p>
 
       <div class="guides reveal">
         <a class="guide" href="INSTALL.html"><b>Install</b><span>From scratch — clone, run setup, generate <span class="mono">settings.json</span>, verify with the doctor.</span></a>
         <a class="guide" href="WELCOME.html"><b>How it works</b><span>The loop, the commands, and your first ten minutes, end to end.</span></a>
-      </div>
-
-      <div class="coda reveal">
-        <p>I built it to stop paying that tax. What I didn't expect was how much steadier the work itself became once the thread stopped living in my own head between sessions and the system was responsible for holding it.</p>
-        <p class="bookend"><b>One word fuels the loop — three beats of the same word, a small ritual.</b> You <i>open</i> a session with <b>svaha</b> — <i>so be it</i> — <i>confirm</i> a step with it, and <i>close</i> the day on it too. When a handoff lands, the system says the word back, once, as a receipt: <span class="bmk">स्वाहा</span> — the offering let go into the fire. Seeing it is your all-clear: the work is written to file, the old session safe to close. Open a new window, say <b>svaha</b>, and you're already there. Begun and carried on, on a single breath.</p>
       </div>
 
     </article>
