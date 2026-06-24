@@ -16,12 +16,12 @@ See `DISTILLATION-LOG.md` for the per-component keep/slim/cut rationale, and
 |---|---|
 | `_NEXT.md` | Canonical `_NEXT` format + Verified-Handoff field semantics (single source of truth) |
 | `_LOADUP.md` | Boot context-bootstrap skeleton (§0–8) |
-| `boot.md` | `/boot` — two-file boot + RESUME-WITH-VERIFICATION (steps A–D) |
-| `session.md` | `/session` — smart entry (auto-pick / list / boot a slot) |
-| `handoff.md` | `/handoff` — session wrap; Warrant gate, Continuity check, read-back |
-| `reflect.md` | `/reflect` — memory + bug-log pass (handoff steps 4–5 delegate here) |
-| `foldin.md` | `/foldin` — adopt an ungoverned conversation into the system |
-| `init.md` | `/init` — scaffold a fresh project's data layer (per-project, runs once) |
+| `commands/boot.md` | `/boot` — two-file boot + RESUME-WITH-VERIFICATION (steps A–D) |
+| `commands/session.md` | `/session` — smart entry (auto-pick / list / boot a slot) |
+| `commands/handoff.md` | `/handoff` — session wrap; Warrant gate, Continuity check, read-back |
+| `commands/reflect.md` | `/reflect` — memory + bug-log pass (handoff steps 4–5 delegate here) |
+| `commands/foldin.md` | `/foldin` — adopt an ungoverned conversation into the system |
+| `commands/init.md` | `/init` — scaffold a fresh project's data layer (per-project, runs once) |
 | `bin/next-write.sh` | Atomic, collision-safe `_NEXT_NNN` writer |
 | `bin/next-live.sh` | Single source of truth for the live-session set |
 | `next/_NEXT_001.md` | Seed handoff |
@@ -33,7 +33,7 @@ See `DISTILLATION-LOG.md` for the per-component keep/slim/cut rationale, and
 | `bin/version-guard.py` | **SAFETY** — hard-blocks edits to frozen artifacts |
 | `bin/drift-guard.py` | PreToolUse coherence guard (prevent layer) — wired to SYNC_MAP |
 | `bin/coherence-check.py` | Boot integrity check + `--stop` exit check |
-| `audit.md` | `/audit` — periodic drift/coherence sweep (Tier 1 / Tier 2) |
+| `commands/audit.md` | `/audit` — periodic drift/coherence sweep (Tier 1 / Tier 2) |
 | `SYNC_MAP.md` | Coupling map (change X → update Y) |
 | `SYSTEM_MAP.md` | Data-flow view (what file does what) |
 
@@ -76,7 +76,7 @@ See `DISTILLATION-LOG.md` for the per-component keep/slim/cut rationale, and
 | `CLAUDE.md` | The always-loaded behavior contract (core safety skeleton + optional Operator layer) |
 | `AGENTS.md` | Vendor-neutral mirror of `CLAUDE.md` for non-Claude agents |
 | `README.md` | Front door |
-| `CREDITS.md` | Provenance ledger |
+| `docs/CREDITS.md` | Provenance ledger |
 | `LICENSE` | MIT |
 | `setup.sh` | Non-destructive installer (companions are print-only) |
 | `.claude-plugin/plugin.json` | Plugin-system manifest |

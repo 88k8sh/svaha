@@ -66,13 +66,13 @@ COMMANDS="boot.md session.md handoff.md reflect.md audit.md foldin.md init.md"
 cmd_ok=0
 cmd_miss=0
 for f in $COMMANDS; do
-  if [ -f "$KIT_ROOT/$f" ]; then
+  if [ -f "$KIT_ROOT/commands/$f" ]; then
     # Bake <kit-dir> into the installed command so its bin/ + hook references resolve by
     # absolute path. <kit-dir> is the one fixed, known-at-install location, so baking it
     # here kills the placeholder-exploration storm for every machinery path. <system-dir>
     # is deliberately LEFT literal — it is per-project and resolved at runtime; CLAUDE.md
     # tells the model how (nearest ancestor of CWD holding _LOADUP.md): a bounded walk, no storm.
-    sed "s|<kit-dir>|$KIT_ROOT|g" "$KIT_ROOT/$f" > "$CMD_DIR/$f"
+    sed "s|<kit-dir>|$KIT_ROOT|g" "$KIT_ROOT/commands/$f" > "$CMD_DIR/$f"
     if grep -q '<kit-dir>' "$CMD_DIR/$f" 2>/dev/null; then
       echo "          copied  $f  (WARNING: <kit-dir> placeholder still present — sed may have failed)"
     else
@@ -80,7 +80,7 @@ for f in $COMMANDS; do
     fi
     cmd_ok=$((cmd_ok + 1))
   else
-    echo "          MISSING $f  (not found in kit root — skipped)"
+    echo "          MISSING $f  (not found in commands/ — skipped)"
     cmd_miss=$((cmd_miss + 1))
   fi
 done

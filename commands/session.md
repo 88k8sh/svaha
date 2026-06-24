@@ -23,10 +23,10 @@ Three modes:
 It prints the deterministic live set **and** any sessions consumed in the last 120 min (so a session retired by a concurrent handoff is shown explicitly, never vanishes) **and** any desyncs (`DONE-UNCONSUMED` = move finished but never stamped; `ORPHAN` = stray `.consumed`). Relay its output verbatim, then append the boot pointer:
 
 ```
-→ /session to auto-boot lowest, or /session N for a specific one
+→ svaha to boot lowest, or /session N for a specific one
 ```
 
-If `recently consumed` is non-empty, say so in one line — don't let a just-retired session disappear unmentioned. Stop here — do not boot.
+If `recently consumed` is non-empty, say so in one line — don't let a just-retired session disappear unmentioned. Stop here — do not boot. (A follow-up **svaha** is position-2 assent — it boots the lowest live session without needing `/session`.)
 
 ---
 
