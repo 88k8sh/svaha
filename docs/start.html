@@ -198,17 +198,18 @@
   </div>
 
   <h2 id="install">Install</h2>
-  <p class="secnote">Four steps, ~2 minutes. It needs <code>claude</code>, <code>python3</code>, and <code>git</code> on your machine.</p>
+  <p class="secnote">Four steps, ~2 minutes. It needs <code>claude</code>, <code>python3</code>, <code>git</code>, and <code>jq</code> on your machine — <code>jq</code> powers the six shell hooks, which <i>silently do nothing</i> without it. (New to Claude Code? <a href="INSTALL-CLAUDE-CODE.html">the prerequisite page</a> installs all of these.)</p>
 
   <div class="step">
-    <div class="h"><span class="n">1</span><span class="where term">Terminal</span> &nbsp;Check the three prerequisites — each should print a version, not "command not found":</div>
-    <div class="cmd"><pre>claude --version && python3 --version && git --version</pre><button onclick="cp(this)">Copy</button></div>
+    <div class="h"><span class="n">1</span><span class="where term">Terminal</span> &nbsp;Check the four prerequisites — each should print a version, not "command not found":</div>
+    <div class="cmd"><pre>claude --version && python3 --version && git --version && jq --version</pre><button onclick="cp(this)">Copy</button></div>
+    <div class="expect">No <code>jq</code>? <code>brew install jq</code> (macOS) or <code>apt-get install jq</code> (Linux) — without it the wrap-up, reflect, and crash-recovery hooks are dark.</div>
   </div>
 
   <div class="step">
-    <div class="h"><span class="n">2</span><span class="where term">Terminal</span> &nbsp;Clone it and move in. <b>Put it somewhere permanent</b> (e.g. <code>~/svaha</code>) — the hooks reference this folder by absolute path, so moving it later stops the guards firing:</div>
+    <div class="h"><span class="n">2</span><span class="where term">Terminal</span> &nbsp;Clone it and move in. <b>Put it somewhere permanent, at a path with no spaces</b> (e.g. <code>~/svaha</code>) — the hooks reference this folder by absolute path, so moving it later stops the guards firing, and a space in the path silently disables them:</div>
     <div class="cmd"><pre>git clone https://github.com/88k8sh/svaha && cd svaha</pre><button onclick="cp(this)">Copy</button></div>
-    <div class="expect">No git? Download the repo as a ZIP, unzip, and <code>cd</code> into the folder instead.</div>
+    <div class="expect">No git? Download the repo as a ZIP, unzip, and <code>cd</code> into the folder instead. (If <code>./setup.sh</code> later says <i>"permission denied,"</i> the ZIP dropped the executable bit — run <code>chmod +x setup.sh</code> first.)</div>
   </div>
 
   <div class="step">
@@ -229,7 +230,7 @@
   </div>
 
   <div class="step">
-    <div class="h"><span class="n">4</span><span class="where term">Terminal</span> &nbsp;Confirm it landed. The doctor checks the commands, hooks, and <code>settings.json</code> (valid JSON, paths wired, no leftover placeholder) and names the exact fix for anything off:</div>
+    <div class="h"><span class="n">4</span><span class="where term">Terminal</span> &nbsp;<b>Verify it landed — don't skip this.</b> The hooks fail <i>silently</i> if anything is off (a missing <code>jq</code>, a space in the path), so the doctor is the only way to know it actually worked. It checks the commands, hooks, and <code>settings.json</code> (valid JSON, paths wired, no leftover placeholder) and names the exact fix for anything off:</div>
     <div class="cmd"><pre>bash bin/doctor.sh</pre><button onclick="cp(this)">Copy</button></div>
     <div class="expect">ends with <b>✓ All good — Svaha is wired up.</b> Any <b>✗</b> line above it tells you the one thing to fix, then just re-run the doctor.</div>
   </div>
@@ -242,8 +243,15 @@
 
   <h2 id="first-run">Your first ten minutes</h2>
   <p class="secnote">The fastest way to feel the loop is to run it once, end to end. One word drives the whole thing — <b>svaha</b> ("so be it / offered into the fire"); <i>where</i> you svaha decides what it does.</p>
+
+  <div class="box note">
+    <p><span class="lbl">First: the svaha folder is the engine, not your workspace</span></p>
+    <p>You installed svaha once and it stays at <code>~/svaha</code> for good. You run the loop inside <b>your own project folders</b> — never inside the svaha folder itself (it's machinery, and it would run the loop on its own files). So before the walk below, <code>cd</code> into a project of yours.</p>
+  </div>
+
   <ol class="walk">
-    <li><b>Boot it.</b> In a project, start Claude Code and just type <b>svaha</b> — it opens the launchpad and resumes where you left off. A brand-new project has nothing to resume yet; that's expected. <small>(Explicit: <code>/session</code>.)</small></li>
+    <li><b>Set up your project.</b> In <i>your own</i> project (not the svaha folder), start Claude Code and run <b><code>/init</code></b> once — it scaffolds the data layer the loop needs, then leaves a few <code>&lt;fill-in&gt;</code> placeholders in <code>_LOADUP.md</code> for you to fill in. Do this once per project. <small>(Without it, the next step has nothing to boot.)</small></li>
+    <li><b>Boot it.</b> Now type <b>svaha</b> — it opens the launchpad and resumes where you left off. Right after <code>/init</code> there's nothing to resume yet; that's expected. <small>(Explicit: <code>/session</code>.)</small></li>
     <li><b>Do a small task</b> — fix a bug, add a function. Notice it states <i>decisions with conviction</i> and acts on the safe stuff without nagging, but stops to confirm anything risky.</li>
     <li><b>Wrap up.</b> When you're done (or context is filling), type <b>svaha</b> again — or <b>"that's it."</b> It freezes a numbered <code>_NEXT</code> capturing where you stopped and what you decided, then seals the session. <small>(Explicit: <code>/handoff</code>.)</small></li>
     <li><b>Start fresh.</b> Open a <i>new</i> session and <b>svaha</b>. This time it recovers where you left off — and reconciles its claims against the actual files before doing anything.</li>
@@ -299,9 +307,11 @@
   <table>
     <tr><th>Symptom</th><th>Fix</th></tr>
     <tr><td>Hooks never fire / commands behave oddly</td><td>Your <code>settings.json</code> is probably invalid JSON or still has a literal <code>&lt;kit-dir&gt;</code>. Run <code>bash bin/doctor.sh</code> (or <code>python3 -m json.tool ~/.claude/settings.json</code>) and fix what it flags.</td></tr>
+    <tr><td>Hooks seem dead / no wrap-up nudge ever appears</td><td>Almost always a missing <code>jq</code> — the six shell hooks need it and fail <i>silently</i> without it. Run <code>jq --version</code>; if it's missing, <code>brew install jq</code> and re-run <code>bash bin/doctor.sh</code>.</td></tr>
+    <tr><td>"the project isn't initialized — run <code>/init</code>"</td><td>You're in a project that hasn't been set up yet (or, by mistake, inside the svaha kit folder). <code>cd</code> to your own project and run <code>/init</code> once, then <b>svaha</b>.</td></tr>
     <tr><td><code>python3: command not found</code></td><td>Install Python 3 — the guard hooks are Python.</td></tr>
     <tr><td>A guard can't find a <code>bin/</code> script</td><td>The svaha folder moved. Move it back, or re-run <code>./setup.sh</code> (or the manual fallback under Step 3) so <code>&lt;kit-dir&gt;</code> points at its new path.</td></tr>
-    <tr><td><code>/session</code> says "nothing to resume"</td><td>Expected on a fresh project — no prior handoff yet. Do some work, <code>/handoff</code>, and the next <code>/session</code> recovers it.</td></tr>
+    <tr><td><code>/session</code> says "nothing to resume"</td><td>Expected right after <code>/init</code> — no handoff yet. Do some work, <b>svaha</b> to wrap, and the next session recovers it.</td></tr>
     <tr><td>Command pasted weirdly / "command not found"</td><td>Use the <b>Copy</b> button — hand-selecting can grab stray characters.</td></tr>
   </table>
 

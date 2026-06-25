@@ -248,21 +248,23 @@ That's the prompt. It's waiting for you. Leave this window open for the whole gu
   </div>
 
   <!-- ============ STEP 5 ============ -->
-  <h2>5 · One more thing, so svaha installs cleanly</h2>
-  <p>svaha's install (<code>start.html</code>, your next stop) uses two small tools that don't ship with a fresh Mac: <b>git</b> (to download svaha) and <b>python3</b> (its safety hooks are Python). One command from Apple installs both at once.</p>
+  <h2>5 · Two more things, so svaha installs cleanly</h2>
+  <p>svaha's install (<code>start.html</code>, your next stop) uses three small tools that don't ship with a fresh Mac: <b>git</b> (to download svaha), <b>python3</b> (its safety hooks are Python), and <b>jq</b> (its six shell hooks read their input with jq and <i>silently do nothing</i> without it). One Apple command installs the first two; <code>brew</code> installs jq.</p>
   <div class="step">
     <div class="h"><span class="n">5</span><span class="where term">Terminal</span> &nbsp;Ask macOS to install the Command Line Tools:</div>
     <div class="cmd"><pre>xcode-select --install</pre><button onclick="cp(this)">Copy</button></div>
     <div class="h" style="margin-top:8px"><span class="where screen">On screen</span> &nbsp;A dialog pops up &mdash; click <b>Install</b> and let it finish (a few minutes). If it instead says <i>"already installed,"</i> you're already set &mdash; move on.</div>
-    <div class="h" style="margin-top:10px"><span class="where term">Terminal</span> &nbsp;Confirm both tools are now there:</div>
-    <div class="cmd"><pre>git --version && python3 --version</pre><button onclick="cp(this)">Copy</button></div>
-    <div class="expect">two version lines, one for <b>git</b> and one for <b>Python 3</b>. If both print, every check on <code>start.html</code>'s first step will pass.</div>
+    <div class="h" style="margin-top:10px"><span class="where term">Terminal</span> &nbsp;Then install <b>jq</b> with Homebrew:</div>
+    <div class="cmd"><pre>brew install jq</pre><button onclick="cp(this)">Copy</button></div>
+    <div class="h" style="margin-top:10px"><span class="where term">Terminal</span> &nbsp;Confirm all three tools are now there:</div>
+    <div class="cmd"><pre>git --version && python3 --version && jq --version</pre><button onclick="cp(this)">Copy</button></div>
+    <div class="expect">three version lines, for <b>git</b>, <b>Python 3</b>, and <b>jq</b>. If all three print, every check on <code>start.html</code>'s first step will pass.</div>
   </div>
 
   <!-- ============ DONE ============ -->
   <div class="box tip">
     <p><span class="lbl">✓ You're ready</span></p>
-    <p>Claude Code is installed, logged in, and the two helper tools are in place. <b>Next: open <code>start.html</code></b> (in this same folder) and follow it to install svaha on top. Its very first step &mdash; the <code>claude --version &amp;&amp; python3 --version &amp;&amp; git --version</code> check &mdash; should now come up all green.</p>
+    <p>Claude Code is installed, logged in, and the three helper tools are in place. <b>Next: open <code>start.html</code></b> (in this same folder) and follow it to install svaha on top. Its very first step &mdash; the <code>claude --version &amp;&amp; python3 --version &amp;&amp; git --version &amp;&amp; jq --version</code> check &mdash; should now come up all green.</p>
   </div>
 
   <!-- ============ TROUBLESHOOTING ============ -->
@@ -283,7 +285,7 @@ That's the prompt. It's waiting for you. Leave this window open for the whole gu
     <p style="margin:8px 0 2px"><b>Windows (PowerShell):</b></p>
     <div class="cmd"><pre>irm https://claude.ai/install.ps1 | iex</pre><button onclick="cp(this)">Copy</button></div>
     <p style="margin:8px 0 2px"><b>Linux / WSL:</b> same line as macOS &mdash; <code>curl -fsSL https://claude.ai/install.sh | bash</code>.</p>
-    <p>Full platform-by-platform instructions: <a href="https://code.claude.com/docs/en/setup">code.claude.com/docs/en/setup</a>. On Windows, install <a href="https://git-scm.com/downloads/win">Git for Windows</a> (covers Step 5's <code>git</code>) and <a href="https://www.python.org/downloads/">Python 3</a> separately.</p>
+    <p>Full platform-by-platform instructions: <a href="https://code.claude.com/docs/en/setup">code.claude.com/docs/en/setup</a>. On Windows, install <a href="https://git-scm.com/downloads/win">Git for Windows</a> (covers Step 5's <code>git</code>), <a href="https://www.python.org/downloads/">Python 3</a>, and <a href="https://jqlang.github.io/jq/download/">jq</a> separately.</p>
   </div>
 
   <footer class="sitefoot">
