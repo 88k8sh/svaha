@@ -165,27 +165,73 @@ fi
 echo ""
 
 # ----------------------------------------------------------------------------
-# Step 3b — Optional CLAUDE.md install (NEVER overwrite without asking).
+# Step 3b — CLAUDE.md install / section-patch.
+#
+#   INSTALL  (no ~/.claude/CLAUDE.md yet)       : write the kit template.
+#   UPDATE   (file exists, Svaha markers found) : section-patch only the
+#             <!-- SVAHA:BASE:START --> … <!-- SVAHA:BASE:END --> block;
+#             user customizations below the end-marker stay untouched.
+#   LEGACY   (file exists, no markers)          : offer wholesale replace (y/N).
 # ----------------------------------------------------------------------------
-# The kit ships a template CLAUDE.md. Offer to drop it at ~/.claude/CLAUDE.md,
-# but if one already exists we MUST NOT clobber it without explicit consent.
 if [ -f "$KIT_ROOT/CLAUDE.md" ]; then
   TARGET_CLAUDE="$CLAUDE_DIR/CLAUDE.md"
   if [ -f "$TARGET_CLAUDE" ]; then
-    echo "          NOTE: $TARGET_CLAUDE already exists."
-    printf "          Overwrite it with the kit's CLAUDE.md template? [y/N] "
-    read REPLY
-    case "$REPLY" in
-      y|Y|yes|YES)
-        cp "$TARGET_CLAUDE" "$TARGET_CLAUDE.backup.$( date +%Y%m%d-%H%M%S )"
-        sed "s|<kit-dir>|$KIT_ROOT|g" "$KIT_ROOT/CLAUDE.md" > "$TARGET_CLAUDE"
-        echo "          overwrote (a timestamped .backup was kept alongside it; <kit-dir> -> $KIT_ROOT)"
-        ;;
-      *)
-        echo "          kept your existing CLAUDE.md (no change)"
-        ;;
-    esac
+    if grep -q '<!-- SVAHA:BASE:START' "$TARGET_CLAUDE" 2>/dev/null; then
+      # ── Section-patch mode ──────────────────────────────────────────────
+      _SVAHA_OLD="$( sed -n '/<!-- SVAHA:BASE:START/,/<!-- SVAHA:BASE:END -->/p' "$TARGET_CLAUDE" )"
+      _SVAHA_NEW="$( sed -n '/<!-- SVAHA:BASE:START/,/<!-- SVAHA:BASE:END -->/p' "$KIT_ROOT/CLAUDE.md" \
+                     | sed "s|<kit-dir>|$KIT_ROOT|g" )"
+      if [ "$_SVAHA_OLD" = "$_SVAHA_NEW" ]; then
+        echo "          CLAUDE.md Svaha base — up to date"
+      else
+        echo "          CLAUDE.md Svaha base section has updates."
+        if command -v diff >/dev/null 2>&1; then
+          printf '%s\n' "$_SVAHA_OLD" > /tmp/_svaha_old.$$
+          printf '%s\n' "$_SVAHA_NEW" > /tmp/_svaha_new.$$
+          diff /tmp/_svaha_old.$$ /tmp/_svaha_new.$$ | head -25 || true
+          rm -f /tmp/_svaha_old.$$ /tmp/_svaha_new.$$
+        fi
+        printf "          Patch the Svaha base section? (your custom rules below stay) [Y/n] "
+        read REPLY
+        case "$REPLY" in
+          n|N|no|NO)
+            echo "          skipped — CLAUDE.md unchanged"
+            ;;
+          *)
+            ts="$( date +%Y%m%d-%H%M%S )"
+            cp "$TARGET_CLAUDE" "$TARGET_CLAUDE.svaha-backup-$ts"
+            # Reassemble: [before markers] + [new base] + [after end-marker]
+            awk '/<!-- SVAHA:BASE:START/{exit} {print}' "$TARGET_CLAUDE" \
+              > /tmp/_svaha_a.$$
+            sed -n '/<!-- SVAHA:BASE:START/,/<!-- SVAHA:BASE:END -->/p' "$KIT_ROOT/CLAUDE.md" \
+              | sed "s|<kit-dir>|$KIT_ROOT|g" \
+              > /tmp/_svaha_b.$$
+            awk 'f{print} /<!-- SVAHA:BASE:END -->/{f=1}' "$TARGET_CLAUDE" \
+              > /tmp/_svaha_c.$$
+            cat /tmp/_svaha_a.$$ /tmp/_svaha_b.$$ /tmp/_svaha_c.$$ > "$TARGET_CLAUDE"
+            rm -f /tmp/_svaha_a.$$ /tmp/_svaha_b.$$ /tmp/_svaha_c.$$
+            echo "          patched — backup: CLAUDE.md.svaha-backup-$ts"
+            ;;
+        esac
+      fi
+    else
+      # ── Legacy mode (no section markers) ────────────────────────────────
+      echo "          NOTE: $TARGET_CLAUDE already exists (no Svaha section markers)."
+      printf "          Overwrite with the kit template? (adds markers for future safe updates) [y/N] "
+      read REPLY
+      case "$REPLY" in
+        y|Y|yes|YES)
+          cp "$TARGET_CLAUDE" "$TARGET_CLAUDE.backup.$( date +%Y%m%d-%H%M%S )"
+          sed "s|<kit-dir>|$KIT_ROOT|g" "$KIT_ROOT/CLAUDE.md" > "$TARGET_CLAUDE"
+          echo "          overwrote (backup kept; <kit-dir> -> $KIT_ROOT)"
+          ;;
+        *)
+          echo "          kept your existing CLAUDE.md (no change)"
+          ;;
+      esac
+    fi
   else
+    # ── Fresh install ──────────────────────────────────────────────────────
     sed "s|<kit-dir>|$KIT_ROOT|g" "$KIT_ROOT/CLAUDE.md" > "$TARGET_CLAUDE"
     echo "          installed CLAUDE.md template -> $TARGET_CLAUDE  (<kit-dir> -> $KIT_ROOT)"
   fi

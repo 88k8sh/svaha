@@ -77,6 +77,9 @@ slimming accretion, and cutting four enhancement/marketing components to the bol
 | `LICENSE` | MIT |
 | `setup.sh` | Non-destructive installer (companions are print-only) |
 | `.claude-plugin/plugin.json` | Plugin-system manifest |
+| `VERSION` | Kit semantic version — read by `setup.sh` and `bin/doctor.sh` |
+| `PATCHES.md` | User-facing changelog for CLAUDE.md base rule and firmware changes |
+| `CONTRIBUTING.md` | Firmware vs user-owned layer model; PR requirements for upstream fixes |
 
 ---
 

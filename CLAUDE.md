@@ -8,6 +8,8 @@ The dated, numbered incidents in parentheses (a lost file, a stranded handoff, a
 
 ---
 
+<!-- SVAHA:BASE:START:v0.5.0 -->
+
 ## Boot
 
 Do the boot immediately when asked, without other work.
@@ -364,3 +366,9 @@ A **structural / plumbing file** governs how the system boots, hands off, or sta
 **After editing any structural file — before ending the session:** (1) open `<system-dir>/SYNC_MAP.md` and apply every coupling row whose trigger you tripped (*change X → also update Y*), then (2) log the change to `CHANGELOG.md`. The `bin/drift-guard.py` PreToolUse hook surfaces the relevant couplings at edit time — it is a reminder, **not** a substitute for doing the follow-through. `SYNC_MAP.md` is the map; when in doubt, `grep -rn` the tree for any renamed name/path/field/count before closing. Registering a new slash command counts: add it to `_LOADUP §2`, `bin/coherence-check.py` `REGISTERED_COMMANDS`, **and** `SYNC_MAP §3`.
 
 **Deletion-First — every edit to an always-loaded surface earns its weight.** `CLAUDE.md` (and any file loaded into *every* session) is permanent context budget — additions there are paid forever, by every future session. So an edit to such a surface must, in the same change, **either** cite a deletion/trim that offsets it (what got collapsed, merged, or removed), **or** carry a one-line net-add justification (why this rule earns standing context that nothing existing can absorb). The default is collapse-into-existing, not append-new; bias toward fewer, sharper primitives over more rules.
+
+<!-- SVAHA:BASE:END -->
+
+---
+
+<!-- Your project customizations below — this section is never overwritten by `./setup.sh`. -->

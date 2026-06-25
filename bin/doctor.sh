@@ -36,6 +36,13 @@ echo "   config: $CLAUDE_DIR"
 echo "=========================================================="
 echo ""
 
+# 0 — kit version
+if [ -f "$KIT_ROOT/VERSION" ]; then
+  ok "kit version: v$( cat "$KIT_ROOT/VERSION" )"
+else
+  warn "no VERSION file (pre-v0.5.0 install — re-run ./setup.sh to update)"
+fi
+
 # 1 — python3 (the guard hooks are Python)
 if command -v python3 >/dev/null 2>&1; then
   ok "python3 present"
