@@ -340,6 +340,7 @@ Each content type lives in exactly one place. Duplicating across files guarantee
 | Named lessons derived from incidents | `ledger/LESSONS.md` | scattered in CHANGELOG |
 | Behavioral corrections from feedback | `CLAUDE.md` (under relevant section) | `memory/` (memory is ignored; CLAUDE.md is the enforcement layer) |
 | Structural changes + completions | `ledger/CHANGELOG.md` | `_NEXT` files |
+| Out-of-tree deliverable completions (a package/essay/sibling-repo ship that writes no in-tree signal) | `ledger/EXTERNAL_DELIVERABLES.md` (via `bin/external-done.sh`) | `CHANGELOG.md` / `_NEXT` files (net-new content type: the one completion class no in-tree signal — CHANGELOG marker, `.consumed`, commit — can structurally represent; routing it here is what lets `boot.md` Step B catch a falsely-live slot) |
 
 **Canonical source chains.** When updating system docs, identify the canonical upstream and update it first, then propagate downstream — never patch a downstream copy in isolation (drift). Example: architecture intent doc → pitch → READMEs. A patch to a downstream sibling creates a fork.
 
@@ -351,11 +352,11 @@ When building or rebuilding any context-management package (starter, reference, 
 
 | Layer | Files |
 |---|---|
-| **1. Handoff loop** | `_NEXT.md`, `_LOADUP.md`, `boot.md`, `handoff.md`, `reflect.md`, `bin/next-write.sh`, `next/` (with seed `_NEXT_001.md`) |
+| **1. Handoff loop** | `_NEXT.md`, `_LOADUP.md`, `boot.md`, `handoff.md`, `reflect.md`, `bin/next-write.sh`, `bin/external-done.sh`, `next/` (with seed `_NEXT_001.md`) |
 | **2. Guardrail shell** | `bin/drift-guard.py`, `bin/security-guard.py`, `bin/version-guard.py`, `bin/coherence-check.py`, `audit.md`, `SYNC_MAP.md`, `SYSTEM_MAP.md` |
 | **3. Canary hooks** | `hooks/context-canary.sh`, `hooks/launchpad-nudge.sh`, `hooks/memory-reflect.sh`, `hooks/resume-line-guard.sh`, `hooks/session-end-backstop.sh`, `hooks/session-start-marker.sh`, `settings.json.snippet` |
 | **4. Memory system** | `memory/MEMORY.md` index + per-entry `.md` files; content-placement rule: universal behavioral rules/corrections → `CLAUDE.md` (the enforcement layer), per-session supplementary context (user background, preferences) → `memory/` |
-| **5. Ledger** | `ledger/CHANGELOG.md`, `session-fixes.md`, `USER_TASKS.md`, `audit-state.md`, `drift-guard-evidence.md` · plus `_ARCHIVE/` at the system root |
+| **5. Ledger** | `ledger/CHANGELOG.md`, `session-fixes.md`, `USER_TASKS.md`, `audit-state.md`, `drift-guard-evidence.md`, `EXTERNAL_DELIVERABLES.md` · plus `_ARCHIVE/` at the system root |
 
 This spec is the checklist — verify all five layers before calling a package complete.
 

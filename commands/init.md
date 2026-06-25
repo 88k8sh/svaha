@@ -40,7 +40,7 @@ cp "$KIT/memory/MEMORY.md"  "$DEST/memory/MEMORY.md"
 cp "$KIT/memory/README.md"  "$DEST/memory/README.md"
 
 # Layer 5 — ledger (clean templates) + archive
-for f in session-fixes DECISIONS LESSONS audit-state drift-guard-evidence drift-guard-overfires USER_TASKS; do
+for f in session-fixes DECISIONS LESSONS audit-state drift-guard-evidence drift-guard-overfires USER_TASKS EXTERNAL_DELIVERABLES; do
   cp "$KIT/ledger/$f.md" "$DEST/ledger/$f.md"
 done
 cp "$KIT/_ARCHIVE/README.md" "$DEST/_ARCHIVE/README.md"
@@ -83,7 +83,7 @@ Emit a short confirmation, then name the two things only the user can do — don
 
 ```
 ✓ initialized <system-dir> at <DEST>
-  scaffolded: _LOADUP.md · _NEXT.md · next/_NEXT_001 · ledger/ (8) · memory/ (2) · SYNC_MAP · SYSTEM_MAP · _ARCHIVE/
+  scaffolded: _LOADUP.md · _NEXT.md · next/_NEXT_001 · ledger/ (9) · memory/ (2) · SYNC_MAP · SYSTEM_MAP · _ARCHIVE/
   coherence-check --boot: clean
 
 next:

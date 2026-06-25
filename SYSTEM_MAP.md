@@ -52,6 +52,7 @@ Key invariants this loop enforces:
 - **`next-write.sh` owns the number.** The handoff writes a `# __FOCUS__ <label>` sentinel; the script stamps the real `_NEXT_NNN` slot once it knows which number is free. A concurrent session can't grab the same slot.
 - **Numbers are parallel session slots, not versions.** A higher number is *another session's* handoff, not a newer copy of yours. `_NEXT_NNN.consumed` sidecars mark which slots are spent so `/session` never replays done work.
 - **The "Push to `_LOADUP`" valve.** Each `_NEXT` has a `## Push to _LOADUP` section — the channel for operational facts to trickle up into `_LOADUP.md §2` (stable reference). It self-destructs: the next session that touches `_LOADUP` moves those lines up and deletes the section.
+- **Out-of-tree completions go in a registry.** A `_NEXT` move finished *outside* `<system-dir>` (a shipped package, a sibling repo, an essay) writes no in-tree signal — no `.consumed`, no CHANGELOG marker, no commit — so `/handoff` records it via `bin/external-done.sh` into `ledger/EXTERNAL_DELIVERABLES.md`; `boot.md` Step B greps that registry FIRST so a falsely-live slot whose work already shipped is caught and classified `superseded`, not re-run.
 
 ### The session pool (`next/`)
 
@@ -90,6 +91,7 @@ Key invariants this loop enforces:
 | `ledger/USER_TASKS.md` | `/handoff` | Actions only the human can take (hands, credentials, decisions) |
 | `ledger/audit-state.md` | `/audit` | Counter: last audit, date, tier |
 | `ledger/drift-guard-evidence.md` | Manual | Guard fires: real catches + false positives |
+| `ledger/EXTERNAL_DELIVERABLES.md` | `/handoff` via `bin/external-done.sh` | Out-of-tree deliverable completions (shipped outside `<system-dir>`) — read FIRST by `boot.md` Step B |
 | `_ARCHIVE/` | Manual | Retired files — no hard deletes; supersede then archive |
 
 ### Command layer (the slash-command specs)

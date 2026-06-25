@@ -21,13 +21,15 @@ A handoff is a **claim**, not a fact — verify it before acting (the fix for si
 
 **Step A — diff against the checkpoint.** If the header's `checkpoint:` is a SHA in a git repo, run `git -C <system-dir> diff --stat <checkpoint>..HEAD` for the ground truth of what changed since the handoff; if `n/a`/unresolvable, skip to grep-only and note `checkpoint unverifiable`.
 
-**Step B — grep each move's Read-Map.** For every open move, inspect exactly the files/sections its `reads:` names (cross-check `skip:`) and classify it: **still-true** (target in the pre-move state, work genuinely pending) · **already-done** (target already holds the result, or diff shows it landed, or it's on `skip:` — do NOT execute) · **stale** (target moved/renamed/changed so the move no longer applies) · **unverified** (no `reads:` hint, or checkpoint unverifiable and grep inconclusive).
+**Step B — registry-FIRST, then grep each move's Read-Map.** A move can be finished *outside* this tree — a shipped package, a sibling repo, an essay — which writes **no** in-tree completion signal (no `(_NEXT_NNN)` CHANGELOG marker, no `.consumed`, no commit here), so the `reads:`-named files can never reveal it. So as the **first** action of Step B — a plain `grep`, NOT gated behind Step A's git diff (out-of-tree work commits nothing and the project may be non-git) — run `grep -nF <move-subject-or-slot> <system-dir>/ledger/EXTERNAL_DELIVERABLES.md` for each open move, matching the move's **deliverable name or `_NEXT_NNN`** against the registry's `predecessor` column (the registry is keyed on the deliverable, not an in-tree path — that is exactly what lets it catch an out-of-tree ship the `reads:` hint can never name). A recorded row is a human-adjudicated **fact**: classify the move **superseded**, cite the registry line, do NOT execute, and stop checking it. Fall back to your own inference **only if the registry is silent** — and gate it: a move naming a *bare* token (no slash/extension) is a supersession risk where the named thing may be a *predecessor* already replaced by something the move never names. An `_ARCHIVE/` namesake alone is a **CANDIDATE, never a verdict** — many live canonical files (`CLAUDE.md`, `handoff.md`, `SYNC_MAP.md`) have an archived copy after any archive-before-mutating. The signal that counts is **named source archived AND a live superseder present**; with only the archive, keep classifying by the `reads:` evidence below. With neither a registry hit nor that two-signal pair, do not guess — mark it `unverified` and surface it.
+
+**Then grep each move's Read-Map.** For every move not already classed **superseded**, inspect exactly the files/sections its `reads:` names (cross-check `skip:`) and classify it: **still-true** (target in the pre-move state, work genuinely pending) · **already-done** (target already holds the result, or diff shows it landed, or it's on `skip:` — do NOT execute) · **stale** (target moved/renamed/changed so the move no longer applies) · **superseded** (a registry hit, or the two-signal archive+live-superseder rule, shows the deliverable was completed/replaced out-of-tree — do NOT execute) · **unverified** (no `reads:` hint, or checkpoint unverifiable and grep inconclusive). The sweep only **classifies and warns** — it never retires a slot; retirement stays a human-gated handoff act (`next-consume.sh` / `external-done.sh`).
 
 **Step C — report, then gate.** Emit one line per open move in the status block:
 ```
-claimed: <move text>  /  verified: still-true | already-done | stale | unverified
+claimed: <move text>  /  verified: still-true | already-done | stale | superseded | unverified
 ```
-All still-true → execute move 1 normally. Any **already-done**/**stale** → FLAG it, do NOT execute, name the next live move (or that the queue is exhausted). `unverified` is not a stop, but say so before acting.
+All still-true → execute move 1 normally. Any **already-done**/**stale**/**superseded** → FLAG it, do NOT execute, name the next live move (or that the queue is exhausted). `unverified` is not a stop, but say so before acting.
 
 **Step D — same-file-clobber check.** Derive the files move 1 will edit; read the `touched:` line of the other still-live slots (`<kit-dir>/bin/next-live.sh <system-dir>` for the live set, `grep -h '^touched:' <system-dir>/next/_NEXT_*.md` for their edit-lists). On an overlap, warn (`⚠ same-file overlap — _NEXT_NNN also touched <file>; a concurrent session may be mid-edit`) then proceed — advisory, not a block. Skip silently if no other slot is live.
 
@@ -46,7 +48,7 @@ loaded: <every file actually read this boot, each with ✓ — e.g. _NEXT_017 �
 phase: [one phrase — current work mode]
 tasks: N open  [or "tasks: none"]
 verified: <checkpoint SHA or n/a> — <one claimed/verified line per open move>
-  claimed: <move 1 text>  /  verified: still-true | already-done | stale | unverified
+  claimed: <move 1 text>  /  verified: still-true | already-done | stale | superseded | unverified
   claimed: <move 2 text>  /  verified: ...
 next: [system] move N — <move text> (<model> / <effort>)
 ```
@@ -56,7 +58,7 @@ next: [system] move N — <move text> (<model> / <effort>)
 - `verified:` — the RESUME-WITH-VERIFICATION result (see the section above). Lead with the checkpoint SHA being diffed against (or `n/a`), then one `claimed: … / verified: …` line per open move. This is the **proof-of-contract** line: it shows the handoff's claims were checked against reality, not trusted blind. Omit only on a cold boot with no `_NEXT` loaded.
 - Source `next:` from open moves in `_NEXT_NNN.md` (takes priority over _LOADUP §7). **Pick the first move that verified `still-true`** — skip any `already-done`, and surface any `stale` move rather than running it.
 - If nothing pending: `next: nothing pending — what's the task?`
-- If a move verified `already-done` or `stale`: do not silently execute it — flag it on its `verified:` line, then point `next:` at the first genuinely-live move (or `next: queue exhausted — all moves already-done; what's the task?`).
+- If a move verified `already-done`, `stale`, or `superseded`: do not silently execute it — flag it on its `verified:` line (for `superseded`, name the out-of-tree superseder from the registry), then point `next:` at the first genuinely-live move (or `next: queue exhausted — all moves already-done; what's the task?`).
 
 ## What to never read on boot
 

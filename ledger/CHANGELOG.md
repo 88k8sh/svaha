@@ -7,6 +7,21 @@ Written by `/handoff` (or manually after structural edits). Do not edit existing
 
 ---
 
+## 2026-06-25 — Out-of-tree supersession registry (v0.6.0)
+
+- **NEW** `bin/external-done.sh` — single-writer for the out-of-tree supersession registry; append-only, idempotent, pipe/root-guarded, bash-3.2-safe (ledger/ preferred, 30_LEDGER/ fallback)
+- **NEW** `ledger/EXTERNAL_DELIVERABLES.md` — the append-only registry (header + schema + illustrative examples); the missing completion signal for deliverables shipped outside `<system-dir>`
+- **EDIT** `commands/boot.md` — Step B made registry-FIRST (grep the registry before `reads:`-hint inference, not behind the git diff; two-signal archive+live-superseder fallback; new classify value `superseded`); Step C + Output block + the do-not-execute gate carry `superseded`. Sweep classifies/warns only — never auto-retires
+- **EDIT** `commands/session.md` — one-line registry-first pointer in the Step-4b Step-B bullet (boot.md stays canonical; do-not-restate invariant preserved)
+- **EDIT** `commands/handoff.md` — Supersede-stamp step now records out-of-tree completions via `external-done.sh`
+- **EDIT** `commands/init.md` — scaffolds the registry seed into new projects (ledger cp loop + report count 8→9)
+- **EDIT** `VERSION` 0.5.0→0.6.0; `PATCHES.md` v0.6.0 entry + manual-apply path
+- **EDIT** `MANIFEST.md` (Layer-1 `external-done.sh` + Layer-5 `EXTERNAL_DELIVERABLES.md` rows), `SYNC_MAP.md` (§1 registry-contract row + §3 `external-done.sh` coupling row / guard-self reconcile), `_LOADUP.md` §3 map + §7 enum, `CLAUDE.md` (content-placement row + completeness spec Layer 1 + Layer 5), `bin/drift-guard.py` (boot-loop pattern), `bin/doctor.sh` (check4 must-have list)
+- **DECISION** `ledger/DECISIONS.md` — boot-sweep-guard hook NOT mirrored (kit Step B is conditional, not a hard-gate mandatory grep; no skip-proof anchor; revisit if a hard-gate grep step is added)
+- `bin/coherence-check.py` — intentionally NOT edited (the new script is auto-covered by the PLUMBING_DIRS bin-glob; not a slash command, not a named plumbing file)
+
+---
+
 ## 2026-06-25 — Patch management infrastructure (v0.5.0)
 
 - **NEW** `VERSION` — `0.5.0`; read by `setup.sh` and `bin/doctor.sh`

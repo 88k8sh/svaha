@@ -86,11 +86,11 @@ A complete package is five layers — missing any one produces a system that run
 
 | Layer | Files |
 |---|---|
-| **1 · Handoff loop** | `_NEXT.md`, `_LOADUP.md`, `boot.md`, `session.md`, `handoff.md`, `reflect.md`, `foldin.md`, `bin/next-write.sh`, `bin/next-live.sh`, `next/` |
+| **1 · Handoff loop** | `_NEXT.md`, `_LOADUP.md`, `boot.md`, `session.md`, `handoff.md`, `reflect.md`, `foldin.md`, `bin/next-write.sh`, `bin/next-live.sh`, `bin/external-done.sh`, `next/` |
 | **2 · Guardrail shell** | `bin/drift-guard.py`, `bin/security-guard.py`, `bin/version-guard.py`, `bin/coherence-check.py`, `audit.md`, `SYNC_MAP.md`, `SYSTEM_MAP.md` |
 | **3 · Canary hooks** | `hooks/context-canary.sh`, `hooks/launchpad-nudge.sh`, `hooks/memory-reflect.sh`, `hooks/resume-line-guard.sh`, `hooks/session-end-backstop.sh`, `hooks/session-start-marker.sh`, `settings.json.snippet` |
 | **4 · Memory** | `memory/MEMORY.md` index + per-entry files |
-| **5 · Ledger** | `ledger/` — `CHANGELOG.md`, `DECISIONS.md`, `LESSONS.md`, `session-fixes.md`, `USER_TASKS.md`, `audit-state.md` · plus `_ARCHIVE/` at the system root |
+| **5 · Ledger** | `ledger/` — `CHANGELOG.md`, `DECISIONS.md`, `LESSONS.md`, `session-fixes.md`, `USER_TASKS.md`, `audit-state.md`, `EXTERNAL_DELIVERABLES.md` · plus `_ARCHIVE/` at the system root |
 
 ## Composes with your stack
 

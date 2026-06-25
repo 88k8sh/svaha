@@ -22,6 +22,7 @@ slimming accretion, and cutting four enhancement/marketing components to the bol
 | `bin/next-write.sh` | Atomic, collision-safe `_NEXT_NNN` writer |
 | `bin/next-live.sh` | Single source of truth for the live-session set |
 | `bin/next-boot.sh` | Writes the advisory `_NEXT_NNN.booted` occupancy hint at boot (double-booking soft-guard) |
+| `bin/external-done.sh` | Single-writer for the out-of-tree supersession registry (read first by `boot.md` Step B) |
 | `next/_NEXT_001.md` | Seed handoff |
 
 ### 2 · Guardrail shell
@@ -63,6 +64,7 @@ slimming accretion, and cutting four enhancement/marketing components to the bol
 | `ledger/audit-state.md` | Audit counter |
 | `ledger/drift-guard-evidence.md` | Guard catches log |
 | `ledger/drift-guard-overfires.md` | Over-fire log (audit reads for tighten signal) |
+| `ledger/EXTERNAL_DELIVERABLES.md` | Out-of-tree supersession registry (append-only; written by `bin/external-done.sh`, read by `boot.md` Step B) |
 | `_ARCHIVE/README.md` | Graveyard for retired files |
 
 ---

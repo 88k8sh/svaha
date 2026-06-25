@@ -171,7 +171,7 @@ def main():
     # msg = what else must change when this file is edited.
 
     # Boot / handoff / audit loop
-    cat("boot-loop", r"(/_LOADUP\.md|/_NEXT\.md|/boot\.md|/handoff\.md|/audit\.md|/reflect\.md|/session\.md|/next-write\.sh|/next-live\.sh|/next-consume\.sh|/next-boot\.sh)$",
+    cat("boot-loop", r"(/_LOADUP\.md|/_NEXT\.md|/boot\.md|/handoff\.md|/audit\.md|/reflect\.md|/session\.md|/next-write\.sh|/next-live\.sh|/next-consume\.sh|/next-boot\.sh|/external-done\.sh)$",
         "Boot/handoff loop: parallel readers/writers must agree — boot output fields ↔ files actually loaded; "
         "the fast-path lives in _LOADUP §1 + boot.md always-load (keep aligned); "
         "the _NEXT 3-section format is a read/write contract (the cold-reader test + resolution-triggers must stay in sync across _NEXT.md / handoff.md).")
