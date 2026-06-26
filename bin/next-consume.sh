@@ -42,6 +42,13 @@ if [[ ! -f "${SYSTEM_DIR}/_NEXT.md" ]]; then
   exit 1
 fi
 
+# Kit guard (v0.6.2): the kit ships its own _NEXT.md spec (root-guard passes) but is
+# NOT a user system — never stamp a sidecar on the shipped repo. A .svaha-kit marker flags it.
+if [[ -f "${SYSTEM_DIR}/.svaha-kit" ]]; then
+  echo "next-consume.sh: '${SYSTEM_DIR}' is the Svaha kit (.svaha-kit present), not a user system — refusing." >&2
+  exit 1
+fi
+
 # Normalize the slot arg: accept 59, 059, _NEXT_059, _NEXT_059.md, _NEXT_059.consumed.
 nnn="${NNN_RAW##*_NEXT_}"; nnn="${nnn%.md}"; nnn="${nnn%.consumed}"
 if ! [[ "${nnn}" =~ ^[0-9]+$ ]]; then

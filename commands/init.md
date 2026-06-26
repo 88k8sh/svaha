@@ -18,6 +18,12 @@ set -u
 KIT="<kit-dir>"
 DEST="$(pwd)"
 
+# Guard 0 — never scaffold inside the Svaha kit distribution itself (v0.6.2).
+if [ -f "$DEST/.svaha-kit" ]; then
+  echo "KIT-DIR: $DEST is the Svaha kit (.svaha-kit) — /init refuses. Run /init inside your own project."
+  exit 0
+fi
+
 # Guard — never clobber an initialized project.
 if [ -f "$DEST/_LOADUP.md" ]; then
   echo "ALREADY-INIT: $DEST/_LOADUP.md exists — /init refuses to clobber. Run /session instead."

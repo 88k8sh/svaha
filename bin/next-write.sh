@@ -80,6 +80,15 @@ if [[ ! -f "${SYSTEM_DIR}/_NEXT.md" ]]; then
   exit 1
 fi
 
+# Kit guard (v0.6.2): the Svaha kit ships its own _NEXT.md spec, so the root-guard
+# above passes for the kit dir — but the kit is NOT a user system; minting here would
+# pollute the shipped repo (the kit-as-system-dir footgun). A .svaha-kit marker flags it.
+if [[ -f "${SYSTEM_DIR}/.svaha-kit" ]]; then
+  echo "next-write.sh: '${SYSTEM_DIR}' is the Svaha kit (.svaha-kit present), not a user system — refusing to mint." >&2
+  echo "  Run /init in your own project, or scope the handoff to your personal system." >&2
+  exit 1
+fi
+
 num_of()    { local b; b=$(basename "$1"); b=${b#_NEXT_}; printf '%s' "${b%.md}"; }
 width_for() { if (( $1 > 9999 )); then echo 5; elif (( $1 > 999 )); then echo 4; else echo 3; fi; }
 slot()      { local w; w=$(width_for "$1"); printf "%s/_NEXT_%0${w}d.md" "${NEXT_DIR}" "$1"; }

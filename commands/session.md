@@ -8,7 +8,7 @@ Three modes:
 
 **Alias:** saying **"svaha"** as the opening word of a session is an alias for `/session list` (show the live set, then pick) — see `CLAUDE.md` "## Boot". It's the opening counterpart to the स्वाहा handoff seal; a svaha-boot shows the list and leads the eventual boot with the status block, never echoing the seal back.
 
-**Resolve `<system-dir>` first** (per CLAUDE.md's "Two paths" rule): the dir holding a `_LOADUP.md`, found by a bounded search around CWD — the nearest dir at/above CWD, else the single immediate child of CWD that has one (the nested-workspace case). CWD + ancestors + one level of children, never recursive. `<kit-dir>` is already absolute wherever it appears. Nothing found → the project isn't initialized; run `/init`.
+**Resolve `<system-dir>` first** (per CLAUDE.md's "Two paths" rule): the dir holding a `_LOADUP.md`, found by a bounded search around CWD — the nearest dir at/above CWD, else the single immediate child of CWD that has one (the nested-workspace case). CWD + ancestors + one level of children, never recursive. `<kit-dir>` is already absolute wherever it appears. Nothing found → the project isn't initialized; run `/init`. **If the resolved dir carries a `.svaha-kit` marker, it is the kit itself — not a system: refuse (don't boot or `/init` it) and direct to a real project (or the personal system).**
 
 ---
 

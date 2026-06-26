@@ -1,0 +1,10 @@
+svaha-kit
+
+This directory is the Svaha kit distribution — the engine, not a user continuity system.
+The loop refuses to boot, mint a _NEXT, stamp occupancy, or /init here: this is the
+kit-as-system-dir guard (v0.6.2). Run the loop inside your OWN project instead —
+/init there once, then svaha. The kit's own development continuity lives in its git
+history (and ledger/CHANGELOG.md for structural changes), never in a _NEXT loop here.
+
+Presence of this file is the signal; the continuity writers (bin/next-write.sh,
+next-boot.sh, next-consume.sh), /init, and coherence-check.py all key off it.

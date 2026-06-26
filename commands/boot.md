@@ -4,7 +4,7 @@ Execute immediately, no preamble. Two files — always.
 
 ## Pre-read (before loading anything)
 
-**Resolve `<system-dir>` first** (per CLAUDE.md's "Two paths" rule): the dir holding a `_LOADUP.md`, found by a bounded search around CWD — the nearest dir at/above CWD, else the single immediate child of CWD that has one (the nested-workspace case). CWD + ancestors + one level of children, never recursive. `<kit-dir>` is already absolute wherever it appears. If nothing is found, the project isn't initialized — run `/init`.
+**Resolve `<system-dir>` first** (per CLAUDE.md's "Two paths" rule): the dir holding a `_LOADUP.md`, found by a bounded search around CWD — the nearest dir at/above CWD, else the single immediate child of CWD that has one (the nested-workspace case). CWD + ancestors + one level of children, never recursive. `<kit-dir>` is already absolute wherever it appears. If nothing is found, the project isn't initialized — run `/init`. **If the resolved dir carries a `.svaha-kit` marker, it is the kit itself — not a system: refuse (don't boot or `/init` it) and direct to a real project (or the personal system).**
 
 **Git pull (if repo):** check `git -C <system-dir> rev-parse --git-dir 2>/dev/null`. If <system-dir> is a git repo, run `git -C <system-dir> pull` before reading any files. Stale files silently misdirect sessions.
 

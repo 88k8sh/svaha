@@ -44,8 +44,9 @@ def discover_system_dir():
          launch in a *workspace that contains* the system — the nested layout — where the
          system sits one level below CWD). Ambiguous (2+) or none → fall through.
     Bounded both ways (ancestors + one level down) — never a recursive walk, so it can't
-    trigger the filesystem-exploration storm. Falls back to KIT_DIR, which doubles as its
-    own system dir in a combined repo, so a run from inside the kit still works."""
+    trigger the filesystem-exploration storm. Falls back to KIT_DIR; when KIT_DIR is the
+    kit distribution (carries .svaha-kit) the caller runs in KIT_MODE — it is the engine,
+    not a user system, so the data-layer checks below target templates/ instead (v0.6.2)."""
     try:
         start = Path.cwd().resolve()
     except Exception:
@@ -71,6 +72,11 @@ def discover_system_dir():
 
 # Project data root (next/, ledger/, _LOADUP.md, …) — per-project, runtime-resolved.
 SYSTEM_DIR = discover_system_dir()
+
+# Kit-mode: the resolved dir is the Svaha kit distribution itself (carries .svaha-kit),
+# not a user system. The kit ships templates/, never a live data layer, so boot()'s
+# required-list targets the templates instead of a (correctly-absent) root _LOADUP.md (v0.6.2).
+KIT_MODE = (SYSTEM_DIR / ".svaha-kit").is_file()
 
 # Where your Claude slash commands + installed config live (real Claude Code location).
 DOT_CLAUDE = HOME / ".claude"
@@ -160,14 +166,25 @@ def boot():
     issues = []
 
     # 1. Required plumbing files exist.
-    required = [
-        SYSTEM_DIR / "_LOADUP.md",
-        SYSTEM_DIR / "_NEXT.md",
-        CHANGELOG,
-        AUDIT_STATE,
-        SYSTEM_DIR / "SYNC_MAP.md",
-        DOT_CLAUDE / "settings.json",
-    ]
+    if KIT_MODE:
+        # The kit ships templates/, not a live data layer — verify the /init template
+        # sources, not a root _LOADUP.md / next loop (correctly absent in the kit).
+        required = [
+            SYSTEM_DIR / "templates" / "_LOADUP.template.md",
+            SYSTEM_DIR / "templates" / "_NEXT_001.md",
+            SYSTEM_DIR / "_NEXT.md",
+            CHANGELOG,
+            SYSTEM_DIR / "SYNC_MAP.md",
+        ]
+    else:
+        required = [
+            SYSTEM_DIR / "_LOADUP.md",
+            SYSTEM_DIR / "_NEXT.md",
+            CHANGELOG,
+            AUDIT_STATE,
+            SYSTEM_DIR / "SYNC_MAP.md",
+            DOT_CLAUDE / "settings.json",
+        ]
     for p in required:
         if not p.exists():
             issues.append(f"MISSING: {p}")
