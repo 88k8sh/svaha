@@ -8,6 +8,25 @@ Changes to the Svaha base rules (CLAUDE.md) and firmware files by version.
 
 ---
 
+## v0.6.2 — 2026-06-26
+
+**Kit-as-`<system-dir>` footgun closed — the kit folder can no longer be booted or written to as a user system.**
+
+The kit shipped a live-layout `_LOADUP.md` + `next/_NEXT_001.md` at its root, so the kit folder itself resolved as a valid `<system-dir>`: a `svaha` / `/handoff` run from inside the kit (e.g. while developing Svaha) would boot the kit's seed loop or mint a `_NEXT` into the shipped repo — with no error. This release makes that structurally impossible.
+
+### What changed
+
+- **MOVED** the seed templates out of live layout — `_LOADUP.md` → `templates/_LOADUP.template.md` (renamed so no file named `_LOADUP.md` exists in the kit: the resolver anchors on that name, and its one-level child down-scan would otherwise re-resolve a `templates/_LOADUP.md`), and `next/_NEXT_001.md` → `templates/_NEXT_001.md`. `next/` removed from the kit; `/init` now copies from `templates/`.
+- **NEW `.svaha-kit`** marker at the kit root. `bin/next-write.sh` / `next-boot.sh` / `next-consume.sh` refuse to operate on a dir carrying it; `/init` refuses to scaffold there; `bin/coherence-check.py` runs `KIT_MODE` (verifies `templates/` instead of a root `_LOADUP.md`, so the kit's own `--boot` stays clean).
+- **EDIT** resolution prose — `CLAUDE.md` "Two paths" (base block), `commands/session.md`, `commands/boot.md`: a `.svaha-kit` dir is the kit, not a system — refuse and redirect to a real project.
+- Supporting coherence: `MANIFEST.md`, `SYSTEM_MAP.md`, `SYNC_MAP.md`, `FIRST_USER_READINESS.md`, `README.md`.
+
+### Upgrading from v0.6.1
+
+Run `git pull && ./setup.sh` — it re-copies the firmware commands and `bin/`. **Existing user projects are unaffected** (their `_LOADUP.md` is untouched; only the kit's own layout changed). **Manual patch:** in your kit, move root `_LOADUP.md` → `templates/_LOADUP.template.md` and `next/_NEXT_001.md` → `templates/_NEXT_001.md`, point `commands/init.md`'s copy-sources at `templates/`, add an empty `.svaha-kit` file at the kit root, and copy the updated `bin/next-write.sh` / `next-boot.sh` / `next-consume.sh` / `coherence-check.py`.
+
+---
+
 ## v0.6.1 — 2026-06-26
 
 **`setup.sh` end-of-run banner — the two silent-failure modes can no longer scroll past unseen.**

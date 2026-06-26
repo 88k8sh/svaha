@@ -7,6 +7,18 @@ Written by `/handoff` (or manually after structural edits). Do not edit existing
 
 ---
 
+## 2026-06-26 — Kit-as-system-dir footgun closed (v0.6.2)
+
+- **MOVED** `_LOADUP.md` → `templates/_LOADUP.template.md`, `next/_NEXT_001.md` → `templates/_NEXT_001.md`; removed `next/` from the kit. The kit root no longer holds a `_LOADUP.md` resolver anchor (renamed so the one-level child down-scan can't re-resolve it either). `commands/init.md` copies from `templates/`
+- **NEW** `.svaha-kit` marker — `bin/next-write.sh` / `next-boot.sh` / `next-consume.sh` refuse a marked dir; `commands/init.md` Guard 0 refuses to scaffold there; `bin/coherence-check.py` `KIT_MODE` verifies `templates/` not a root `_LOADUP.md`
+- **EDIT** `CLAUDE.md` "Two paths" (base block) + `commands/session.md` + `commands/boot.md` — a `.svaha-kit` dir is the kit, not a system: refuse + redirect
+- **EDIT** `VERSION` 0.6.1→0.6.2; `PATCHES.md` v0.6.2 entry + manual-apply path
+- **EDIT** `MANIFEST.md`, `SYSTEM_MAP.md`, `SYNC_MAP.md` (§4 anchor caveat + new kit-guard coupling row), `FIRST_USER_READINESS.md` (§3 now mechanically enforced), `README.md`
+- `bin/drift-guard.py` + the two Stop/SessionEnd hooks intentionally NOT edited — after the relocation they no longer resolve the kit, so they no-op naturally
+- Lands on top of concurrent `ce4925c` (setup.sh banner, v0.6.1) and `fc67af2` (plugin recon); neither file touched by this branch
+
+---
+
 ## 2026-06-26 — setup.sh end-of-run install-health banner (v0.6.1)
 
 - **EDIT** `setup.sh` — Step 1 checks now set `JQ_MISSING` / `SPACE_IN_PATH` flags; Step 6/6 re-surfaces a consolidated `⚠ INSTALL INCOMPLETE / DEGRADED` banner at end-of-run (with the fix command) whenever either fired, so the two silent-failure modes (jq missing → 6 shell hooks no-op; space in path → 4 Python guards silently disabled) can't scroll past unseen. Purely additive — inline Step-1 warnings unchanged
