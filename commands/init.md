@@ -27,9 +27,9 @@ fi
 mkdir -p "$DEST/next" "$DEST/ledger" "$DEST/memory" "$DEST/_ARCHIVE"
 
 # Layer 1 — handoff loop (data half)
-cp "$KIT/_LOADUP.md"        "$DEST/_LOADUP.md"
-cp "$KIT/_NEXT.md"          "$DEST/_NEXT.md"
-cp "$KIT/next/_NEXT_001.md" "$DEST/next/_NEXT_001.md"
+cp "$KIT/templates/_LOADUP.template.md" "$DEST/_LOADUP.md"
+cp "$KIT/_NEXT.md"                       "$DEST/_NEXT.md"
+cp "$KIT/templates/_NEXT_001.md"         "$DEST/next/_NEXT_001.md"
 
 # Layer 2 — coherence maps (data half; the bin/ guards stay in <kit-dir>)
 cp "$KIT/SYNC_MAP.md"       "$DEST/SYNC_MAP.md"
