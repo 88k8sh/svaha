@@ -1,0 +1,28 @@
+{
+  "name": "svaha",
+  "owner": {
+    "name": "88k8sh"
+  },
+  "description": "Svaha — Claude Code that picks up exactly where it left off: frozen cross-session handoffs, a self-watching context budget, coherence guardrails, and an optional operator decision layer.",
+  "plugins": [
+    {
+      "name": "svaha",
+      "source": "./",
+      "description": "Installs Svaha's commands (boot/session/handoff/reflect/audit/foldin/init) and hooks only. The always-loaded CLAUDE.md behavior contract and the settings.json permission floor CANNOT be delivered by a plugin — run setup.sh for the complete install. Use the plugin XOR setup.sh for the hooks, never both (they would double-fire).",
+      "author": {
+        "name": "88k8sh"
+      },
+      "homepage": "https://github.com/88k8sh/svaha",
+      "repository": "https://github.com/88k8sh/svaha",
+      "license": "MIT",
+      "keywords": [
+        "claude-code",
+        "claude-md",
+        "context-management",
+        "session-handoff",
+        "continuity",
+        "guardrails"
+      ]
+    }
+  ]
+}

@@ -8,6 +8,26 @@ Changes to the Svaha base rules (CLAUDE.md) and firmware files by version.
 
 ---
 
+## v0.7.0 — 2026-06-26
+
+**Plugin-installability — Svaha can now be added as a Claude Code plugin/marketplace (additive; `setup.sh` stays canonical).**
+
+Svaha was already partially plugin-shaped (`.claude-plugin/plugin.json` + conventional `commands/`, `hooks/`, `bin/`). This release adds the two files that make the cleanly-mapping half (commands + hooks) installable via the plugin system, **without touching the existing install path**. The plugin path is an honestly-scoped *convenience*, never a replacement: a plugin **cannot** install the always-loaded `CLAUDE.md` behavior contract or the `settings.json` permission floor, so `setup.sh` remains the only complete install. See `PLUGIN_PACKAGING_RECON.md` for the full feasibility analysis.
+
+### What changed
+
+- **NEW `hooks/hooks.json`** — declares all 10 hooks (the 6 shell hooks + the 4 Python guards) in the plugin hook schema, referencing bundled scripts via `${CLAUDE_PLUGIN_ROOT}` instead of the baked `<kit-dir>` / `$HOME/.claude/hooks`. This is the one artifact that makes the hooks fire under the plugin model; auto-discovered from `hooks/hooks.json` (no `plugin.json` change needed).
+- **NEW `.claude-plugin/marketplace.json`** — turns the repo into a single-plugin marketplace (`source: "./"`), so users can `/plugin marketplace add 88k8sh/svaha` then `/plugin install svaha@svaha`. The plugin entry's `description` states loudly what the plugin path does *not* install.
+- **EDIT `VERSION`** 0.6.2→0.7.0; **EDIT `.claude-plugin/plugin.json`** version 0.1.0→0.7.0 (was stale; now the single source the marketplace entry inherits).
+- Supporting coherence: `MANIFEST.md` (two new shipped files), `SYNC_MAP.md` (plugin-layer coupling row), `ledger/CHANGELOG.md`.
+- **Known limitation (documented, not yet fixed):** under the plugin model `security-guard.py` / `version-guard.py` write logs relative to `__file__` (the wiped-on-update cache dir); the port-time fix is to point them at `${CLAUDE_PLUGIN_DATA}`. Does not affect hook *firing*, only log persistence across updates. `setup.sh`-path installs are unaffected.
+
+### Upgrading from v0.6.2
+
+**No action needed for `setup.sh` users** — the two new files are invisible to `setup.sh` (it copies `commands/` + `hooks/*.sh` and wires via `settings.json.snippet`; it never reads `marketplace.json` or `hooks/hooks.json`). To use the *plugin* path instead: `/plugin marketplace add 88k8sh/svaha` → `/plugin install svaha@svaha`, then `cp CLAUDE.md ~/.claude/CLAUDE.md` and add the permission posture by hand (the plugin can't). **Use the plugin XOR `setup.sh` for the hooks, never both — they would double-fire.** **Manual patch:** copy `hooks/hooks.json` and `.claude-plugin/marketplace.json` from this repo.
+
+---
+
 ## v0.6.2 — 2026-06-26
 
 **Kit-as-`<system-dir>` footgun closed — the kit folder can no longer be booted or written to as a user system.**

@@ -78,7 +78,9 @@ slimming accretion, and cutting four enhancement/marketing components to the bol
 | `docs/CREDITS.md` | Provenance ledger |
 | `LICENSE` | MIT |
 | `setup.sh` | Non-destructive installer (companions are print-only) |
-| `.claude-plugin/plugin.json` | Plugin-system manifest |
+| `.claude-plugin/plugin.json` | Plugin-system manifest (its `version` is the single version source the marketplace entry inherits) |
+| `.claude-plugin/marketplace.json` | Single-plugin marketplace (`source: "./"`) — lets users `/plugin marketplace add 88k8sh/svaha` + `/plugin install svaha@svaha`. Additive convenience; `setup.sh` never reads it (v0.7.0) |
+| `hooks/hooks.json` | Plugin hook wiring — the 10 hooks via `${CLAUDE_PLUGIN_ROOT}`; auto-discovered under the plugin model. Invisible to `setup.sh`, which wires via `settings.json.snippet` instead (v0.7.0) |
 | `.svaha-kit` | Kit-distribution marker — makes the continuity writers, `/init`, and `coherence-check.py` refuse to treat the kit root as a user `<system-dir>` (the kit-as-system-dir guard, v0.6.2) |
 | `VERSION` | Kit semantic version — read by `setup.sh` and `bin/doctor.sh` |
 | `PATCHES.md` | User-facing changelog for CLAUDE.md base rule and firmware changes |

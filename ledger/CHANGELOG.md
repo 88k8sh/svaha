@@ -7,6 +7,18 @@ Written by `/handoff` (or manually after structural edits). Do not edit existing
 
 ---
 
+## 2026-06-26 — Plugin packaging layer (v0.7.0)
+
+- **NEW** `hooks/hooks.json` — the 10 hooks (6 shell + 4 Python guards) translated into the plugin hook schema, scripts referenced via `${CLAUDE_PLUGIN_ROOT}` (swapped from the `settings.json.snippet`'s baked `<kit-dir>` / `$HOME/.claude/hooks`). Auto-discovered; the one artifact that makes hooks fire under the plugin model. JSON validated; all 10 script paths resolve.
+- **NEW** `.claude-plugin/marketplace.json` — single-plugin marketplace, `source: "./"` (the repo root is the plugin). Install identity `/plugin install svaha@svaha`. Plugin `description` states the incompleteness loudly (commands+hooks only; no `CLAUDE.md` contract, no permission floor — `setup.sh` stays canonical).
+- **EDIT** `VERSION` 0.6.2→0.7.0; `.claude-plugin/plugin.json` version 0.1.0→0.7.0 (was stale since creation; now the single version source the marketplace entry inherits — marketplace entry omits `version` deliberately so there's one source, not three).
+- **EDIT** `PATCHES.md` v0.7.0 entry + manual-apply path; `MANIFEST.md` (two new shipped-file rows); `SYNC_MAP.md` (plugin-layer coupling row).
+- **Purely additive** — `setup.sh` never reads either new file, so both install paths coexist; the two files are the smallest safe path from `PLUGIN_PACKAGING_RECON.md` §6. No existing install machinery touched.
+- Known limitation deferred: `security-guard.py`/`version-guard.py` log to `__file__`-relative paths (cache dir under the plugin model, wiped on update) — port-time fix is `${CLAUDE_PLUGIN_DATA}`; affects log persistence only, not hook firing.
+- Lands on top of `02aeb41` (v0.6.2). Both v0.6.2 and v0.7.0 unpushed at commit time — push is user-gated.
+
+---
+
 ## 2026-06-26 — Kit-as-system-dir footgun closed (v0.6.2)
 
 - **MOVED** `_LOADUP.md` → `templates/_LOADUP.template.md`, `next/_NEXT_001.md` → `templates/_NEXT_001.md`; removed `next/` from the kit. The kit root no longer holds a `_LOADUP.md` resolver anchor (renamed so the one-level child down-scan can't re-resolve it either). `commands/init.md` copies from `templates/`
