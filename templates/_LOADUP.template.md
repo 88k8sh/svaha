@@ -12,7 +12,7 @@ status: living
 # _LOADUP — Context Bootstrap (read me first)
 
 > **Goal: a fresh chat reaches ~full context in a handful of files instead of hundreds.**
-> **This is a template.** Replace every `<fill-in>` and bracketed placeholder with your project's specifics, then delete this line. The §0–8 skeleton is the contract — keep the section structure even as you swap the content.
+> **`/init` drafts §0 and §1 of this file from your project — you review a draft, not a blank form.** §4 (retrieval index) and §6 (on-demand) start sparse and fill in as you work. The §0–8 skeleton is the contract — keep the section structure even as the content grows.
 
 ## 0. System architecture (settled <date>)
 
@@ -40,7 +40,7 @@ Boot reads the specific `_NEXT_NNN.md` named in the opener block (or auto-picked
 - **`bin/coherence-check.py --boot`** runs a structural integrity check at boot; **`--stop`** runs an exit check wired as a Stop hook in `settings.json`.
 - **`_NEXT.md`** = permanent reference & pointer (spec + boot instructions); never overwritten.
 - **`_NEXT_NNN.md` files are frozen once written** — corrections go in a new numbered file, never a rewrite.
-- **Registered slash commands** at `~/.claude/commands/`: `<list your commands — e.g. /boot, /session, /handoff, /reflect, /audit, /foldin, /init>`.
+- **Registered slash commands** at `~/.claude/commands/`: `/boot`, `/session`, `/handoff`, `/reflect`, `/audit`, `/foldin`, `/init` (trim any your project doesn't use).
 - *Example fill-in:* `<tool>` installed for `<purpose>`; `<alias>` added to `~/.zshrc`; `<known OS/sandbox quirk>` = expected, not a bug.
 
 ## 3. The map (what lives where)

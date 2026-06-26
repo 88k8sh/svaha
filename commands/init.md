@@ -37,6 +37,11 @@ cp "$KIT/templates/_LOADUP.template.md" "$DEST/_LOADUP.md"
 cp "$KIT/_NEXT.md"                       "$DEST/_NEXT.md"
 cp "$KIT/templates/_NEXT_001.md"         "$DEST/next/_NEXT_001.md"
 
+# Fill the deterministic placeholders /init can resolve itself, so the user never
+# meets them as blanks: dates (today). §0/§1 get drafted from the project in Step 2.
+TODAY="$(date +%Y-%m-%d)"
+tmp="$(mktemp)" && sed "s/<date>/$TODAY/g" "$DEST/_LOADUP.md" > "$tmp" && mv "$tmp" "$DEST/_LOADUP.md"
+
 # Layer 2 — coherence maps (data half; the bin/ guards stay in <kit-dir>)
 cp "$KIT/SYNC_MAP.md"       "$DEST/SYNC_MAP.md"
 cp "$KIT/SYSTEM_MAP.md"     "$DEST/SYSTEM_MAP.md"
@@ -78,7 +83,20 @@ echo "✓ scaffolded $DEST"
 
 If the guard printed `ALREADY-INIT`, stop here and tell the user the project is already initialized — do **not** run the rest of the steps.
 
-## Step 2 — verify the scaffold boots
+## Step 2 — draft `_LOADUP.md` from the project (don't hand back blanks)
+
+The scaffold copied a template whose project-specific sections (§0 architecture, §1 fast path) still read as placeholders. Fill them in now, *from the project itself*, so the user reviews a draft instead of authoring from a blank form. **Keep it bounded — do not walk the tree:** read only the project-root listing (`ls`), plus the `README` and one manifest (`package.json` / `pyproject.toml` / `go.mod` / `Cargo.toml`) if present. A few cheap reads, no recursion.
+
+Then edit `$DEST/_LOADUP.md`:
+
+1. **§0 (System architecture)** — replace the generic paragraph with a one-paragraph draft of what *this* project is and its top-level shape, from what you just read. If the project is empty or its shape isn't clear, keep the generic default rather than guess.
+2. **§1 (the fast path)** — name the 1–3 files a session should always load (the README, a core spec). If nothing is obvious yet, keep the minimal default.
+3. **Delete the `> **This is a template…**` banner line** at the top — this is a real `_LOADUP` now, not a blank form.
+4. **Leave §4 (retrieval index) and §6 (on-demand) as they are** — they legitimately start sparse and fill in as the project accumulates material.
+
+Draft, don't perfect: a rough-but-real `_LOADUP` the user skims and corrects beats an empty one they have to write from scratch.
+
+## Step 3 — verify the scaffold boots
 
 Run the kit's boot check against the freshly-scaffolded data root:
 
@@ -88,18 +106,18 @@ python3 <kit-dir>/bin/coherence-check.py --boot
 
 Expect `✓ coherence-check --boot: clean`. It asserts the five required data files (`_LOADUP.md`, `_NEXT.md`, `ledger/CHANGELOG.md`, `ledger/audit-state.md`, `SYNC_MAP.md`) plus the installed `settings.json` + `CLAUDE.md`. If it flags a `MISSING` data file, a copy failed — confirm `<kit-dir>` resolved to a real path (it should be baked absolute in this command).
 
-## Step 3 — report + hand back to the user
+## Step 4 — report + hand back to the user
 
-Emit a short confirmation, then name the two things only the user can do — don't run `/session` yourself, because the `_LOADUP.md` placeholders need their input first:
+Emit a short confirmation. Hand back so the user can review your `_LOADUP` draft before booting — don't run `/session` yourself:
 
 ```
 ✓ initialized <system-dir> at <DEST>
-  scaffolded: _LOADUP.md · _NEXT.md · next/_NEXT_001 · ledger/ (9) · memory/ (2) · SYNC_MAP · SYSTEM_MAP · _ARCHIVE/
+  scaffolded: _LOADUP.md (drafted) · _NEXT.md · next/_NEXT_001 · ledger/ (9) · memory/ (2) · SYNC_MAP · SYSTEM_MAP · _ARCHIVE/
   coherence-check --boot: clean
 
 next:
-  1. Fill in _LOADUP.md — replace every <fill-in>/<date> placeholder with this project's
-     specifics (§0 architecture, §1 fast-path, §2 settled facts).
+  1. Skim _LOADUP.md — I drafted §0 (architecture) and §1 (fast path) from your project;
+     fix anything I got wrong. §4 / §6 fill in as you work.
   2. svaha (or run /session) to boot the loop.
 ```
 

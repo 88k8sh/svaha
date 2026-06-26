@@ -8,6 +8,26 @@ Changes to the Svaha base rules (CLAUDE.md) and firmware files by version.
 
 ---
 
+## v0.7.2 — 2026-06-26
+
+**`/init` now drafts `_LOADUP.md` from your project instead of handing back a blank form to fill in.**
+
+`/init` copied `_LOADUP.template.md` verbatim and told you to "replace every `<fill-in>`/`<date>` placeholder" — onboarding's first act was authoring a context file from blanks. Now `/init` fills what it can and drafts the rest, so you *review* a `_LOADUP`, you don't author one.
+
+### What changed
+
+- **EDIT `commands/init.md`** — Step 1 fills `<date>` deterministically; new **Step 2** reads the project (bounded: root `ls` + README + one manifest, no recursion) and drafts §0 (architecture) + §1 (fast path), then deletes the template banner. §4/§6 legitimately stay sparse. The hand-back message changed from "fill in every placeholder" to "skim the draft I wrote." Silent-draft-then-skim: no upfront questions, and it degrades to the generic default on a sparse repo rather than inventing an architecture.
+- **EDIT `templates/_LOADUP.template.md`** — command list hardcoded (was a `<list your commands>` blank); banner reworded to the draft framing.
+- **EDIT `docs/start.html` + `README.md`** — the install copy now says `/init` drafts the `_LOADUP` and you skim/adjust, not "fill in blanks."
+- **EDIT `VERSION`** 0.7.1→0.7.2; `.claude-plugin/plugin.json` 0.7.1→0.7.2.
+- Supporting coherence: `SYNC_MAP.md` (new row pinning the onboarding copy to `init.md` as canonical), `ledger/CHANGELOG.md`, `FIRST_USER_READINESS.md`.
+
+### Upgrading from v0.7.1
+
+Run `git pull && ./setup.sh` — it re-copies the firmware command (`commands/init.md`). **Existing projects are unaffected** (this only changes what a *future* `/init` scaffolds).
+
+---
+
 ## v0.7.1 — 2026-06-26
 
 **`/init` ledger hygiene — new projects now seed from clean ledger templates, not the kit's own live ledger.**

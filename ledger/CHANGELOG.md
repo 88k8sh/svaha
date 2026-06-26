@@ -7,6 +7,16 @@ Written by `/handoff` (or manually after structural edits). Do not edit existing
 
 ---
 
+## 2026-06-26 — /init drafts _LOADUP instead of blanks (v0.7.2)
+
+- **Root cause:** `/init` copied `_LOADUP.template.md` verbatim and its closing message told the user to "replace every `<fill-in>`/`<date>` placeholder" — onboarding's first act was authoring a context file from a blank form. The user-facing copy (`start.html`, `README.md`) *honestly* described that chore, so it was unfixable in the copy alone (fix-the-cause: the friction lived in `/init`).
+- **Fix (cause):** `commands/init.md` now fills what it can and drafts the rest, so the user *reviews* a `_LOADUP`, never authors one from scratch. Step 1 bash fills `<date>` (today) deterministically; new **Step 2** has the model read the project (bounded — root `ls` + README + one manifest, no recursion) and draft §0 (architecture) + §1 (fast path), then delete the template banner. §4/§6 legitimately stay sparse. `templates/_LOADUP.template.md`: command list hardcoded (was `<list your commands>`), banner reworded to the draft framing.
+- **Copy reflects truth:** `docs/start.html` ("first ten minutes" walk) and `README.md` now say `/init` drafts the `_LOADUP` and you skim/adjust — not "fill in blanks."
+- **Prevention:** new SYNC_MAP §2 row couples the four places the onboarding promise lives (`init.md` canonical → template + `README.md` + `start.html`), so the copy can't silently drift from what `/init` does again.
+- **Released v0.7.2:** `VERSION` 0.7.1→0.7.2; `.claude-plugin/plugin.json` 0.7.1→0.7.2; `PATCHES.md` entry added. Git tags lag (only `v0.6.0` is tagged — v0.7.0/v0.7.1 shipped untagged), so no lone tag was cut; backfill flagged for the user.
+
+---
+
 ## 2026-06-26 — /init ledger-template hygiene (v0.7.1)
 
 - **Root cause:** `commands/init.md`'s Layer-5 loop copied the kit's live `ledger/*.md` into new projects under a comment that *claimed* "clean templates." But the kit dogfoods its own ledger — `ledger/DECISIONS.md` (2 real decisions) and `ledger/session-fixes.md` (1 real bug) already carried Svaha's dev history; `LESSONS`/drift-guard logs accumulate over time. So `/init` seeded new projects with the KIT's history. Verified against ground truth (read each file), not just the two the source-move named — `session-fixes` leaks too; `LESSONS`/`drift-guard-evidence`/`drift-guard-overfires` are latent leaks.

@@ -42,7 +42,7 @@ The walk also *conflates two different states*: "initialized-but-empty" (nothing
 
 `README.md` Track B (`:66-79`) *does* state the correct two-step model (install machinery once; `/init` per project). So the correct mental model exists — it just isn't in the walk the user actually follows. **The funnel and the README disagree on whether `/init` is part of first-run.**
 
-**Fix (small):** Add an explicit Step 0 to the walk: *"In your own project, run `/init` once to create the data layer, fill in the `_LOADUP.md` placeholders it leaves, then `svaha`."* Correct the step-1 line so it stops promising "nothing to resume yet" for an uninitialized project.
+**Fix (small):** Add an explicit Step 0 to the walk: *"In your own project, run `/init` once — it scaffolds the data layer and drafts your `_LOADUP.md`, which you skim and adjust, then `svaha`."* Correct the step-1 line so it stops promising "nothing to resume yet" for an uninitialized project. **Update (v0.7.2):** `/init` now *drafts* `_LOADUP` from the project (no blank placeholders) and the `start.html` walk reflects it — this finding's placeholder half is resolved.
 
 ---
 
@@ -100,7 +100,7 @@ These are true and load-bearing but a first-time user (or evaluating architect) 
 - **Booting is read-only by invariant.** Nothing about resuming mutates durable state except the advisory `.booted` hint. (This is *why* there's no hard lock.) A concurrency-focused evaluator can't find this without reading `next-boot.sh`.
 - **There is a human calibrator in the seat.** The "self-calibrating loop" assumes the user watches conviction-vs-outcome over many sessions and decides when to enable auto-act. It is human-in-the-loop, not autonomous. The pitch reads as more automatic than it is.
 - **Crash recovery exists but is `jq`-gated and undocumented.** A session that dies without `/handoff` is caught by `session-end-backstop.sh` on SessionEnd/PreCompact — *if* `jq` is installed and the session exits through those events. The strongest reliability story in the system is invisible at the funnel level, so an architect asking "what happens on a crash?" finds no answer and may assume the worst.
-- **The ongoing maintenance burden is real but unstated:** apply `SYNC_MAP` couplings + log to CHANGELOG after structural edits; re-run `setup.sh` if you move the kit; fill `_LOADUP` placeholders. An architect's first question — "what do I have to maintain?" — is unanswered on the page trying to convert them.
+- **The ongoing maintenance burden is real but unstated:** apply `SYNC_MAP` couplings + log to CHANGELOG after structural edits; re-run `setup.sh` if you move the kit; skim the `_LOADUP` draft `/init` writes (v0.7.2 — no longer a blank to fill). An architect's first question — "what do I have to maintain?" — is unanswered on the page trying to convert them.
 
 **Fix (small):** A short "What happens if a session crashes / what you maintain" note in README or `start.html`, naming the backstop (and its jq-gating), the SYNC_MAP+CHANGELOG follow-through, and the move-the-kit re-run rule. The mechanisms exist; surfacing them is pure trust-building at low cost.
 
@@ -147,7 +147,7 @@ Consolidated checklist of everything a user must do that the `start.html` walk o
 2. Clone to a path with **no spaces** (§4).
 3. Run `/init` in your actual project before the first `svaha` (§1).
 4. `cd` **out** of the kit folder into your real project before booting (§3).
-5. Fill in the `_LOADUP.md` placeholders that `/init` leaves (`init.md:90-92`) before the loop is meaningful — a blank `_LOADUP` boots a hollow loop.
+5. Skim the `_LOADUP.md` that `/init` drafts and correct anything off (v0.7.2 — `/init` no longer leaves blanks; §0/§1 come pre-drafted from your project, §4/§6 fill in as you go).
 6. `chmod +x setup.sh` if you downloaded the ZIP (§5).
 7. Actually **run** `bash bin/doctor.sh` and act on any `✗` — it's the only thing that catches the jq / space-path / moved-kit failures, yet the walk frames it as optional.
 8. Launch Claude Code from inside your project (so CWD resolution finds the project's `_LOADUP.md`).
