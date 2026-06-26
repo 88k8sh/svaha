@@ -5,17 +5,17 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>svaha — pick up where you left off, from files you own</title>
 <meta name="author" content="Aakash Raj">
-<meta name="description" content="svaha is a context system for working with an AI: a handoff trail, a guard layer, and a behavioral contract — plain files in your own repo, so the assistant resumes mid-sentence on whatever model is best this month.">
+<meta name="description" content="svaha gives your AI a verified memory that outlives the session: your project's state lives in plain files it checks against reality before trusting — so you stop re-explaining, and it stops building confidently on a stale picture.">
 
 <!-- Open Graph / social -->
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://88k8sh.github.io/svaha/">
 <meta property="og:title" content="svaha — context that survives the session boundary">
-<meta property="og:description" content="A handoff trail, a guard layer, a behavioral contract. Plain files you own, so your AI picks up where it left off.">
+<meta property="og:description" content="A protocol that keeps your AI's working state in plain files you own — checked against reality before they're trusted, so any session resumes exactly where the last left off.">
 <meta property="og:site_name" content="svaha">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="svaha — context that survives the session boundary">
-<meta name="twitter:description" content="A handoff trail, a guard layer, a behavioral contract. Plain files you own, so your AI picks up where it left off.">
+<meta name="twitter:description" content="A protocol that keeps your AI's working state in plain files you own — checked against reality before they're trusted, so any session resumes exactly where the last left off.">
 
 <!-- Favicon: two offset files = continuity across the boundary -->
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%2314130f'/%3E%3Crect x='7' y='9' width='12' height='15' rx='2.5' fill='none' stroke='%23e0a24e' stroke-width='2'/%3E%3Crect x='14' y='6' width='12' height='15' rx='2.5' fill='%2314130f' stroke='%23ece8de' stroke-width='2'/%3E%3C/svg%3E">
@@ -382,7 +382,7 @@
         <span class="tag">· so be it</span>
       </div>
       <h1 class="title reveal">Pick up exactly where you left off.</h1>
-      <p class="dek reveal">Stop anytime, drop a checkpoint, resume right where you were — no pasting context back in, no re-explaining. It all lives in plain files you own.</p>
+      <p class="dek reveal">Stop anytime, drop a checkpoint, resume right where you were — no re-explaining, no hunting for where things stood. It's plain files you own, and your assistant checks them against reality before it acts — so it never picks up confidently wrong.</p>
       <p class="reveal" style="margin:2px 0 28px;font-size:17px;line-height:1.55;color:var(--ink)"><b>One word runs the loop</b> — <span class="mono">svaha</span> to begin, confirm, wrap. Nothing to memorize; a finished wrap seals back, once, as <span style="font-family:'Noto Serif Devanagari',serif;color:var(--accent-ink);font-weight:600">स्वाहा</span>.</p>
       <div class="cta reveal">
         <a class="btn btn-primary" href="start.html">Get started</a>
@@ -440,13 +440,13 @@
       <p class="reveal">I built it to stop paying that tax — what I didn't expect was how much steadier the work got once the thread lived in the system instead of my head. Seeing <span style="font-family:'Noto Serif Devanagari',serif;color:var(--accent-ink);font-weight:600">स्वाहा</span> come back is the all-clear: written to file, safe to close.</p>
 
       <h2 class="section reveal" id="data"><span class="num">three pieces</span>How it works</h2>
-      <p class="reveal">A record of where things stand, a guard that keeps those records honest as they pile up, and a contract that holds the same across every session and model.</p>
+      <p class="reveal">It's plain files — but not a notes folder you keep by hand. The state of the work lives in the repo, not the chat: the session becomes the disposable part, and the project outlives it. And since an assistant will read a stale note and march off confidently wrong, Svaha doesn't just store that state — it checks it against reality before trusting it, and when something breaks, it finds the root cause and a fix before it brings you in.</p>
 
       <div class="pillars reveal">
         <div class="pillar">
           <div class="pnum">01 / RECORD</div>
           <h3>The handoff</h3>
-          <p>A frozen, numbered snapshot: where the work stands, and the exact next move.</p>
+          <p>A frozen, numbered snapshot: where the work stands and the next move — written as a claim the next session checks, not a fact it trusts.</p>
         </div>
         <div class="pillar">
           <div class="pnum">02 / KEEP HONEST</div>
@@ -456,7 +456,7 @@
         <div class="pillar">
           <div class="pnum">03 / BE CONSISTENT</div>
           <h3>The contract</h3>
-          <p>How the assistant works — identical on every session, every model.</p>
+          <p>The same operating rules on every session and model — like running a bug down to its root cause and handing you a fix, not just the problem.</p>
         </div>
       </div>
 
