@@ -76,7 +76,7 @@ cd ~/your-project
 claude            # then run:  /init
 ```
 
-`setup.sh` installs the seven slash commands and six hooks and wires `settings.json` (filling in the kit's absolute `<kit-dir>` path, validating the JSON, or safe-merging into an existing config). `/init` then turns the current directory into a bootable `<system-dir>` — it creates the data folders and seeds a fresh `CHANGELOG`, but never copies the machinery (that stays in the kit). Fill in the `_LOADUP.md` placeholders it leaves, then `/session` boots the loop.
+`setup.sh` installs the seven slash commands and six hooks and wires `settings.json` (filling in the kit's absolute `<kit-dir>` path, validating the JSON, or safe-merging into an existing config). `/init` then turns the current directory into a bootable `<system-dir>` — it creates the data folders and seeds a fresh `CHANGELOG`, but never copies the machinery (that stays in the kit). The kit folder itself is **not** a system — it ships a `.svaha-kit` marker (and keeps its seed `_LOADUP`/`_NEXT_001` under `templates/`), so booting, handoff, and `/init` inside the kit are refused; always run the loop in your own project. Fill in the `_LOADUP.md` placeholders it leaves, then `/session` boots the loop.
 
 The completeness spec in `CLAUDE.md` lists all five layers. A `.claude-plugin/plugin.json` also ships, so Svaha can be installed through the Claude Code plugin system.
 

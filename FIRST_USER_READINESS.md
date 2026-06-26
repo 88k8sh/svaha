@@ -73,6 +73,8 @@ The walk never says "this folder is the engine — run the loop inside your *own
 
 **Fix (trivial):** After Step 4, add one line: *"This `svaha` folder is the engine — install it once and leave it here. Run the loop inside your own project folders, not in here."* This both prevents the trap and teaches the kit-dir/system-dir model in plain language at the moment the wrong assumption forms.
 
+**Update (v0.6.2):** this is now *mechanically enforced*, not documentation-only. The kit relocated its seed `_LOADUP`/`_NEXT_001` under `templates/` (so the kit root holds no `_LOADUP.md` anchor) and ships a `.svaha-kit` marker, so the kit root no longer resolves as a `<system-dir>` and the continuity writers / `/init` / `coherence-check.py` refuse it. The doc line above still helps users understand *why*.
+
 ---
 
 ## 4. SILENT-DEGRADED — a space in the kit path disables all four Python guards

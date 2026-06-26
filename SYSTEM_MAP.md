@@ -65,6 +65,8 @@ Key invariants this loop enforces:
 
 `/session` (no arg) auto-picks the lowest-numbered open (unconsumed) session, skipping any slot annotated `⚠ in use` — an advisory tiebreak from the `.booted` occupancy hint, never a hard lock. `/session list` runs `bin/next-live.sh` — the **single source of truth** for the live set — never eyeball the folder, because concurrent handoffs mutate it underneath any hand-built list.
 
+> **The kit is not a `<system-dir>`.** The Svaha kit ships its seed `_LOADUP`/`_NEXT_001` under `templates/` (not at its root) and carries a `.svaha-kit` marker, so the resolver never resolves the kit folder as a user system and the continuity writers / `/init` / `coherence-check.py` refuse it. Develop the kit from your workspace root (continuity then lands in your real project) or rely on its git history — never run the loop inside the kit. (v0.6.2 — the kit-as-system-dir guard.)
+
 ---
 
 ## Where each layer's files live

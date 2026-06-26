@@ -12,7 +12,7 @@ slimming accretion, and cutting four enhancement/marketing components to the bol
 | File | Role |
 |---|---|
 | `_NEXT.md` | Canonical `_NEXT` format + Verified-Handoff field semantics (single source of truth) |
-| `_LOADUP.md` | Boot context-bootstrap skeleton (§0–8) |
+| `templates/_LOADUP.template.md` | Boot context-bootstrap skeleton (§0–8); `/init` copies it to the system root as `_LOADUP.md` (shipped under `templates/`, renamed, so the kit root is not a resolver anchor — v0.6.2) |
 | `commands/boot.md` | `/boot` — two-file boot + RESUME-WITH-VERIFICATION (steps A–D) |
 | `commands/session.md` | `/session` — smart entry (auto-pick / list / boot a slot) |
 | `commands/handoff.md` | `/handoff` — session wrap; Warrant gate, Continuity check, read-back |
@@ -23,7 +23,7 @@ slimming accretion, and cutting four enhancement/marketing components to the bol
 | `bin/next-live.sh` | Single source of truth for the live-session set |
 | `bin/next-boot.sh` | Writes the advisory `_NEXT_NNN.booted` occupancy hint at boot (double-booking soft-guard) |
 | `bin/external-done.sh` | Single-writer for the out-of-tree supersession registry (read first by `boot.md` Step B) |
-| `next/_NEXT_001.md` | Seed handoff |
+| `templates/_NEXT_001.md` | Seed handoff; `/init` copies it to `<system-dir>/next/_NEXT_001.md` (shipped under `templates/`, not at the kit root — v0.6.2) |
 
 ### 2 · Guardrail shell
 | File | Role |
@@ -79,6 +79,7 @@ slimming accretion, and cutting four enhancement/marketing components to the bol
 | `LICENSE` | MIT |
 | `setup.sh` | Non-destructive installer (companions are print-only) |
 | `.claude-plugin/plugin.json` | Plugin-system manifest |
+| `.svaha-kit` | Kit-distribution marker — makes the continuity writers, `/init`, and `coherence-check.py` refuse to treat the kit root as a user `<system-dir>` (the kit-as-system-dir guard, v0.6.2) |
 | `VERSION` | Kit semantic version — read by `setup.sh` and `bin/doctor.sh` |
 | `PATCHES.md` | User-facing changelog for CLAUDE.md base rule and firmware changes |
 | `CONTRIBUTING.md` | Firmware vs user-owned layer model; PR requirements for upstream fixes |
