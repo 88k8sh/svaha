@@ -45,9 +45,14 @@ cp "$KIT/SYSTEM_MAP.md"     "$DEST/SYSTEM_MAP.md"
 cp "$KIT/memory/MEMORY.md"  "$DEST/memory/MEMORY.md"
 cp "$KIT/memory/README.md"  "$DEST/memory/README.md"
 
-# Layer 5 — ledger (clean templates) + archive
+# Layer 5 — ledger SEED templates + archive. Copy from templates/ledger/, NOT the kit's
+# live ledger/. The kit dogfoods its own ledger — real DECISIONS, session-fixes, LESSONS,
+# drift-guard logs accumulate there as Svaha is developed — so copying ledger/ would seed a
+# new project with the KIT's history. templates/ledger/ holds the clean header+format seeds
+# (the same fresh-seed idea as the CHANGELOG below; CHANGELOG stays inline because it injects
+# a dated init entry).
 for f in session-fixes DECISIONS LESSONS audit-state drift-guard-evidence drift-guard-overfires USER_TASKS EXTERNAL_DELIVERABLES; do
-  cp "$KIT/ledger/$f.md" "$DEST/ledger/$f.md"
+  cp "$KIT/templates/ledger/$f.md" "$DEST/ledger/$f.md"
 done
 cp "$KIT/_ARCHIVE/README.md" "$DEST/_ARCHIVE/README.md"
 

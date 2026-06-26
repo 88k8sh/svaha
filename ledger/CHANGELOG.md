@@ -7,6 +7,17 @@ Written by `/handoff` (or manually after structural edits). Do not edit existing
 
 ---
 
+## 2026-06-26 — /init ledger-template hygiene (v0.7.1)
+
+- **Root cause:** `commands/init.md`'s Layer-5 loop copied the kit's live `ledger/*.md` into new projects under a comment that *claimed* "clean templates." But the kit dogfoods its own ledger — `ledger/DECISIONS.md` (2 real decisions) and `ledger/session-fixes.md` (1 real bug) already carried Svaha's dev history; `LESSONS`/drift-guard logs accumulate over time. So `/init` seeded new projects with the KIT's history. Verified against ground truth (read each file), not just the two the source-move named — `session-fixes` leaks too; `LESSONS`/`drift-guard-evidence`/`drift-guard-overfires` are latent leaks.
+- **NEW** `templates/ledger/` — clean header+format seeds for all 8 ledger files. The kit's live `ledger/` is untouched. `/init` now copies from `templates/ledger/`, so it reads zero files from the live ledger (CHANGELOG was already a fresh inline seed). Closes the class, not just the symptom.
+- **EDIT** `commands/init.md` — Layer-5 loop repointed `ledger/` → `templates/ledger/`; comment corrected (it had lied). Matches the `templates/` convention v0.6.2 set for `_LOADUP`/`_NEXT_001`.
+- **EDIT** `bin/coherence-check.py` — KIT_MODE required-list asserts `templates/ledger/` exists (fail-fast if the seed source is deleted).
+- **EDIT** `VERSION` 0.7.0→0.7.1; `plugin.json` 0.7.0→0.7.1. Coherence: `PATCHES.md`, `MANIFEST.md`, `SYNC_MAP.md`.
+- Stacks on v0.7.0 (plugin layer) on `feat/plugin-packaging`; both unpushed at commit time — push user-gated.
+
+---
+
 ## 2026-06-26 — Plugin packaging layer (v0.7.0)
 
 - **NEW** `hooks/hooks.json` — the 10 hooks (6 shell + 4 Python guards) translated into the plugin hook schema, scripts referenced via `${CLAUDE_PLUGIN_ROOT}` (swapped from the `settings.json.snippet`'s baked `<kit-dir>` / `$HOME/.claude/hooks`). Auto-discovered; the one artifact that makes hooks fire under the plugin model. JSON validated; all 10 script paths resolve.

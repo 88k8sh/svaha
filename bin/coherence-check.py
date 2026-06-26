@@ -172,6 +172,7 @@ def boot():
         required = [
             SYSTEM_DIR / "templates" / "_LOADUP.template.md",
             SYSTEM_DIR / "templates" / "_NEXT_001.md",
+            SYSTEM_DIR / "templates" / "ledger",  # /init's clean ledger-seed source (dir)
             SYSTEM_DIR / "_NEXT.md",
             CHANGELOG,
             SYSTEM_DIR / "SYNC_MAP.md",

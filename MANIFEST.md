@@ -24,6 +24,7 @@ slimming accretion, and cutting four enhancement/marketing components to the bol
 | `bin/next-boot.sh` | Writes the advisory `_NEXT_NNN.booted` occupancy hint at boot (double-booking soft-guard) |
 | `bin/external-done.sh` | Single-writer for the out-of-tree supersession registry (read first by `boot.md` Step B) |
 | `templates/_NEXT_001.md` | Seed handoff; `/init` copies it to `<system-dir>/next/_NEXT_001.md` (shipped under `templates/`, not at the kit root — v0.6.2) |
+| `templates/ledger/` | Clean header+format SEEDS for the 8 ledger files; `/init` copies these (NOT the kit's live `ledger/`, which dogfoods real entries) so a new project starts with empty ledgers — v0.7.1 |
 
 ### 2 · Guardrail shell
 | File | Role |

@@ -8,6 +8,26 @@ Changes to the Svaha base rules (CLAUDE.md) and firmware files by version.
 
 ---
 
+## v0.7.1 — 2026-06-26
+
+**`/init` ledger hygiene — new projects now seed from clean ledger templates, not the kit's own live ledger.**
+
+`commands/init.md` copied the kit's `ledger/*.md` straight into every new project under the comment "clean templates" — but the kit **dogfoods its own ledger**, so `ledger/DECISIONS.md` and `ledger/session-fixes.md` already carry real Svaha development entries (and `LESSONS.md` / the drift-guard logs accumulate them over time). A freshly `/init`'d project therefore started with Svaha's internal design decisions and bug history as if they were the user's own. The `CHANGELOG` was already special-cased (fresh inline seed); this extends that fix to the **whole** ledger, closing the class rather than the two named files.
+
+### What changed
+
+- **NEW `templates/ledger/`** — clean header+format seeds for all eight ledger files (`session-fixes`, `DECISIONS`, `LESSONS`, `audit-state`, `drift-guard-evidence`, `drift-guard-overfires`, `USER_TASKS`, `EXTERNAL_DELIVERABLES`). The kit's live `ledger/` is untouched (it remains the kit's real dev ledger).
+- **EDIT `commands/init.md`** — the Layer-5 ledger loop now copies from `templates/ledger/`, never the live `ledger/`. `/init` no longer reads a single file from the kit's live ledger (CHANGELOG was already a fresh inline seed). Matches the `templates/` convention v0.6.2 established for `_LOADUP`/`_NEXT_001`.
+- **EDIT `bin/coherence-check.py`** — KIT_MODE required-list now asserts `templates/ledger/` exists (fail-fast if the seed source is ever removed, so `/init` can't silently produce a project missing ledger files).
+- **EDIT `VERSION`** 0.7.0→0.7.1; `.claude-plugin/plugin.json` 0.7.0→0.7.1.
+- Supporting coherence: `MANIFEST.md`, `SYNC_MAP.md`, `ledger/CHANGELOG.md`.
+
+### Upgrading from v0.7.0
+
+Run `git pull && ./setup.sh` — it re-copies the firmware commands (the fixed `commands/init.md`) and `bin/`. **Existing projects are unaffected** (this only changes what a *future* `/init` scaffolds). **Manual patch:** copy the `templates/ledger/` directory from this repo into your kit, point `commands/init.md`'s Layer-5 ledger loop at `templates/ledger/`, and add the `templates/ledger` line to `bin/coherence-check.py`'s KIT_MODE required-list.
+
+---
+
 ## v0.7.0 — 2026-06-26
 
 **Plugin-installability — Svaha can now be added as a Claude Code plugin/marketplace (additive; `setup.sh` stays canonical).**
