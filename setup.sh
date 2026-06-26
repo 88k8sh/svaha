@@ -64,13 +64,18 @@ echo ""
 # no-op) without jq — so warn now rather than let the safety net quietly not exist.
 command -v python3 >/dev/null 2>&1 || \
   echo "          ⚠ python3 not found — the guard hooks (security/version/drift/coherence) need it. Install Python 3."
-command -v jq >/dev/null 2>&1 || \
+JQ_MISSING=0
+if ! command -v jq >/dev/null 2>&1; then
+  JQ_MISSING=1
   echo "          ⚠ jq not found — the six shell hooks parse stdin with jq and SILENTLY disable themselves without it. Install: brew install jq  /  apt-get install jq"
+fi
 # A space in the kit path is fatal-but-silent: settings.json wires the guard
 # commands UNQUOTED, so a space makes the runtime word-split the path and quietly
 # disable all four Python guards (doctor.sh would still pass the -f file test).
+SPACE_IN_PATH=0
 case "$KIT_ROOT" in
   *\ *)
+    SPACE_IN_PATH=1
     echo "          ⚠ WARNING: this kit path contains a space:"
     echo "              $KIT_ROOT"
     echo "            The guards are wired UNQUOTED, so a space here will silently DISABLE"
@@ -368,6 +373,21 @@ echo ""
 # ----------------------------------------------------------------------------
 echo "Step 6/6  So be it."
 echo ""
+if [ "${JQ_MISSING:-0}" -eq 1 ] || [ "${SPACE_IN_PATH:-0}" -eq 1 ]; then
+  echo "          ──────────────────────────────────────────────────────"
+  if [ "${JQ_MISSING:-0}" -eq 1 ]; then
+    echo "          ⚠ INSTALL INCOMPLETE: jq is missing — the 6 shell hooks will"
+    echo "            run SILENTLY (no context / wrap-up / crash-recovery nudges)."
+    echo "            Fix:  brew install jq   (or: apt-get install jq)"
+  fi
+  if [ "${SPACE_IN_PATH:-0}" -eq 1 ]; then
+    echo "          ⚠ INSTALL DEGRADED: the kit path has a space — the 4 Python"
+    echo "            guards are SILENTLY disabled at runtime. Move the kit to a"
+    echo "            space-free path, then re-run ./setup.sh."
+  fi
+  echo "          ──────────────────────────────────────────────────────"
+  echo ""
+fi
 echo "          Verify:  bash $KIT_ROOT/bin/doctor.sh"
 echo "          Begin:   open Claude Code and say  svaha   (or run /session)"
 echo "=========================================================="

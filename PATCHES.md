@@ -8,6 +8,22 @@ Changes to the Svaha base rules (CLAUDE.md) and firmware files by version.
 
 ---
 
+## v0.6.1 — 2026-06-26
+
+**`setup.sh` end-of-run banner — the two silent-failure modes can no longer scroll past unseen.**
+
+Two install conditions silently cripple Svaha: a missing `jq` makes the six shell hooks no-op, and a space in the kit path makes the four Python guards word-split and silently disable. Both were already warned about inline during Step 1 — but those warnings scroll off-screen during the 6-step install, so a user who looks only at the final screen never sees them.
+
+### What changed
+
+- **EDIT `setup.sh`** — the early checks now set `JQ_MISSING` / `SPACE_IN_PATH` flags, and Step 6/6 re-surfaces a consolidated `⚠ INSTALL INCOMPLETE / DEGRADED` banner at the very end (where the user is actually looking) whenever either fired, with the exact fix command. Purely additive — the inline Step-1 warnings are unchanged; no behavior changes when both conditions are clean.
+
+### Upgrading from v0.6.0
+
+Run `git pull && ./setup.sh`. No action needed beyond re-running — the new banner only appears if your install is missing `jq` or sits at a path with a space. **Manual patch:** copy the updated `setup.sh` from this repo.
+
+---
+
 ## v0.6.0 — 2026-06-25
 
 **Out-of-tree supersession registry — the boot sweep can now see completions made outside this tree.**

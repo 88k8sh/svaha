@@ -7,6 +7,13 @@ Written by `/handoff` (or manually after structural edits). Do not edit existing
 
 ---
 
+## 2026-06-26 — setup.sh end-of-run install-health banner (v0.6.1)
+
+- **EDIT** `setup.sh` — Step 1 checks now set `JQ_MISSING` / `SPACE_IN_PATH` flags; Step 6/6 re-surfaces a consolidated `⚠ INSTALL INCOMPLETE / DEGRADED` banner at end-of-run (with the fix command) whenever either fired, so the two silent-failure modes (jq missing → 6 shell hooks no-op; space in path → 4 Python guards silently disabled) can't scroll past unseen. Purely additive — inline Step-1 warnings unchanged
+- **EDIT** `VERSION` 0.6.0→0.6.1; `PATCHES.md` v0.6.1 entry + manual-apply path
+
+---
+
 ## 2026-06-25 — Out-of-tree supersession registry (v0.6.0)
 
 - **NEW** `bin/external-done.sh` — single-writer for the out-of-tree supersession registry; append-only, idempotent, pipe/root-guarded, bash-3.2-safe (ledger/ preferred, 30_LEDGER/ fallback)
